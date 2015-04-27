@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tastypie',
+    'server',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -77,8 +78,12 @@ WSGI_APPLICATION = 'NiiiServer.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'niii',
+        'USER': 'niii',
+        'PASSWORD': 'niii1234',
+        'HOST': 'niii.cqaplm4h2vbq.us-west-2.rds.amazonaws.com',
+        'PORT': '3306',
     }
 }
 
@@ -101,3 +106,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Media files (images)
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'server', 'media')
