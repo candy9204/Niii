@@ -8,7 +8,7 @@ class Profile(models.Model):
 	nickname = models.CharField(max_length = 50)
 	gender = models.NullBooleanField(blank = True)
 	photo = models.ImageField(upload_to = 'photos', null = True, blank = True)
-	friends = models.ManyToManyField('self', symmetrical = False, blank = True)
+	followings = models.ManyToManyField('self', related_name = 'followers', symmetrical = False, blank = True)
 
 class Category(models.Model):
 	name = models.CharField(max_length = 50)
