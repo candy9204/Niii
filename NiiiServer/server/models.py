@@ -16,7 +16,7 @@ class Category(models.Model):
 class Event(models.Model):
 	# basic
 	name = models.CharField(max_length = 50)
-	organizor = models.ForeignKey(Profile)
+	organizor = models.ForeignKey(User)
 	place = models.CharField(max_length = 50)
 	description = models.TextField(max_length = 5000)
 	time = models.DateTimeField()
@@ -26,8 +26,8 @@ class Event(models.Model):
 	favoriters = models.ManyToManyField(User, related_name = 'favorites', blank = True)
 
 class Rating(models.Model):
-	person = models.ForeignKey(User)
-	event = models.ForeignKey(Event)
+	rator = models.ForeignKey(User, related_name = '+')
+	ratee = models.ForeignKey(User, related_name = '+')
 	score = models.IntegerField()
 
 class Comment(models.Model):

@@ -87,7 +87,7 @@ def updateProfile(request, userid):
 
 def viewFollowing(request, userid):
 	user = User.objects.get(id = userid)
-	followings = Profile.objects.get(user = user).followings.values('user__id', 'user__username', 'photo')
+	followings = Profile.objects.get(user = user).followings.values('user__id', 'user__username', 'user__profile__nickname', 'photo')
 	res = list(followings)
 	for f in res:
 		try:
@@ -130,7 +130,7 @@ def removeFollowing(request, userid):
 
 def viewFollower(request, userid):
 	user = User.objects.get(id = userid)
-	followers = Profile.objects.get(user = user).followers.values('user__id', 'user__username', 'photo')
+	followers = Profile.objects.get(user = user).followers.values('user__id', 'user__username', 'user__profile__nickname', 'photo')
 	res = list(followers)
 	for f in res:
 		try:
