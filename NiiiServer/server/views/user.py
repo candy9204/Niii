@@ -5,8 +5,9 @@ from django.http import JsonResponse
 from django.core.files.base import ContentFile
 from django.forms.models import model_to_dict
 from django.core import serializers
+from django.db.models import Avg
 
-from server.models import Profile
+from server.models import Profile, Rating
 
 # Create your views here.
 def login(request):
@@ -67,6 +68,9 @@ def viewProfile(request, userid):
 		res['photo'] = profile.photo.url
 	except:
 		res['photo'] = None
+	res['followings'] = profile.followings.count()
+	res['followers'] = profile.followers.count()
+	res['rating'] = Rating.objects.filter(ratee = user).aggregate(Avg('score'))['score__avg']
 	return JsonResponse(res)
 
 def updateProfile(request, userid):
@@ -85,18 +89,23 @@ def updateProfile(request, userid):
 	profile.save()
 	return JsonResponse({'success': True})
 
-def viewFollowing(request, userid):
+def viewFollowings(request, userid):
 	user = User.objects.get(id = userid)
 	followings = Profile.objects.get(user = user).followings.values('user__id', 'user__username', 'user__profile__nickname', 'photo')
-	res = list(followings)
-	for f in res:
+	res = []
+	for f in list(followings):
+		info = {}
+		info['id'] = f['user__id']
+		info['username'] = f['user__username']
+		info['nickname'] = f['user__profile__nickname']
 		try:
-			f['photo'] = f['photo'].url
+			info['photo'] = f['photo'].url
 		except:
-			f['photo'] = None
+			info['photo'] = None
+		res.append(info)
 	return JsonResponse({'followings': res})
 
-def addFollowing(request, userid):
+def addFollowings(request, userid):
 	# GET for following
 	try:
 		following_id = request.GET['following_id']
@@ -112,7 +121,7 @@ def addFollowing(request, userid):
 		return JsonResponse(res)
 	return JsonResponse({'success': True})
 
-def removeFollowing(request, userid):
+def removeFollowings(request, userid):
 	# GET for following
 	try:
 		following_id = request.GET['following_id']
@@ -128,13 +137,45 @@ def removeFollowing(request, userid):
 		return JsonResponse(res)
 	return JsonResponse({'success': True})
 
-def viewFollower(request, userid):
+def viewFollowers(request, userid):
 	user = User.objects.get(id = userid)
 	followers = Profile.objects.get(user = user).followers.values('user__id', 'user__username', 'user__profile__nickname', 'photo')
-	res = list(followers)
-	for f in res:
+	res = []
+	for f in list(followers):
+		info = {}
+		info['id'] = f['user__id']
+		info['username'] = f['user__username']
+		info['nickname'] = f['user__profile__nickname']
 		try:
-			f['photo'] = f['photo'].url
+			info['photo'] = f['photo'].url
 		except:
-			f['photo'] = None
+			info['photo'] = None
+		res.append(info)
 	return JsonResponse({'followers': res})
+
+def viewParticipations(request, userid):
+	participations = User.objects.select_related('participations').get(id = userid).participations.values('id', 'name')
+	return JsonResponse({'participations': list(participations)})
+
+def viewFavorites(request, userid):
+	favorites = User.objects.select_related('favorites').get(id = userid).favorites.values('id', 'name')
+	return JsonResponse({'favorites': list(favorites)})
+
+def rate(request, userid):
+	# POST for rateing
+	try:
+		ratee_id = request.POST['ratee_id']
+		score = int(request.POST['score'])
+	except:
+		res = {'success': False, 'message': 'Invalid Request'}
+		return JsonResponse(res)
+	rator = User.objects.get(id = userid)
+	try:
+		ratee = User.objects.get(id = ratee_id)
+		rating = Rating(rator = rator, ratee = ratee, score = score)
+		rating.save()
+	except:
+		res = {'success': False, 'message': 'Invalid ratee_id or score'}
+		return JsonResponse(res)
+	return JsonResponse({'success': True})
+	

@@ -10,13 +10,22 @@ urlpatterns = [
 	# user
     url(r'^user/login/', user.login, name = 'login'),
     url(r'^user/register/', user.register, name = 'register'),
-    url(r'^user/profile/(?P<userid>[0-9]+)/$', user.viewProfile, name = 'viewprofile'),
-    url(r'^user/profile/(?P<userid>[0-9]+)/update/$', user.updateProfile, name = 'updateprofile'),
-    url(r'^user/following/(?P<userid>[0-9]+)/$', user.viewFollowing, name = 'viewfollowing'),
-    url(r'^user/following/(?P<userid>[0-9]+)/add/$', user.addFollowing, name = 'addfollowing'),
-    url(r'^user/following/(?P<userid>[0-9]+)/remove/$', user.removeFollowing, name = 'removefollowing'),
-    url(r'^user/follower/(?P<userid>[0-9]+)/$', user.viewFollower, name = 'viewfollower'),
+    url(r'^user/(?P<userid>[0-9]+)/profile/$', user.viewProfile, name = 'viewprofile'),
+    url(r'^user/(?P<userid>[0-9]+)/profile/update/$', user.updateProfile, name = 'updateprofile'),
+    url(r'^user/(?P<userid>[0-9]+)/followings/$', user.viewFollowings, name = 'viewfollowings'),
+    url(r'^user/(?P<userid>[0-9]+)/followings/add/$', user.addFollowings, name = 'addfollowings'),
+    url(r'^user/(?P<userid>[0-9]+)/followings/remove/$', user.removeFollowings, name = 'removefollowings'),
+    url(r'^user/(?P<userid>[0-9]+)/followers/$', user.viewFollowers, name = 'viewfollowers'),
+    url(r'^user/(?P<userid>[0-9]+)/participations/$', user.viewParticipations, name = 'viewparticipations'),
+    url(r'^user/(?P<userid>[0-9]+)/favorites/$', user.viewFavorites, name = 'viewfavorites'),
+    url(r'^user/(?P<userid>[0-9]+)/rate/$', user.rate, name = 'rate'),
 
-    url(r'^event/(?P<eventid>[0-9]+)/$', event.viewEvent, name = 'viewEvent'),
+    url(r'^event/(?P<eventid>[0-9]+)/$', event.viewEvent, name = 'viewevent'),
+    url(r'^event/add/$', event.addEvent, name = 'addevent'),
+    url(r'^event/categories/$', event.viewCategories, name = 'viewcategories'),
+    url(r'^event/(?P<eventid>[0-9]+)/join$', event.joinEvent, name = 'joinevent'),
+    url(r'^event/(?P<eventid>[0-9]+)/favorite$', event.favoriteEvent, name = 'favoriteevent'),
+    url(r'^event/(?P<eventid>[0-9]+)/unjoin$', event.unjoinEvent, name = 'unjoinevent'),
+    url(r'^event/(?P<eventid>[0-9]+)/unfavorite$', event.unfavoriteEvent, name = 'unfavoriteevent'),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
