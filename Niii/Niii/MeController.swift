@@ -30,7 +30,7 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell:UITableViewCell = self.settingList.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+        var cell:UITableViewCell = self.settingList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
         
         cell.textLabel?.text = self.settings[indexPath.row]
         

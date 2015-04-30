@@ -7,13 +7,11 @@
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "worldwide_location-48.png"
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x",
-      "filename" : "worldwide_location-96.png"
+      "scale" : "3x"
     }
   ],
   "info" : {

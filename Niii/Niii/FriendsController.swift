@@ -41,7 +41,7 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell:UITableViewCell = self.friendsList.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+        var cell:UITableViewCell = self.friendsList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
         
         if(tableView == self.friendsList){
             cell.textLabel?.text = self.friends[indexPath.row]
