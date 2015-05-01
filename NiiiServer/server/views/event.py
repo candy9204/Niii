@@ -5,10 +5,12 @@ from django.http import JsonResponse
 from django.core.files.base import ContentFile
 from django.forms.models import model_to_dict
 from django.core import serializers
+from django.core.exceptions import DoesNotExist
 
 import dateutil.parser
+import datetime
 
-from server.models import Event, Category
+from server.models import Event, Category, Comment, Picture
 
 # Create your views here.
 def viewEvent(request, eventid):
@@ -53,6 +55,7 @@ def addEvent(request):
 		event.category = category
 	except:
 		pass
+	event.save()
 	return JsonResponse({'success': True})
 
 def viewCategories(request):
@@ -125,4 +128,114 @@ def unfavoriteEvent(request, eventid):
 	except:
 		res = {'success': False, 'message': 'Invalid user_id'}
 		return JsonResponse(res)
+	return JsonResponse({'success': True})
+
+def viewComments(request, eventid):
+	try:
+		event = Event.objects.get(id = eventid)
+		comments = event.comment_set.all().select_related()
+	except:
+		res = {'success': False, 'message': 'Invalid event_id'}
+		return JsonResponse(res)
+	res = []
+	for c in list(comments):
+		info = model_to_dict(c, fields = ['id', 'content', 'time'])
+		info['time'] = info['time'].isoformat()
+		info['user'] = {
+			'id': c.user.pk,
+			'username': c.user.username,
+			'nickname': c.user.profile.nickname,
+		}
+		res.append(info)
+	return JsonResponse({'comments': res})
+
+def addComment(request, eventid):
+	# POST for comment
+	try:
+		user_id = request.POST['user_id']
+		content = request.POST['content']
+	except:
+		res = {'success': False, 'message': 'Invalid Request'}
+		return JsonResponse(res)
+	try:
+		user = User.objects.get(id = user_id)
+	except:
+		res = {'success': False, 'message': 'Invalid user_id'}
+		return JsonResponse(res)
+	try:
+		event = Event.objects.get(id = eventid)
+	except:
+		res = {'success': False, 'message': 'Invalid event_id'}
+		return JsonResponse(res)
+	comment = Comment(user = user, event = event, content = content, time = datetime.datetime.now())
+	comment.save()
+	return JsonResponse({'success': True})
+
+def removeComment(request, eventid):
+	# GET for comment
+	try:
+		comment_id = request.GET['comment_id']
+	except:
+		res = {'success': False, 'message': 'Invalid Request'}
+		return JsonResponse(res)
+	try:
+		event = Event.objects.get(id = eventid)
+	except:
+		res = {'success': False, 'message': 'Invalid event_id'}
+		return JsonResponse(res)
+	try:
+		event.comment_set.remove(id = comment_id)
+	except:
+		res = {'success': False, 'message': 'Invalid comment_id'}
+		return JsonResponse(res)
+	return JsonResponse({'success': True})
+
+def viewPictures(request, eventid):
+	try:
+		event = Event.objects.get(id = eventid)
+		pictures = event.picture_set.all().select_related()
+	except:
+		res = {'success': False, 'message': 'Invalid event_id'}
+		return JsonResponse(res)
+	res = []
+	for p in list(pictures):
+		info = {}
+		info['id'] = info['id']
+		info['user'] = {
+			'id': p.user.pk,
+			'username': p.user.username,
+			'nickname': p.user.profile.nickname,
+		}
+		info['image'] = p.image.url
+		info['time'] = p.time.isoformat()
+		res.append(info)
+	return JsonResponse({'pictures': res})
+
+def addPicture(request, eventid):
+	# POST for picture
+	try:
+		user_id = request.POST['user_id']
+		image = request.FILES['image']
+	except:
+		res = {'success': False, 'message': 'Invalid Request'}
+		return JsonResponse(res)
+	try:
+		user = User.objects.get(id = user_id)
+	except:
+		res = {'success': False, 'message': 'Invalid user_id'}
+		return JsonResponse(res)
+	try:
+		event = Event.objects.get(id = eventid)
+	except:
+		res = {'success': False, 'message': 'Invalid event_id'}
+		return JsonResponse(res)
+	uploadedFile = request.FILES['image']
+	try:
+		pid = Picture.objects.latest('id') + 1
+	except DoesNotExist:
+		pid = 1
+	filename = str(eventid) + '-' + str(pid) + '.' + uploadedFile.name.split('.')[-1]
+	picture = Picture(user = user, event = event, time = datetime.datetime.now())
+	picture.image.save(filename, ContentFile(uploadedFile.read()), save = False)
+	picture.save()
 	return JsonResponse({'success': True})

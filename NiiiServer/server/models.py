@@ -32,6 +32,7 @@ class Rating(models.Model):
 
 class Comment(models.Model):
 	user = models.ForeignKey(User)
+	event = models.ForeignKey(Event)
 	content = models.TextField(max_length = 5000)
 	time = models.DateTimeField()
 
@@ -39,3 +40,4 @@ class Picture(models.Model):
 	user = models.ForeignKey(User)
 	event = models.ForeignKey(Event)
 	image = models.ImageField(upload_to = 'album')
+	time = models.DateTimeField()
