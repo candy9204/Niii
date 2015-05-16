@@ -5,7 +5,8 @@ from django.http import JsonResponse
 from django.core.files.base import ContentFile
 from django.forms.models import model_to_dict
 from django.core import serializers
-from django.core.exceptions import DoesNotExist
+#from django.core.exceptions import DoesNotExist
+from django.db.models import Avg
 
 import dateutil.parser
 import datetime
@@ -19,7 +20,7 @@ def viewEvent(request, eventid):
 	res['organizor'] = {
 		'id': event.organizor.pk,
 		'username': event.organizor.username,
-		'nickname': event.organizor.profile.nickname
+		'nickname': event.organizor.profile.nickname,
 		'rating': Rating.objects.filter(ratee = event.organizor).aggregate(Avg('score'))['score__avg']
 	}
 	res['time'] = res['time'].isoformat()
