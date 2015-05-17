@@ -15,6 +15,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view, typically from a nib.
         self.eventList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.eventList.rowHeight = 100.0

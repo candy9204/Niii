@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Niii/AppDelegate.swift"
-            timestampString = "451033791.069876"
+            timestampString = "453592604.385982"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
             landmarkName = "applicationWillEnterForeground(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -49,6 +49,54 @@
             endingLineNumber = "15"
             landmarkName = "AppDelegate"
             landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Niii/UIColorFromHex.swift"
+            timestampString = "453590900.629557"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "10"
+            endingLineNumber = "10"
+            landmarkName = "UIColorFromHex"
+            landmarkType = "3">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Niii.UIColorFromHex.deinit"
+                  moduleName = "Niii"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/linshengyi/Desktop/Niii_Project/Niii/Niii/UIColorFromHex.swift"
+                  timestampString = "453595195.247473"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "0"
+                  endingLineNumber = "0"
+                  offsetFromSymbolStart = "8">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Niii.UIColorFromHex.init (Niii.UIColorFromHex.Type)() -&gt; Niii.UIColorFromHex"
+                  moduleName = "Niii"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/linshengyi/Desktop/Niii_Project/Niii/Niii/UIColorFromHex.swift"
+                  timestampString = "453595195.247652"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "11"
+                  endingLineNumber = "11"
+                  offsetFromSymbolStart = "8">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
