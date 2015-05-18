@@ -40,7 +40,6 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
         var subView:UIView!
         subView = UIView(frame: CGRectMake(5, 5, tw-25, th-10))
         subView.backgroundColor = UIColor.whiteColor()
-        subView.layer.shadowOpacity = 1.55;
         subView.layer.shadowColor = UIColor(red: 53/255.0, green: 143/255.0, blue: 185/255.0, alpha: 1.0).CGColor
         subView.layer.cornerRadius = 3.0
         subView.layer.shadowOpacity = 0.5
@@ -74,6 +73,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEvent") as! UIViewController
+        singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         self.presentViewController(singleEvent, animated:true, completion:nil)
     }
     

@@ -91,12 +91,12 @@
 		25E1F2F31ADDDBBE008FD067 /* Niii */ = {
 			isa = PBXGroup;
 			children = (
-				25E1F2F61ADDDBBE008FD067 /* AppDelegate.swift */,
+				25E1F31A1ADDF6D7008FD067 /* MeController.swift */,
 				25E1F2F81ADDDBBE008FD067 /* EventsController.swift */,
+				25E1F2F61ADDDBBE008FD067 /* AppDelegate.swift */,
 				25E6C7B11AF2873100451C10 /* SingleEventController.swift */,
 				25E1F31C1ADDFEA7008FD067 /* SearchController.swift */,
 				25E1F3181ADDF6BB008FD067 /* FriendsController.swift */,
-				25E1F31A1ADDF6D7008FD067 /* MeController.swift */,
 				25E1F2FC1ADDDBBE008FD067 /* Main.storyboard */,
 				25E1F3011ADDDBBE008FD067 /* LaunchScreen.xib */,
 				25E1F2F41ADDDBBE008FD067 /* Supporting Files */,

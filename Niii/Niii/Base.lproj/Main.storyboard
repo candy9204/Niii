@@ -184,7 +184,7 @@
                                 </state>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" red="0.38828301630000001" green="0.57424928490000005" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.23137254900000001" green="0.47843137250000001" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="XNp-yG-0hD" firstAttribute="leading" secondItem="9ez-s8-TF8" secondAttribute="trailing" constant="4" id="0E3-N5-jHq"/>
                             <constraint firstItem="XNp-yG-0hD" firstAttribute="height" secondItem="9ez-s8-TF8" secondAttribute="height" id="0QE-8J-eue"/>
@@ -306,7 +306,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="iAu-m9-iKf">
-                                <rect key="frame" x="16" y="90" width="349" height="200"/>
+                                <rect key="frame" x="16" y="90" width="568" height="461"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="iAu-m9-iKf" secondAttribute="height" multiplier="349:200" id="oRa-tm-8Sa"/>
@@ -315,16 +315,6 @@
                                     <outlet property="dataSource" destination="tzV-IV-Uht" id="UbI-om-sp4"/>
                                     <outlet property="delegate" destination="tzV-IV-Uht" id="4w9-8S-KY0"/>
                                 </connections>
-                            </tableView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="head" translatesAutoresizingMaskIntoConstraints="NO" id="OU1-tY-vs0">
-                                <rect key="frame" x="384" y="90" width="200" height="200"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="OU1-tY-vs0" secondAttribute="height" multiplier="1:1" id="VHn-Af-wTs"/>
-                                </constraints>
-                            </imageView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Cef-NT-Gu8">
-                                <rect key="frame" x="16" y="305" width="568" height="246"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Il-gZ-zLI">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="67"/>
@@ -344,16 +334,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Cef-NT-Gu8" firstAttribute="trailing" secondItem="0FS-5x-t0D" secondAttribute="trailingMargin" id="0gm-tu-OX8"/>
-                            <constraint firstItem="iAu-m9-iKf" firstAttribute="width" secondItem="OU1-tY-vs0" secondAttribute="height" multiplier="349:200" id="5Fo-ky-62A"/>
-                            <constraint firstItem="Cef-NT-Gu8" firstAttribute="top" secondItem="iAu-m9-iKf" secondAttribute="bottom" constant="15" id="9uY-fl-BVK"/>
-                            <constraint firstItem="OU1-tY-vs0" firstAttribute="trailing" secondItem="0FS-5x-t0D" secondAttribute="trailingMargin" id="CF7-Gu-ssr"/>
-                            <constraint firstItem="Cef-NT-Gu8" firstAttribute="leading" secondItem="0FS-5x-t0D" secondAttribute="leadingMargin" id="ISn-UR-g5e"/>
-                            <constraint firstItem="OU1-tY-vs0" firstAttribute="top" secondItem="iAu-m9-iKf" secondAttribute="top" id="Sdo-an-4ba"/>
+                            <constraint firstItem="iAu-m9-iKf" firstAttribute="leading" secondItem="0FS-5x-t0D" secondAttribute="leadingMargin" id="Xxy-cA-fGe"/>
+                            <constraint firstAttribute="centerX" secondItem="iAu-m9-iKf" secondAttribute="centerX" id="Yn5-rO-fhk"/>
                             <constraint firstItem="8Il-gZ-zLI" firstAttribute="width" secondItem="0FS-5x-t0D" secondAttribute="width" id="Zeg-AM-fWM"/>
-                            <constraint firstItem="OU1-tY-vs0" firstAttribute="bottom" secondItem="iAu-m9-iKf" secondAttribute="bottom" id="eg8-7Y-QXP"/>
-                            <constraint firstItem="iAu-m9-iKf" firstAttribute="leading" secondItem="0FS-5x-t0D" secondAttribute="leadingMargin" id="mg9-1W-xSu"/>
-                            <constraint firstItem="OU1-tY-vs0" firstAttribute="leading" secondItem="iAu-m9-iKf" secondAttribute="trailing" constant="19" id="zaO-rF-1si"/>
+                            <constraint firstItem="iAu-m9-iKf" firstAttribute="trailing" secondItem="0FS-5x-t0D" secondAttribute="trailingMargin" id="bYE-xf-hZK"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Me" image="me" id="Od2-e9-SSe"/>
@@ -445,7 +429,6 @@
         <image name="chat" width="32" height="32"/>
         <image name="events" width="32" height="32"/>
         <image name="friends" width="32" height="32"/>
-        <image name="head" width="748" height="728"/>
         <image name="me" width="32" height="32"/>
         <image name="search" width="32" height="32"/>
         <image name="title" width="541" height="285"/>

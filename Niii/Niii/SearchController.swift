@@ -71,5 +71,16 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEvent") as! UIViewController
+        singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        self.presentViewController(singleEvent, animated:true, completion:nil)
+    }
+    
+    func setSelected(selected: Bool, animated: Bool) {
+        self.setSelected(selected, animated: animated)
+    }
+    
+    func setHightlighted(highlighted: Bool, animated: Bool) {
+        self.setHightlighted(highlighted, animated: animated)
     }
 }

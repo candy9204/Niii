@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class SingleEventController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -14,20 +15,12 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-//        self.navigationController!.setNavigationBarHidden(false, animated:true)
-//        var myBackButton:UIButton = UIButton.buttonWithType(UIButtonType.Custom)as! UIButton
-//        myBackButton.addTarget(self, action: "popToRoot:", forControlEvents: UIControlEvents.TouchUpInside)
-//        myBackButton.setTitle("YOUR TITLE", forState: UIControlState.Normal)
-//        myBackButton.setTitleColor(UIColor.blueColor(), forState: UIControlState.Normal)
-//        myBackButton.sizeToFit()
-//        var myCustomBackButtonItem:UIBarButtonItem = UIBarButtonItem(customView: myBackButton)
-//        self.navigationItem.leftBarButtonItem  = myCustomBackButtonItem
     }
     
     
     @IBAction func BackToEvents(sender: AnyObject) {
         let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
+        mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         self.presentViewController(mainPage, animated:true, completion:nil)
     }
     

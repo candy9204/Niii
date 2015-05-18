@@ -18,7 +18,7 @@ class SignInController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        initAppearance()
+        // initAppearance()
         
         self.loginView.layer.cornerRadius = self.loginView.frame.size.width / 8
         self.loginView.clipsToBounds = true
@@ -53,7 +53,6 @@ class SignInController: UIViewController {
 
     
     func initAppearance() -> Void {
-        
         let background = CAGradientLayer().blueColor()
         background.frame = self.view.bounds
         self.view.layer.insertSublayer(background, atIndex: 0)
