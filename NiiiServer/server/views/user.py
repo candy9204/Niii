@@ -154,7 +154,7 @@ def viewFollowers(request, userid):
 	return JsonResponse({'followers': res})
 
 def viewParticipations(request, userid):
-	participations = User.objects.select_related('participations').get(id = userid).participations.values('id', 'name')
+	participations = User.objects.select_related('profile').get(id = userid).participations.values('id', 'name')
 	return JsonResponse({'participations': list(participations)})
 
 def viewFavorites(request, userid):

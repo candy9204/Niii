@@ -11,12 +11,13 @@ from django.db.models import Avg
 import dateutil.parser
 import datetime
 
-from server.models import Event, Category, Comment, Picture
+from server.models import Event, Category, Comment, Picture, Rating
 
 # Create your views here.
 def viewEvent(request, eventid):
 	event = Event.objects.select_related().get(id = eventid)
-	res = model_to_dict(event, files = ['name', 'place', 'description'])
+	res = model_to_dict(event, fields = ['name', 'place', 'description', 'time'])
+	print res
 	res['organizor'] = {
 		'id': event.organizor.pk,
 		'username': event.organizor.username,
@@ -24,7 +25,7 @@ def viewEvent(request, eventid):
 		'rating': Rating.objects.filter(ratee = event.organizor).aggregate(Avg('score'))['score__avg']
 	}
 	res['time'] = res['time'].isoformat()
-	res['category'] = event.category.name
+	res['category'] = event.category.name if event.category else ''
 	res['participants'] = event.participants.count()
 	res['favoriters'] = event.favoriters.count()
 	return JsonResponse(res)
@@ -57,7 +58,7 @@ def addEvent(request):
 	except:
 		pass
 	event.save()
-	return JsonResponse({'success': True})
+	return JsonResponse({'success': True, 'id': event.id})
 
 def viewCategories(request):
 	categories = Category.objects.all().values('id', 'name')
