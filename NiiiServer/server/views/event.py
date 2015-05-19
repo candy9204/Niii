@@ -72,7 +72,7 @@ def joinEvent(request, eventid):
 	except:
 		res = {'success': False, 'message': 'Invalid Request'}
 		return JsonResponse(res)
-	user = User.objects.get(id = userid)
+	user = User.objects.get(id = user_id)
 	try:
 		user = User.objects.get(id = user_id)
 		event.participants.add(user)
@@ -89,7 +89,7 @@ def favoriteEvent(request, eventid):
 	except:
 		res = {'success': False, 'message': 'Invalid Request'}
 		return JsonResponse(res)
-	user = User.objects.get(id = userid)
+	user = User.objects.get(id = user_id)
 	try:
 		user = User.objects.get(id = user_id)
 		event.favoriters.add(user)
@@ -106,7 +106,7 @@ def unjoinEvent(request, eventid):
 	except:
 		res = {'success': False, 'message': 'Invalid Request'}
 		return JsonResponse(res)
-	user = User.objects.get(id = userid)
+	user = User.objects.get(id = user_id)
 	try:
 		user = User.objects.get(id = user_id)
 		event.participants.remove(user)
@@ -123,7 +123,7 @@ def unfavoriteEvent(request, eventid):
 	except:
 		res = {'success': False, 'message': 'Invalid Request'}
 		return JsonResponse(res)
-	user = User.objects.get(id = userid)
+	user = User.objects.get(id = user_id)
 	try:
 		user = User.objects.get(id = user_id)
 		event.favoriters.remove(user)
@@ -171,7 +171,7 @@ def addComment(request, eventid):
 		return JsonResponse(res)
 	comment = Comment(user = user, event = event, content = content, time = datetime.datetime.now())
 	comment.save()
-	return JsonResponse({'success': True})
+	return JsonResponse({'success': True, 'id': comment.id})
 
 def removeComment(request, eventid):
 	# GET for comment
@@ -186,7 +186,8 @@ def removeComment(request, eventid):
 		res = {'success': False, 'message': 'Invalid event_id'}
 		return JsonResponse(res)
 	try:
-		event.comment_set.remove(id = comment_id)
+		comment = event.comment_set.filter(id = comment_id)
+		comment.delete()
 	except:
 		res = {'success': False, 'message': 'Invalid comment_id'}
 		return JsonResponse(res)

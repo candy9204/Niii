@@ -22,7 +22,7 @@ def login(request):
 	if username and password:
 		user = authenticate(username = username, password = password)
 		if user is not None:
-			if user.is_active:
+			if not user.is_active:
 				res['success'] = False
 				res['message'] = 'Inactive User'
 			else:
@@ -158,7 +158,7 @@ def viewParticipations(request, userid):
 	return JsonResponse({'participations': list(participations)})
 
 def viewFavorites(request, userid):
-	favorites = User.objects.select_related('favorites').get(id = userid).favorites.values('id', 'name')
+	favorites = User.objects.select_related('profile').get(id = userid).favorites.values('id', 'name')
 	return JsonResponse({'favorites': list(favorites)})
 
 def rate(request, userid):
