@@ -15,10 +15,11 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view, typically from a nib.
         self.eventList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.eventList.rowHeight = 100.0
-        self.events = ["Event 1", "Event 2", "Event 3"]
+        self.events = ["Event 1", "Event 2", "Event 3", "Event 4"]
     }
 
     override func didReceiveMemoryWarning() {
@@ -37,12 +38,11 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
         
         // Subview
         var subView:UIView!
-        subView = UIView(frame: CGRectMake(5, 5, tw-25, th-10))
+        subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
         subView.backgroundColor = UIColor.whiteColor()
-        subView.layer.shadowOpacity = 1.55;
-        subView.layer.shadowColor = UIColor(red: 53/255.0, green: 143/255.0, blue: 185/255.0, alpha: 1.0).CGColor
-        subView.layer.cornerRadius = 3.0
-        subView.layer.shadowOpacity = 0.5
+        subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
+        subView.layer.shadowOffset = CGSizeMake(0, 3.0)
+        subView.layer.shadowOpacity = 0.2
         
         let sh = subView.bounds.height
         let sw = subView.bounds.width
@@ -51,12 +51,12 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
         let imageName = "climbing.png"
         let image = UIImage(named: imageName)
         let imageView = UIImageView(image: image!)
-        imageView.frame = CGRect(x: 5, y: 5, width: sh-10, height: sh-10)
+        imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
         subView.addSubview(imageView)
         
         // label
         let label = UILabel();
-        label.frame = CGRect(x: sh+5, y: 5, width: sw-sh-10, height: sh-10)
+        label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
         label.text = self.events[indexPath.row]
         subView.addSubview(label)
         
@@ -65,14 +65,15 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
         cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
         cell.backgroundColor = UIColor.clearColor();
         cell.contentView.addSubview(subView)
-        // cell.selectionStyle = UITableViewCellSelectionStyle.None;
         
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEvent") as! UIViewController
+        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEvent") as! SingleEventController
+        singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        singleEvent.parentController = 0
         self.presentViewController(singleEvent, animated:true, completion:nil)
     }
     

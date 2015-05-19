@@ -12,12 +12,14 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     @IBOutlet weak var settingList: UITableView!
     var settings = [String]()
+    var firstRowHeight : CGFloat = 140.0
+    var otherRowHeight : CGFloat = 50.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.settingList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        self.settings = ["Name: Shengyi Lin", "Sex: Female", "Age: 23"]
+        self.settings = ["Name: Shengyi Lin", "Sex: Female", "Age: 23", "Favourite", "History"]
     }
     
     override func didReceiveMemoryWarning() {
@@ -26,14 +28,101 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.settings.count;
+        return self.settings.count - 2;
+    }
+    
+    // Setting the height of the rows
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if(indexPath.row == 0){
+            return firstRowHeight
+        }
+        else{
+            return otherRowHeight
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         var cell:UITableViewCell = self.settingList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+        var subView:UIView!
         
-        cell.textLabel?.text = self.settings[indexPath.row]
+        if(indexPath.row == 0){
+            let th = firstRowHeight;
+            let tw = self.settingList.bounds.width;
+            
+            // Subview
+            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+            subView.backgroundColor = UIColor.whiteColor()
+            subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
+            subView.layer.shadowOffset = CGSizeMake(0, 3.0)
+            subView.layer.shadowOpacity = 0.2
+            let sh = subView.bounds.height
+            let sw = subView.bounds.width
+            
+            // Image
+            let imageName = "head.png"
+            let image = UIImage(named: imageName)
+            let imageView = UIImageView(image: image!)
+            imageView.frame = CGRect(x: 20, y: 10, width: sh-20, height: sh-20)
+            subView.addSubview(imageView)
+            
+            // label
+            let eh = (sh - 20) / 3
+            let label1 = UILabel();
+            label1.frame = CGRect(x: sh+30, y: 5, width: sw-sh-60, height: eh)
+            label1.text = self.settings[0]
+            let label2 = UILabel();
+            label2.frame = CGRect(x: sh+30, y: 10+eh, width: sw-sh-60, height: eh)
+            label2.text = self.settings[1]
+            let label3 = UILabel();
+            label3.frame = CGRect(x: sh+30, y: 15+2*eh, width: sw-sh-60, height: eh)
+            label3.text = self.settings[2]
+            subView.addSubview(label1)
+            subView.addSubview(label2)
+            subView.addSubview(label3)
+        }
+        else{
+            let th = otherRowHeight;
+            let tw = self.settingList.bounds.width;
+            
+            // Subview
+            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+            subView.backgroundColor = UIColor.whiteColor()
+            subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
+            subView.layer.shadowOffset = CGSizeMake(0, 3.0)
+            subView.layer.shadowOpacity = 0.2
+            let sh = subView.bounds.height
+            let sw = subView.bounds.width
+            
+            
+            // label
+            let label = UILabel();
+            label.frame = CGRect(x: 20, y: 5, width: sw-20, height: sh-10)
+            label.text = self.settings[indexPath.row+2]
+            subView.addSubview(label)
+            
+            // Cell
+            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+        }
         
+        cell.backgroundColor = UIColor.clearColor()
+        cell.contentView.addSubview(subView)
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        
+//        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEvent") as! UIViewController
+//        singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+//        self.presentViewController(singleEvent, animated:true, completion:nil)
+    }
+    
+    func setSelected(selected: Bool, animated: Bool) {
+        self.setSelected(selected, animated: animated)
+    }
+    
+    func setHightlighted(highlighted: Bool, animated: Bool) {
+        self.setHightlighted(highlighted, animated: animated)
     }
 }

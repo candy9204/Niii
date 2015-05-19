@@ -17,20 +17,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         initAppearance()
-        let colorView = UIView()
-        colorView.backgroundColor = UIColor(red: 130/255.0, green: 185/255.0, blue: 255/255.0, alpha: 0.5)
-        UITableViewCell.appearance().selectedBackgroundView = colorView
-                
+        
         return true
     }
 
     func initAppearance() -> Void {
-        
+        // Initialize Launch Screen
         let background = CAGradientLayer().blueColor()
         let objects = NSBundle.mainBundle().loadNibNamed("LaunchScreen", owner: self, options: nil)
         background.frame = objects[0].bounds
         objects[0].layer.insertSublayer(background, atIndex: 0)
         
+        // Set the color of all navigation bars to blue
+        var navigationBarAppearance = UINavigationBar.appearance()
+        navigationBarAppearance.barTintColor = UIColorFromHex.color(0x6698FF)
+        let navigationTitleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        navigationBarAppearance.titleTextAttributes = navigationTitleDict as [NSObject : AnyObject]
+        
+        // Set the selected color of the selected cell
+        let colorView = UIView()
+        colorView.backgroundColor = UIColor(red: 130/255.0, green: 185/255.0, blue: 255/255.0, alpha: 0.5)
+        UITableViewCell.appearance().selectedBackgroundView = colorView
     }
     
     func applicationWillResignActive(application: UIApplication) {
