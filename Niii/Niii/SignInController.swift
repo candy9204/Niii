@@ -31,28 +31,35 @@ class SignInController: UIViewController {
     
     @IBAction func signUp(sender: AnyObject) {
         let signUpPage = self.storyboard?.instantiateViewControllerWithIdentifier("signUpPage") as! UIViewController
+        signUpPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         self.presentViewController(signUpPage, animated:true, completion:nil)
     }
     
     @IBAction func signIn(sender: AnyObject) {
-        if(!username.text.isEmpty && !password.text.isEmpty) {
+        
+        if(username.text.isEmpty || password.text.isEmpty){
+            // If no username or password, prompt error
+            let alertController = UIAlertController(title: "Sign In Failed", message:
+                "The username and the password cannot be empty!", preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
+        } else{
+            // TODO: Check username and password
             if(username.text == "asdf" && password.text == "asdf"){
                 
                 let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
+                mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
                 self.presentViewController(mainPage, animated:true, completion:nil)
+                
             } else {
+                // If the username or password is not right, prompt error
                 let alertController = UIAlertController(title: "Sign In Failed", message:
                     "The username or the password is incorrect!", preferredStyle: UIAlertControllerStyle.Alert)
                 alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
                 
                 self.presentViewController(alertController, animated: true, completion: nil)
             }
-        } else {
-            let alertController = UIAlertController(title: "Sign In Failed", message:
-                "The username and the password cannot be empty!", preferredStyle: UIAlertControllerStyle.Alert)
-            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
-            
-            self.presentViewController(alertController, animated: true, completion: nil)
         }
     }
 
