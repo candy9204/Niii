@@ -3,7 +3,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Events-->
@@ -18,13 +17,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="kV0-zN-J40">
-                                <rect key="frame" x="16" y="84" width="568" height="467"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="9pv-A4-QxB" id="dh9-YN-LXk"/>
-                                    <outlet property="delegate" destination="9pv-A4-QxB" id="mu9-BI-BvN"/>
-                                </connections>
-                            </tableView>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HVN-hY-EiM">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="67"/>
                                 <subviews>
@@ -40,12 +32,18 @@
                                     <constraint firstAttribute="centerX" secondItem="VyH-rv-ntq" secondAttribute="centerX" id="Y98-sh-fvA"/>
                                 </constraints>
                             </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="kV0-zN-J40">
+                                <rect key="frame" x="0.0" y="67" width="600" height="484"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="9pv-A4-QxB" id="dh9-YN-LXk"/>
+                                    <outlet property="delegate" destination="9pv-A4-QxB" id="mu9-BI-BvN"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="HVN-hY-EiM" secondAttribute="width" id="D3A-u9-paS"/>
-                            <constraint firstItem="kV0-zN-J40" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leadingMargin" id="Hs7-J0-woN"/>
-                            <constraint firstItem="kV0-zN-J40" firstAttribute="trailing" secondItem="tsR-hK-woN" secondAttribute="trailingMargin" id="hyP-1e-uYj"/>
+                            <constraint firstAttribute="width" secondItem="kV0-zN-J40" secondAttribute="width" id="n1q-tg-nY9"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Events" image="events" id="goy-VD-yxg"/>
@@ -70,45 +68,39 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ocP-td-EfB">
-                                <rect key="frame" x="16" y="84" width="568" height="44"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </searchBar>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Sj-3T-pui">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="67"/>
+                                <subviews>
+                                    <searchBar contentMode="redraw" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ocP-td-EfB">
+                                        <rect key="frame" x="0.0" y="23" width="600" height="44"/>
+                                        <color key="barTintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </searchBar>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="ocP-td-EfB" firstAttribute="width" secondItem="8Sj-3T-pui" secondAttribute="width" id="L9c-uY-Jvx"/>
+                                    <constraint firstAttribute="centerX" secondItem="ocP-td-EfB" secondAttribute="centerX" id="Ro9-Gw-ucz"/>
+                                </constraints>
+                            </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="7OX-kl-IoV">
-                                <rect key="frame" x="16" y="154" width="568" height="397"/>
+                                <rect key="frame" x="0.0" y="67" width="600" height="484"/>
                                 <connections>
                                     <outlet property="dataSource" destination="8rJ-Kc-sve" id="8qw-no-Ekz"/>
                                     <outlet property="delegate" destination="8rJ-Kc-sve" id="8rJ-l7-dUf"/>
                                 </connections>
                             </tableView>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8Sj-3T-pui">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="67"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Search" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tbp-N9-bta">
-                                        <rect key="frame" x="264" y="23" width="74" height="36"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="centerX" secondItem="tbp-N9-bta" secondAttribute="centerX" constant="-1" id="w0m-vP-6qI"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="7OX-kl-IoV" firstAttribute="top" secondItem="ocP-td-EfB" secondAttribute="bottom" constant="26" id="2YN-fx-lX0"/>
-                            <constraint firstItem="ocP-td-EfB" firstAttribute="trailing" secondItem="QS5-Rx-YEW" secondAttribute="trailingMargin" id="ExY-jy-cRu"/>
-                            <constraint firstItem="ocP-td-EfB" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leadingMargin" id="HKY-0G-n4V"/>
                             <constraint firstItem="8Sj-3T-pui" firstAttribute="width" secondItem="QS5-Rx-YEW" secondAttribute="width" id="Ql2-DJ-ddt"/>
-                            <constraint firstItem="ocP-td-EfB" firstAttribute="width" secondItem="7OX-kl-IoV" secondAttribute="width" id="f3L-G7-3JO"/>
+                            <constraint firstItem="7OX-kl-IoV" firstAttribute="width" secondItem="QS5-Rx-YEW" secondAttribute="width" id="y5d-Sb-eAK"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Search" image="search" id="cPa-gy-q4n"/>
                     <connections>
                         <outlet property="resultsList" destination="7OX-kl-IoV" id="bzT-gh-aEo"/>
+                        <outlet property="searchBar" destination="ocP-td-EfB" id="DRm-ao-4DX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
@@ -184,7 +176,7 @@
                                 </state>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" red="0.23137254900000001" green="0.47843137250000001" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="XNp-yG-0hD" firstAttribute="leading" secondItem="9ez-s8-TF8" secondAttribute="trailing" constant="4" id="0E3-N5-jHq"/>
                             <constraint firstItem="XNp-yG-0hD" firstAttribute="height" secondItem="9ez-s8-TF8" secondAttribute="height" id="0QE-8J-eue"/>
@@ -305,12 +297,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="iAu-m9-iKf">
-                                <rect key="frame" x="16" y="90" width="568" height="461"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="iAu-m9-iKf">
+                                <rect key="frame" x="0.0" y="66" width="600" height="485"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="iAu-m9-iKf" secondAttribute="height" multiplier="349:200" id="oRa-tm-8Sa"/>
-                                </constraints>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <outlet property="dataSource" destination="tzV-IV-Uht" id="UbI-om-sp4"/>
                                     <outlet property="delegate" destination="tzV-IV-Uht" id="4w9-8S-KY0"/>
@@ -334,10 +324,8 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="iAu-m9-iKf" firstAttribute="leading" secondItem="0FS-5x-t0D" secondAttribute="leadingMargin" id="Xxy-cA-fGe"/>
-                            <constraint firstAttribute="centerX" secondItem="iAu-m9-iKf" secondAttribute="centerX" id="Yn5-rO-fhk"/>
+                            <constraint firstItem="iAu-m9-iKf" firstAttribute="width" secondItem="0FS-5x-t0D" secondAttribute="width" id="Vp8-b9-8cH"/>
                             <constraint firstItem="8Il-gZ-zLI" firstAttribute="width" secondItem="0FS-5x-t0D" secondAttribute="width" id="Zeg-AM-fWM"/>
-                            <constraint firstItem="iAu-m9-iKf" firstAttribute="trailing" secondItem="0FS-5x-t0D" secondAttribute="trailingMargin" id="bYE-xf-hZK"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Me" image="me" id="Od2-e9-SSe"/>
@@ -361,54 +349,51 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="h7c-7Q-5ss">
-                                <rect key="frame" x="16" y="138" width="568" height="413"/>
-                                <connections>
-                                    <outlet property="dataSource" destination="Khp-lg-ruT" id="nIQ-ZL-U8Y"/>
-                                    <outlet property="delegate" destination="Khp-lg-ruT" id="YYP-js-psi"/>
-                                </connections>
-                            </tableView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-xY-iDk">
-                                <rect key="frame" x="16" y="86" width="568" height="29"/>
-                                <segments>
-                                    <segment title="" image="chat"/>
-                                    <segment title="" image="friends"/>
-                                </segments>
-                                <connections>
-                                    <action selector="controllerIndexChanged:" destination="Khp-lg-ruT" eventType="valueChanged" id="h51-lG-7PQ"/>
-                                </connections>
-                            </segmentedControl>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Bpe-Gl-CUq">
-                                <rect key="frame" x="16" y="138" width="568" height="413"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Bpe-Gl-CUq">
+                                <rect key="frame" x="0.0" y="111" width="600" height="440"/>
                                 <connections>
                                     <outlet property="dataSource" destination="Khp-lg-ruT" id="TYz-nh-1nK"/>
                                     <outlet property="delegate" destination="Khp-lg-ruT" id="B2h-lp-geP"/>
                                 </connections>
                             </tableView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="h7c-7Q-5ss">
+                                <rect key="frame" x="0.0" y="111" width="600" height="440"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="Khp-lg-ruT" id="nIQ-ZL-U8Y"/>
+                                    <outlet property="delegate" destination="Khp-lg-ruT" id="YYP-js-psi"/>
+                                </connections>
+                            </tableView>
                             <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mch-BW-ogC">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="67"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Friends" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hmv-yA-XkG">
-                                        <rect key="frame" x="264" y="23" width="78" height="36"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="tuV-xY-iDk">
+                                        <rect key="frame" x="183" y="31" width="235" height="29"/>
+                                        <segments>
+                                            <segment title="Chat"/>
+                                            <segment title="Friends"/>
+                                        </segments>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <action selector="controllerIndexChanged:" destination="Khp-lg-ruT" eventType="valueChanged" id="h51-lG-7PQ"/>
+                                        </connections>
+                                    </segmentedControl>
                                 </subviews>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="centerX" secondItem="Hmv-yA-XkG" secondAttribute="centerX" constant="-3" id="7Uo-RM-JCc"/>
+                                    <constraint firstAttribute="centerX" secondItem="tuV-xY-iDk" secondAttribute="centerX" constant="-0.5" id="8Jw-1b-tYD"/>
                                 </constraints>
                             </view>
+                            <searchBar contentMode="redraw" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sFd-29-A7w">
+                                <rect key="frame" x="0.0" y="67" width="600" height="44"/>
+                                <color key="barTintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="h7c-7Q-5ss" firstAttribute="top" secondItem="tuV-xY-iDk" secondAttribute="bottom" constant="24" id="6TL-Yd-GDY"/>
-                            <constraint firstItem="tuV-xY-iDk" firstAttribute="trailing" secondItem="qqI-Aa-EFl" secondAttribute="trailingMargin" id="H7p-q2-GvW"/>
-                            <constraint firstItem="tuV-xY-iDk" firstAttribute="width" secondItem="h7c-7Q-5ss" secondAttribute="width" id="S98-Lo-yTX"/>
-                            <constraint firstItem="Bpe-Gl-CUq" firstAttribute="top" secondItem="tuV-xY-iDk" secondAttribute="bottom" constant="24" id="TGi-hY-5dR"/>
-                            <constraint firstItem="tuV-xY-iDk" firstAttribute="width" secondItem="Bpe-Gl-CUq" secondAttribute="width" id="fte-q2-Ooi"/>
-                            <constraint firstItem="tuV-xY-iDk" firstAttribute="leading" secondItem="qqI-Aa-EFl" secondAttribute="leadingMargin" id="iyB-Qv-oS3"/>
+                            <constraint firstItem="Bpe-Gl-CUq" firstAttribute="width" secondItem="qqI-Aa-EFl" secondAttribute="width" id="GWK-ON-xAF"/>
+                            <constraint firstItem="h7c-7Q-5ss" firstAttribute="width" secondItem="qqI-Aa-EFl" secondAttribute="width" id="Uxv-nD-Idk"/>
+                            <constraint firstItem="sFd-29-A7w" firstAttribute="width" secondItem="qqI-Aa-EFl" secondAttribute="width" id="m0H-4s-x8Y"/>
                             <constraint firstItem="mch-BW-ogC" firstAttribute="width" secondItem="qqI-Aa-EFl" secondAttribute="width" id="mUR-Jg-vef"/>
                         </constraints>
                     </view>
@@ -417,6 +402,7 @@
                         <outlet property="chatList" destination="h7c-7Q-5ss" id="6gX-Rv-LyM"/>
                         <outlet property="controller" destination="tuV-xY-iDk" id="DY2-a7-EJZ"/>
                         <outlet property="friendsList" destination="Bpe-Gl-CUq" id="I7S-mG-aaG"/>
+                        <outlet property="searchBar" destination="sFd-29-A7w" id="7T8-5x-4gP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GvT-Y0-RQ0" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -426,7 +412,6 @@
     </scenes>
     <resources>
         <image name="button" width="297" height="207"/>
-        <image name="chat" width="32" height="32"/>
         <image name="events" width="32" height="32"/>
         <image name="friends" width="32" height="32"/>
         <image name="me" width="32" height="32"/>

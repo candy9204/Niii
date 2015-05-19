@@ -11,6 +11,7 @@ import AVFoundation
 
 class SingleEventController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    var parentController = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +22,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     @IBAction func BackToEvents(sender: AnyObject) {
         let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
         mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        mainPage.selectedIndex = parentController;
         self.presentViewController(mainPage, animated:true, completion:nil)
     }
     

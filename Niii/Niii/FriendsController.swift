@@ -10,6 +10,7 @@ import UIKit
 
 class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var controller: UISegmentedControl!
     @IBOutlet weak var chatList: UITableView!
     @IBOutlet weak var friendsList: UITableView!
@@ -20,9 +21,14 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.friendsList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.friendsList.rowHeight = 50.0
         self.chatList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.chatList.rowHeight = 50.0
         self.chatList.hidden = false
         self.friendsList.hidden = true
+        self.searchBar.layer.borderWidth = 1
+        self.searchBar.layer.borderColor = UIColorFromHex.color(0x0075FF).CGColor
+        self.searchBar.layer.backgroundColor = UIColorFromHex.color(0x0075FF).CGColor
         self.friends = ["Li Ding", "Yilin Xiong", "Mengdi Zhang", "Di Li"]
         self.chat = ["Yilin Xiong", "Li Ding"]
     }
@@ -42,15 +48,71 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell:UITableViewCell = self.friendsList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+        var subView:UIView!
         
         if(tableView == self.friendsList){
-            cell.textLabel?.text = self.friends[indexPath.row]
-            cell.imageView?.image = UIImage(named: "me.png")
+            let th = self.friendsList.rowHeight;
+            let tw = self.friendsList.bounds.width;
+            
+            // Subview
+            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+            subView.backgroundColor = UIColor.whiteColor()
+            subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
+            subView.layer.shadowOffset = CGSizeMake(0, 3.0)
+            subView.layer.shadowOpacity = 0.2
+            
+            let sh = subView.bounds.height
+            let sw = subView.bounds.width
+            
+            // Image
+            let imageName = "me.png"
+            let image = UIImage(named: imageName)
+            let imageView = UIImageView(image: image!)
+            imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
+            subView.addSubview(imageView)
+            
+            // label
+            let label = UILabel();
+            label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
+            label.text = self.friends[indexPath.row]
+            subView.addSubview(label)
+            
+            // Cell
             cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell.backgroundColor = UIColor.clearColor();
+            cell.contentView.addSubview(subView)
+            
         } else{
-            cell.textLabel?.text = self.chat[indexPath.row]
-            cell.imageView?.image = UIImage(named: "me.png")
+            let th = self.chatList.rowHeight;
+            let tw = self.chatList.bounds.width;
+            
+            // Subview
+            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+            subView.backgroundColor = UIColor.whiteColor()
+            subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
+            subView.layer.shadowOffset = CGSizeMake(0, 3.0)
+            subView.layer.shadowOpacity = 0.2
+            
+            let sh = subView.bounds.height
+            let sw = subView.bounds.width
+            
+            // Image
+            let imageName = "me.png"
+            let image = UIImage(named: imageName)
+            let imageView = UIImageView(image: image!)
+            imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
+            subView.addSubview(imageView)
+            
+            // label
+            let label = UILabel();
+            label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
+            label.text = self.chat[indexPath.row]
+            subView.addSubview(label)
+            
+            // Cell
             cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell.backgroundColor = UIColor.clearColor();
+            cell.contentView.addSubview(subView)
         }
     
         return cell
@@ -67,5 +129,20 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
             default:
                 break;
         }
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+//        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEvent") as! UIViewController
+//        singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+//        self.presentViewController(singleEvent, animated:true, completion:nil)
+    }
+    
+    func setSelected(selected: Bool, animated: Bool) {
+        self.setSelected(selected, animated: animated)
+    }
+    
+    func setHightlighted(highlighted: Bool, animated: Bool) {
+        self.setHightlighted(highlighted, animated: animated)
     }
 }
