@@ -203,7 +203,7 @@ def viewPictures(request, eventid):
 	res = []
 	for p in list(pictures):
 		info = {}
-		info['id'] = info['id']
+		info['id'] = p.id
 		info['user'] = {
 			'id': p.user.pk,
 			'username': p.user.username,
@@ -235,7 +235,7 @@ def addPicture(request, eventid):
 	uploadedFile = request.FILES['image']
 	try:
 		pid = Picture.objects.latest('id') + 1
-	except DoesNotExist:
+	except Picture.DoesNotExist:
 		pid = 1
 	filename = str(eventid) + '-' + str(pid) + '.' + uploadedFile.name.split('.')[-1]
 	picture = Picture(user = user, event = event, time = datetime.datetime.now())
