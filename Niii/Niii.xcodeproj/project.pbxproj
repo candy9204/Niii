@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		259CD7101B0AF39900CD34E7 /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259CD70F1B0AF39900CD34E7 /* SignUpController.swift */; };
 		25E1F2F71ADDDBBE008FD067 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E1F2F61ADDDBBE008FD067 /* AppDelegate.swift */; };
 		25E1F2F91ADDDBBE008FD067 /* EventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E1F2F81ADDDBBE008FD067 /* EventsController.swift */; };
 		25E1F2FE1ADDDBBE008FD067 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25E1F2FC1ADDDBBE008FD067 /* Main.storyboard */; };
@@ -33,6 +34,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		259CD70F1B0AF39900CD34E7 /* SignUpController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
 		25E1F2F11ADDDBBE008FD067 /* Niii.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Niii.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25E1F2F51ADDDBBE008FD067 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		25E1F2F61ADDDBBE008FD067 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 				25E1F3011ADDDBBE008FD067 /* LaunchScreen.xib */,
 				25E1F2F41ADDDBBE008FD067 /* Supporting Files */,
 				25E1F3201ADF4052008FD067 /* SignInController.swift */,
+				259CD70F1B0AF39900CD34E7 /* SignUpController.swift */,
 				25E6C7B31B093F2800451C10 /* UIColorFromHex.swift */,
 				25E1F3221ADF4FBC008FD067 /* GradientColor.swift */,
 				25E1F3561ADF7669008FD067 /* Images.xcassets */,
@@ -238,6 +241,7 @@
 				25E1F31D1ADDFEA7008FD067 /* SearchController.swift in Sources */,
 				25E1F2F71ADDDBBE008FD067 /* AppDelegate.swift in Sources */,
 				25E6C7B41B093F2800451C10 /* UIColorFromHex.swift in Sources */,
+				259CD7101B0AF39900CD34E7 /* SignUpController.swift in Sources */,
 				25E1F3211ADF4052008FD067 /* SignInController.swift in Sources */,
 				25E1F2F91ADDDBBE008FD067 /* EventsController.swift in Sources */,
 				25E6C7B21AF2873100451C10 /* SingleEventController.swift in Sources */,

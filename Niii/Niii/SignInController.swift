@@ -13,20 +13,25 @@ class SignInController: UIViewController {
 
     @IBOutlet weak var username: UITextField!
     @IBOutlet weak var password: UITextField!
-    @IBOutlet weak var loginView: UIView!
+    @IBOutlet weak var signInView: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // initAppearance()
         
-        self.loginView.layer.cornerRadius = self.loginView.frame.size.width / 8
-        self.loginView.clipsToBounds = true
+        self.signInView.layer.cornerRadius = self.signInView.frame.size.width / 8
+        self.signInView.clipsToBounds = true
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func signUp(sender: AnyObject) {
+        let signUpPage = self.storyboard?.instantiateViewControllerWithIdentifier("signUpPage") as! UIViewController
+        self.presentViewController(signUpPage, animated:true, completion:nil)
     }
     
     @IBAction func signIn(sender: AnyObject) {
@@ -57,5 +62,4 @@ class SignInController: UIViewController {
         background.frame = self.view.bounds
         self.view.layer.insertSublayer(background, atIndex: 0)
     }
-    
 }
