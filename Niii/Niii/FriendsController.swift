@@ -133,9 +133,18 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-//        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEvent") as! UIViewController
-//        singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-//        self.presentViewController(singleEvent, animated:true, completion:nil)
+        if(tableView == self.friendsList){
+            let singleFriend = self.storyboard?.instantiateViewControllerWithIdentifier("singleFriendPage") as! SingleFriendController
+            singleFriend.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+            singleFriend.parentController = 2
+            self.presentViewController(singleFriend, animated:true, completion:nil)
+        }
+        else{
+            let chat = self.storyboard?.instantiateViewControllerWithIdentifier("chatPage") as! ChatController
+            chat.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+            chat.parentController = 2
+            self.presentViewController(chat, animated:true, completion:nil)
+        }
     }
     
     func setSelected(selected: Bool, animated: Bool) {

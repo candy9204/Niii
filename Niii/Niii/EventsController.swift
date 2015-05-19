@@ -71,7 +71,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEvent") as! SingleEventController
+        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEventPage") as! SingleEventController
         singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         singleEvent.parentController = 0
         self.presentViewController(singleEvent, animated:true, completion:nil)

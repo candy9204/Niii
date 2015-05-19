@@ -1,15 +1,15 @@
 //
-//  SingleEventController.swift
+//  ChatController.swift
 //  Niii
 //
-//  Created by LinShengyi on 4/30/15.
+//  Created by LinShengyi on 5/19/15.
 //  Copyright (c) 2015 LinShengyi. All rights reserved.
 //
 
 import UIKit
 import AVFoundation
 
-class SingleEventController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ChatController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var parentController = 0
     
@@ -18,11 +18,14 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         // Do any additional setup after loading the view, typically from a nib.
     }
     
-    
-    @IBAction func BackToEvents(sender: AnyObject) {
+    @IBAction func backToFriends(sender: AnyObject) {
         let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
         mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         mainPage.selectedIndex = parentController;
+        let friendsController = mainPage.selectedViewController as! FriendsController
+        friendsController.chatList.hidden = false
+        friendsController.friendsList.hidden = true
+        friendsController.controller.selectedSegmentIndex = 0
         self.presentViewController(mainPage, animated:true, completion:nil)
     }
     

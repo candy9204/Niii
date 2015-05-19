@@ -19,7 +19,7 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.settingList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        self.settings = ["Name: Shengyi Lin", "Sex: Female", "Age: 23", "Favourite", "History"]
+        self.settings = ["Name: Shengyi Lin", "Sex: Female", "Age: 23", "Favourite", "History", "Settings"]
     }
     
     override func didReceiveMemoryWarning() {
@@ -124,5 +124,14 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     func setHightlighted(highlighted: Bool, animated: Bool) {
         self.setHightlighted(highlighted, animated: animated)
+    }
+    
+    @IBAction func signOut(sender: AnyObject) {
+        // TODO: Distory local metadata
+        
+        // Then go back to sign in page
+        let signInPage = self.storyboard?.instantiateViewControllerWithIdentifier("signInPage") as! UIViewController
+        signInPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        self.presentViewController(signInPage, animated:true, completion:nil)
     }
 }
