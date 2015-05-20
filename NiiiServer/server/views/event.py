@@ -64,6 +64,29 @@ def viewCategories(request):
 	categories = Category.objects.all().values('id', 'name')
 	return JsonResponse({'categories': list(categories)})
 
+def searchEvents(request):
+	res = []
+	searchString = ""
+	try:
+		searchString = request.POST['searchString']
+	except:
+		res['success'] = False
+		res['message'] = 'Invalid Request'
+	words = searchString.split()
+	events = Event.objects.all()
+	for event in events:
+		names = event.name.split()
+		descript = event.description.split()
+		searchField = names + descript
+		if set(words) <= set(searchField):
+			info = {}
+			info['id'] = event.id
+			info['name'] = event.name
+			info['time'] = event.time
+			info['place'] = event.place
+			res.append(info)
+	return JsonResponse({'searchedEvents': res})
+
 def viewEventsByCat(request, categoryid):
 	res = []
 	events = Event.objects.filter(category = categoryid).values('id', 'name', 'time', 'place')
