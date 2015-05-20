@@ -8,5 +8,18 @@
 
 import Foundation
 struct User {
-    static var UID = 0
+    static var UID: String! = "0"
+    static var nickname: String! = ""
+    static var rating: String = "0"
+    static var gender: String = ""
+    static var photoURL: String?
+    static var updated = false
+    
+    static func reset() {
+        UID = "0"
+        nickname = ""
+        rating = "0"
+        gender = ""
+        updated = false
+    }
 }
