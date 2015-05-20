@@ -49,7 +49,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        for _ in 1...(event.comments.count+7){
+        for var i = flags.count; i < (event.comments.count+7); i++ {
             self.flags.append(false)
         }
         return event.comments.count + 7;
@@ -57,12 +57,13 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
-        if(!self.flags[indexPath.row]){
+        if !self.flags[indexPath.row] {
             self.flags[indexPath.row] = true
+            
             var subView:UIView!
             let tw = self.eventInfo.bounds.width
             
-            if(indexPath.row == 0){
+            if indexPath.row == 0 {
                 let th = infoRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
@@ -89,21 +90,17 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 // rating
                 let subw = min(sw/20.0, eh)
-                if(event.rating > 0){
-                    for i in 0...(event.rating-1) {
-                        let image = UIImage(named: "starY.png")
-                        let imageView = UIImageView(image: image)
-                        imageView.frame = CGRect(x: 20+CGFloat(i)*subw, y: 10+eh, width: subw, height: subw)
-                        subView.addSubview(imageView)
-                    }
+                for var i = 0; i < event.rating; i++ {
+                    let image = UIImage(named: "starY.png")
+                    let imageView = UIImageView(image: image)
+                    imageView.frame = CGRect(x: 20+CGFloat(i)*subw, y: 10+eh, width: subw, height: subw)
+                    subView.addSubview(imageView)
                 }
-                if(event.rating < 4){
-                    for i in event.rating...4{
-                        let image = UIImage(named: "starN.png")
-                        let imageView = UIImageView(image: image)
-                        imageView.frame = CGRect(x: 20+CGFloat(i)*subw, y: 10+eh, width: subw, height: subw)
-                        subView.addSubview(imageView)
-                    }
+                for var i = event.rating; i < 5; i++ {
+                    let image = UIImage(named: "starN.png")
+                    let imageView = UIImageView(image: image)
+                    imageView.frame = CGRect(x: 20+CGFloat(i)*subw, y: 10+eh, width: subw, height: subw)
+                    subView.addSubview(imageView)
                 }
                 
                 let button = UIButton()
@@ -135,7 +132,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 
                 
-            } else if(indexPath.row == 1){
+            } else if indexPath.row == 1 {
                 let th = titleRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
@@ -153,7 +150,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 label.font = UIFont(name: label.font.fontName, size: 20)
                 subView.addSubview(label)
                 
-            } else if(indexPath.row == 2){
+            } else if indexPath.row == 2 {
                 let th = descriptionRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
@@ -172,7 +169,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 label.lineBreakMode = NSLineBreakMode.ByWordWrapping
                 subView.addSubview(label)
                 
-            } else if(indexPath.row == 3){
+            } else if indexPath.row == 3 {
                 let th = titleRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
@@ -190,7 +187,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 label.font = UIFont(name: label.font.fontName, size: 20)
                 subView.addSubview(label)
                 
-            } else if(indexPath.row == 4){
+            } else if indexPath.row == 4 {
                 let th = participantsRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
@@ -209,7 +206,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     subView.addSubview(imageView)
                 }
                 
-            } else if(indexPath.row == 5){
+            } else if indexPath.row == 5 {
                 let th = activityRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
@@ -242,7 +239,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 subView.addSubview(like)
                 subView.addSubview(join)
                 
-            } else if(indexPath.row == 6){
+            } else if indexPath.row == 6 {
                 let th = titleRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
@@ -273,7 +270,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 subView.addSubview(add)
                 subView.addSubview(label)
                 
-            } else{
+            } else {
                 let th = commentRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
@@ -431,21 +428,21 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     
     // Setting the height of the rows
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if(indexPath.row == 0){
+        if indexPath.row == 0 {
             return infoRowHeight
-        } else if(indexPath.row == 1){
+        } else if indexPath.row == 1 {
             return titleRowHeight
-        } else if(indexPath.row == 2){
+        } else if indexPath.row == 2 {
             return descriptionRowHeight
-        } else if(indexPath.row == 3){
+        } else if indexPath.row == 3 {
             return titleRowHeight
-        } else if(indexPath.row == 4){
+        } else if indexPath.row == 4 {
             return participantsRowHeight
-        } else if(indexPath.row == 5){
+        } else if indexPath.row == 5 {
             return activityRowHeight
-        } else if(indexPath.row == 6){
+        } else if indexPath.row == 6 {
             return titleRowHeight
-        } else{
+        } else {
             return commentRowHeight
         }
     }

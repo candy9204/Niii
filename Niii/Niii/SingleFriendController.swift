@@ -23,8 +23,8 @@ class SingleFriendController: UIViewController, UITableViewDelegate, UITableView
         mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         mainPage.selectedIndex = parentController;
         let friendsController = mainPage.selectedViewController as! FriendsController
-        friendsController.chatList.hidden = true
-        friendsController.friendsList.hidden = false
+        friendsController.followingList.hidden = true
+        friendsController.followersList.hidden = false
         friendsController.controller.selectedSegmentIndex = 1
         self.presentViewController(mainPage, animated:true, completion:nil)
     }
