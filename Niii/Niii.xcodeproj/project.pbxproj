@@ -11,6 +11,7 @@
 		259CD7121B0BC2D800CD34E7 /* SingleFriendController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259CD7111B0BC2D800CD34E7 /* SingleFriendController.swift */; };
 		259CD7141B0BC93900CD34E7 /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259CD7131B0BC93900CD34E7 /* ChatController.swift */; };
 		259CD7161B0BD9C200CD34E7 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259CD7151B0BD9C200CD34E7 /* Event.swift */; };
+		25C06A271B0D11CA0014D75F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C06A261B0D11CA0014D75F /* User.swift */; };
 		25E1F2F71ADDDBBE008FD067 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E1F2F61ADDDBBE008FD067 /* AppDelegate.swift */; };
 		25E1F2F91ADDDBBE008FD067 /* EventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E1F2F81ADDDBBE008FD067 /* EventsController.swift */; };
 		25E1F2FE1ADDDBBE008FD067 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25E1F2FC1ADDDBBE008FD067 /* Main.storyboard */; };
@@ -41,6 +42,7 @@
 		259CD7111B0BC2D800CD34E7 /* SingleFriendController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleFriendController.swift; sourceTree = "<group>"; };
 		259CD7131B0BC93900CD34E7 /* ChatController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
 		259CD7151B0BD9C200CD34E7 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		25C06A261B0D11CA0014D75F /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		25E1F2F11ADDDBBE008FD067 /* Niii.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Niii.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25E1F2F51ADDDBBE008FD067 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		25E1F2F61ADDDBBE008FD067 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 		25E1F2F31ADDDBBE008FD067 /* Niii */ = {
 			isa = PBXGroup;
 			children = (
+				25C06A261B0D11CA0014D75F /* User.swift */,
 				25E1F2F81ADDDBBE008FD067 /* EventsController.swift */,
 				25E6C7B11AF2873100451C10 /* SingleEventController.swift */,
 				25E1F3181ADDF6BB008FD067 /* FriendsController.swift */,
@@ -251,6 +254,7 @@
 				25E1F2F71ADDDBBE008FD067 /* AppDelegate.swift in Sources */,
 				25E6C7B41B093F2800451C10 /* UIColorFromHex.swift in Sources */,
 				259CD7121B0BC2D800CD34E7 /* SingleFriendController.swift in Sources */,
+				25C06A271B0D11CA0014D75F /* User.swift in Sources */,
 				259CD7101B0AF39900CD34E7 /* SignUpController.swift in Sources */,
 				25E1F3211ADF4052008FD067 /* SignInController.swift in Sources */,
 				25E1F2F91ADDDBBE008FD067 /* EventsController.swift in Sources */,
