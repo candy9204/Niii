@@ -12,6 +12,7 @@ import AVFoundation
 class SingleFriendController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var parentController = 0
+    var parentTab = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,9 +24,9 @@ class SingleFriendController: UIViewController, UITableViewDelegate, UITableView
         mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         mainPage.selectedIndex = parentController;
         let friendsController = mainPage.selectedViewController as! FriendsController
-        friendsController.followingList.hidden = true
-        friendsController.followersList.hidden = false
-        friendsController.controller.selectedSegmentIndex = 1
+        friendsController.followingList.hidden = (parentTab == 1)
+        friendsController.followersList.hidden = (parentTab == 0)
+        friendsController.controller.selectedSegmentIndex = parentTab
         self.presentViewController(mainPage, animated:true, completion:nil)
     }
     

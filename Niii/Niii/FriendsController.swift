@@ -160,14 +160,16 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
         if tableView == self.followersList {
-            let singleFriend = self.storyboard?.instantiateViewControllerWithIdentifier("singleFriendPage") as! SingleFriendController
-            singleFriend.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-            singleFriend.parentController = 2
-            self.presentViewController(singleFriend, animated:true, completion:nil)
+            let followers = self.storyboard?.instantiateViewControllerWithIdentifier("singleFriendPage") as! SingleFriendController
+            followers.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+            followers.parentController = 2
+            followers.parentTab = 1
+            self.presentViewController(followers, animated:true, completion:nil)
         } else {
             let following = self.storyboard?.instantiateViewControllerWithIdentifier("singleFriendPage") as! SingleFriendController
             following.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
             following.parentController = 2
+            following.parentTab = 0
             self.presentViewController(following, animated:true, completion:nil)
         }
     }
