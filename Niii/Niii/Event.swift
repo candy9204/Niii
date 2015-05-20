@@ -16,7 +16,8 @@ struct Event {
     var followers:[UIImage]
     var comments:[[String]]
     var rating:Int
-    init(eventName:String = "", holderName:String = "", address:String = "", date:String = "", followers:[UIImage] = [UIImage](), comments:[[String]] = [[String]](), rating:Int = 5){
+    var description:String
+    init(eventName:String = "", holderName:String = "", address:String = "", date:String = "", followers:[UIImage] = [UIImage](), comments:[[String]] = [[String]](), rating:Int = 5, description:String = ""){
         self.eventName = eventName
         self.holderName = holderName
         self.address = address
@@ -24,5 +25,6 @@ struct Event {
         self.followers = followers
         self.comments = comments
         self.rating = rating
+        self.description = description
     }
 }
