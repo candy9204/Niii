@@ -27,6 +27,7 @@ def login(request):
 				res['message'] = 'Inactive User'
 			else:
 				res['success'] = True
+				res['id'] = user.pk
 		else:
 			res['success'] = False
 			res['message'] = 'Incorrect username or password'

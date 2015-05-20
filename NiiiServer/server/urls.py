@@ -19,10 +19,12 @@ urlpatterns = [
     url(r'^user/(?P<userid>[0-9]+)/participations/$', user.viewParticipations, name = 'viewparticipations'),
     url(r'^user/(?P<userid>[0-9]+)/favorites/$', user.viewFavorites, name = 'viewfavorites'),
     url(r'^user/(?P<userid>[0-9]+)/rate/$', user.rate, name = 'rate'),
+    url(r'^user/(?P<userid>[0-9]+)/recommend/$', user.recommend, name = 'recommend'),
 
     url(r'^event/(?P<eventid>[0-9]+)/$', event.viewEvent, name = 'viewevent'),
     url(r'^event/add/$', event.addEvent, name = 'addevent'),
     url(r'^event/categories/$', event.viewCategories, name = 'viewcategories'),
+    url(r'^event/search/$', event.searchEvent, name = 'searchEvent'),
     url(r'^event/(?P<eventid>[0-9]+)/join/$', event.joinEvent, name = 'joinevent'),
     url(r'^event/(?P<eventid>[0-9]+)/favorite/$', event.favoriteEvent, name = 'favoriteevent'),
     url(r'^event/(?P<eventid>[0-9]+)/unjoin/$', event.unjoinEvent, name = 'unjoinevent'),
