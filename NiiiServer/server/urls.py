@@ -35,4 +35,6 @@ urlpatterns = [
     url(r'^event/(?P<eventid>[0-9]+)/pictures/$', event.viewPictures, name = 'viewpictures'),
     url(r'^event/(?P<eventid>[0-9]+)/pictures/add/$', event.addPicture, name = 'addpicture'),
 
+    url(r'^category/(?P<categoryid>[0-9]+)/$', event.viewEventsByCat, name = 'vieweventsbycat'),
+
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -64,6 +64,18 @@ def viewCategories(request):
 	categories = Category.objects.all().values('id', 'name')
 	return JsonResponse({'categories': list(categories)})
 
+def viewEventsByCat(request, categoryid):
+	res = []
+	events = Event.objects.filter(category = categoryid).values('id', 'name', 'time', 'place')
+	for e in events:
+		info = {}
+		info['id'] = e['id']
+		info['name'] = e['name']
+		info['time'] = e['time']
+		info['place'] = e['place']
+		res.append(info)
+	return JsonResponse({'recommendations': res})
+
 def joinEvent(request, eventid):
 	# GET for joining
 	event = Event.objects.get(id = eventid)
