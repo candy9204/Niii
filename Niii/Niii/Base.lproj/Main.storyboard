@@ -476,7 +476,7 @@
                                     <constraint firstAttribute="width" secondItem="V1K-i3-7nd" secondAttribute="height" multiplier="301:335" id="zlb-0w-LAo"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Age:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KXP-AS-dao">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Nickname:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KXP-AS-dao">
                                 <rect key="frame" x="180" y="429" width="89" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -605,8 +605,8 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="LEp-2Y-KbG" userLabel="SignUp"/>
                     <connections>
-                        <outlet property="age" destination="3Uh-hr-XTO" id="bkG-gX-kwD"/>
                         <outlet property="confirm" destination="DVJ-k9-oYP" id="v6D-Jj-JXw"/>
+                        <outlet property="nickname" destination="3Uh-hr-XTO" id="u4v-Cb-HZm"/>
                         <outlet property="password" destination="uIF-b6-x3G" id="GU6-zP-sTl"/>
                         <outlet property="sex" destination="IFu-JH-8o6" id="xG7-ZV-zUo"/>
                         <outlet property="signUpView" destination="V1K-i3-7nd" id="hKQ-Gv-Npe"/>

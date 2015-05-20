@@ -15,7 +15,7 @@ class SignUpController: UIViewController {
     @IBOutlet weak var password: UITextField!
     @IBOutlet weak var confirm: UITextField!
     @IBOutlet weak var sex: UITextField!
-    @IBOutlet weak var age: UITextField!
+    @IBOutlet weak var nickname: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,7 +123,7 @@ class SignUpController: UIViewController {
     func update(){
         var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/user/" + User.UID + "/profile/update/")!)
         request.HTTPMethod = "POST"
-        let postString = "gender=" + sex.text + "&nickname=" + age.text
+        let postString = "gender=" + sex.text + "&nickname=" + nickname.text
         request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
         
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
@@ -145,7 +145,7 @@ class SignUpController: UIViewController {
             
             println(jsonResult)
             
-            User.nickname = self.age.text
+            User.nickname = self.nickname.text
             User.gender = self.sex.text
             
         }
