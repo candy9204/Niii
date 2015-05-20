@@ -37,18 +37,16 @@ class SignInController: UIViewController {
     
     @IBAction func signIn(sender: AnyObject) {
         
-//        if(username.text.isEmpty || password.text.isEmpty){
-//            // If no username or password, prompt error
-//            let alertController = UIAlertController(title: "Sign In Failed", message:
-//                "The username and the password cannot be empty!", preferredStyle: UIAlertControllerStyle.Alert)
-//            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
-//            
-//            self.presentViewController(alertController, animated: true, completion: nil)
-//        } else{
-            //loginWithHTTP()
-            let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
-            self.presentViewController(mainPage, animated:true, completion:nil)
-//        }
+        if(username.text.isEmpty || password.text.isEmpty){
+            // If no username or password, prompt error
+            let alertController = UIAlertController(title: "Sign In Failed", message:
+                "The username and the password cannot be empty!", preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
+        } else{
+            loginWithHTTP()
+        }
     }
     
     func loginWithHTTP() {
@@ -84,7 +82,8 @@ class SignInController: UIViewController {
                         
                         self.presentViewController(alertController, animated: true, completion: nil)
                     } else {
-                        User.UID = jsonResult["id"] as! Int
+                        let id = jsonResult["id"] as! Int
+                        User.UID = String(id)
                         let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
                         self.presentViewController(mainPage, animated:true, completion:nil)
                     }

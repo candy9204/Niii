@@ -11,6 +11,9 @@ import UIKit
 class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var settingList: UITableView!
+    var label1 = UILabel();
+    var label2 = UILabel();
+    var label3 = UILabel();
     var settings = [String]()
     var firstRowHeight : CGFloat = 140.0
     var otherRowHeight : CGFloat = 50.0
@@ -19,9 +22,66 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.settingList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        self.settings = ["Name: Shengyi Lin", "Sex: Female", "Age: 23", "Favourite", "History", "Settings"]
+        println("Count")
+        self.settings = ["Name: " + User.nickname, "Sex: " + User.gender, "Rating: " + User.rating, "Favourite", "History", "Settings"]
+        if !User.updated {
+            updateWithHTTP()
+        }
     }
     
+    func updateWithHTTP(){
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/user/" + User.UID + "/profile/")!)
+        request.HTTPMethod = "POST"
+        var flag = true
+        
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            data, response, error in
+            
+            if error != nil {
+                println("error=\(error)")
+                flag = false
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if (err != nil) {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                flag = false
+                return
+            }
+            
+            println(jsonResult)
+            
+            let nickname = jsonResult["nickname"] as? String
+            let g = jsonResult["gender"] as? Int
+            let gender: String
+            if g == 1 {
+                gender = "male"
+            } else {
+                gender = "female"
+            }
+            let rating = jsonResult["rating"] as? String
+            println(nickname)
+            dispatch_async(dispatch_get_main_queue(), {
+                User.nickname = nickname
+                User.gender = gender as String!
+                if rating != nil {
+                    User.rating = rating as String!
+                }
+                User.updated = true
+                self.label1.text = "Name: " + User.nickname
+                self.label2.text = "Sex: " + User.gender
+                self.label3.text = "Rating: " + User.rating
+                self.label1.reloadInputViews()
+                self.label2.reloadInputViews()
+                self.label3.reloadInputViews()
+            })
+        }
+        task.resume()
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -68,13 +128,10 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
             
             // label
             let eh = (sh - 20) / 3
-            let label1 = UILabel();
             label1.frame = CGRect(x: sh+30, y: 5, width: sw-sh-60, height: eh)
             label1.text = self.settings[0]
-            let label2 = UILabel();
             label2.frame = CGRect(x: sh+30, y: 10+eh, width: sw-sh-60, height: eh)
             label2.text = self.settings[1]
-            let label3 = UILabel();
             label3.frame = CGRect(x: sh+30, y: 15+2*eh, width: sw-sh-60, height: eh)
             label3.text = self.settings[2]
             subView.addSubview(label1)
@@ -128,7 +185,7 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     @IBAction func signOut(sender: AnyObject) {
         // TODO: Distory local metadata
-        
+        User.reset()
         // Then go back to sign in page
         let signInPage = self.storyboard?.instantiateViewControllerWithIdentifier("signInPage") as! UIViewController
         signInPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
