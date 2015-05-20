@@ -199,7 +199,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 let sh = subView.bounds.height
                 let sw = subView.bounds.width
                 
-                for i in 0...(event.followers.count-1){
+                for var i = 0; i < event.followers.count; i++ {
                     let image = event.followers[i]
                     let imageView = UIImageView(image: image)
                     imageView.frame = CGRect(x: 20+CGFloat(i)*sh, y: 10, width: sh-20, height: sh-20)
@@ -450,17 +450,68 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     func getInformationFromDatabase(){
         
         // TODO: Get information from database
-        event.eventName = "Go Climbing!"
-        event.holderName = "Shengyi Lin"
-        event.address = "New York"
-        event.date = "June 1, 2015"
-        event.followers.append(UIImage(named:"head.jpg")!)
-        event.followers.append(UIImage(named:"head.jpg")!)
-        event.comments.append(["Yilin", "11:00am April 29, 2015", "Interesting!!!"])
-        event.comments.append(["Mengdi", "12:00pm April 30, 2015", "Yes!!! Very interesting!!!"])
-        event.rating = 5
-        event.description = "Let's go climbing together!!! HAHAHAHAHAHAHAHAHA!!!"
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/event/" + User.EventID + "/")!)
+        request.HTTPMethod = "POST"
+        var flag = true
         
-        titleLabel.text = event.eventName
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            data, response, error in
+            
+            if error != nil {
+                println("error=\(error)")
+                flag = false
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                flag = false
+                return
+            }
+            
+            println(jsonResult)
+            
+            let eventName = jsonResult["name"] as! String
+            let address = jsonResult["place"] as! String
+            let date = jsonResult["time"] as! String
+            let description = jsonResult["description"] as! String
+            let organizor = jsonResult["organizor"] as! NSDictionary
+            let holderName = organizor["nickname"] as! String
+            let pCount = jsonResult["participants"] as! Int
+            var r = organizor["rating"] as? Int
+            var rating = 0
+            if r != nil {
+                rating = r!
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                self.event.eventName = eventName
+                self.event.holderName = holderName
+                self.event.address = address
+                self.event.date = "June 1, 2015"
+                for _ in 1...pCount {
+                    self.event.followers.append(UIImage(named:"head.jpg")!)
+                }
+                
+                self.event.comments.append(["Yilin", "11:00am April 29, 2015", "Interesting!!!"])
+                self.event.comments.append(["Mengdi", "12:00pm April 30, 2015", "Yes!!! Very interesting!!!"])
+                self.event.rating = rating
+                self.event.description = description
+                self.titleLabel.text = self.event.eventName
+                
+                for var i = 0; i < self.flags.count; i++ {
+                    self.flags[i] = false
+                }
+                self.eventInfo.reloadData()
+                self.titleLabel.reloadInputViews()
+                
+            })
+        }
+        task.resume()
+        
     }
 }

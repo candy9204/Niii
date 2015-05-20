@@ -14,6 +14,7 @@ struct User {
     static var gender: String = ""
     static var photoURL: String?
     static var updated = false
+    static var EventID: String! = "4"
     
     static func reset() {
         UID = "0"
