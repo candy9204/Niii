@@ -11,7 +11,7 @@ from django.db.models import Avg
 import dateutil.parser
 import datetime
 
-from server.models import Event, Category, Comment, Picture, Rating
+from server.models import Event, Category, Comment, Picture, Rating, Profile
 
 # Create your views here.
 def viewEvent(request, eventid):
@@ -26,8 +26,15 @@ def viewEvent(request, eventid):
 	}
 	res['time'] = res['time'].isoformat()
 	res['category'] = event.category.name if event.category else ''
-	res['participants'] = event.participants.count()
-	res['favoriters'] = event.favoriters.count()
+	participants = event.participants.all()
+	res['participants'] = []
+	for part in participants:
+		info = {
+			'id' : part.id,
+			'username' : part.username
+		}
+		res['participants'].append(info)
+
 	return JsonResponse(res)
 
 def addEvent(request):
@@ -64,7 +71,7 @@ def viewCategories(request):
 	categories = Category.objects.all().values('id', 'name')
 	return JsonResponse({'categories': list(categories)})
 
-def searchEvents(request):
+def search(request):
 	res = []
 	searchString = ""
 	try:
@@ -72,11 +79,11 @@ def searchEvents(request):
 	except:
 		res['success'] = False
 		res['message'] = 'Invalid Request'
-	words = searchString.split()
+	words = searchString.lower().split()
 	events = Event.objects.all()
 	for event in events:
-		names = event.name.split()
-		descript = event.description.split()
+		names = event.name.lower().split()
+		descript = event.description.lower().split()
 		searchField = names + descript
 		if set(words) <= set(searchField):
 			info = {}
@@ -84,8 +91,22 @@ def searchEvents(request):
 			info['name'] = event.name
 			info['time'] = event.time
 			info['place'] = event.place
+			# type = 0 event
+			info['type'] = 0
 			res.append(info)
-	return JsonResponse({'searchedEvents': res})
+	users = User.objects.all()
+	for user in users:
+		if user.username != "admin":
+			p = Profile.objects.get(user = user)
+			names = p.nickname.lower().split()
+			if set(words) <= set(names):
+				info = {}
+				info['id'] = user.id
+				info['nickname'] = p.nickname
+				# type = 1 user
+				info['type'] = 1
+				res.append(info)
+	return JsonResponse({'results': res})
 
 def viewEventsByCat(request, categoryid):
 	res = []

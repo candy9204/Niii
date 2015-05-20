@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^event/(?P<eventid>[0-9]+)/$', event.viewEvent, name = 'viewevent'),
     url(r'^event/add/$', event.addEvent, name = 'addevent'),
     url(r'^event/categories/$', event.viewCategories, name = 'viewcategories'),
-    url(r'^event/search/$', event.searchEvents, name = 'searchEvent'),
+
     url(r'^event/(?P<eventid>[0-9]+)/join/$', event.joinEvent, name = 'joinevent'),
     url(r'^event/(?P<eventid>[0-9]+)/favorite/$', event.favoriteEvent, name = 'favoriteevent'),
     url(r'^event/(?P<eventid>[0-9]+)/unjoin/$', event.unjoinEvent, name = 'unjoinevent'),
@@ -34,7 +34,7 @@ urlpatterns = [
     url(r'^event/(?P<eventid>[0-9]+)/comments/remove/$', event.removeComment, name = 'removecomment'),
     url(r'^event/(?P<eventid>[0-9]+)/pictures/$', event.viewPictures, name = 'viewpictures'),
     url(r'^event/(?P<eventid>[0-9]+)/pictures/add/$', event.addPicture, name = 'addpicture'),
-
+    url(r'^search/$', event.search, name = 'search'),
     url(r'^category/(?P<categoryid>[0-9]+)/$', event.viewEventsByCat, name = 'vieweventsbycat'),
 
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
