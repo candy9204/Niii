@@ -37,56 +37,62 @@ class SignInController: UIViewController {
     
     @IBAction func signIn(sender: AnyObject) {
         
-        if(username.text.isEmpty || password.text.isEmpty){
-            // If no username or password, prompt error
-            let alertController = UIAlertController(title: "Sign In Failed", message:
-                "The username and the password cannot be empty!", preferredStyle: UIAlertControllerStyle.Alert)
-            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+//        if(username.text.isEmpty || password.text.isEmpty){
+//            // If no username or password, prompt error
+//            let alertController = UIAlertController(title: "Sign In Failed", message:
+//                "The username and the password cannot be empty!", preferredStyle: UIAlertControllerStyle.Alert)
+//            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+//            
+//            self.presentViewController(alertController, animated: true, completion: nil)
+//        } else{
+            //loginWithHTTP()
+            let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
+            self.presentViewController(mainPage, animated:true, completion:nil)
+//        }
+    }
+    
+    func loginWithHTTP() {
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/user/login/")!)
+        request.HTTPMethod = "POST"
+        let postString = "username=" + username.text + "&password=" + password.text
+        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+        
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            data, response, error in
             
-            self.presentViewController(alertController, animated: true, completion: nil)
-        } else{
-            var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/user/login/")!)
-            request.HTTPMethod = "POST"
-            let postString = "username=" + username.text + "&password=" + password.text
-            request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
-            
-            let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
-                data, response, error in
-                
-                if error != nil {
-                    println("error=\(error)")
-                    return
-                }
-                
-                var err: NSError?
-                let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
-                
-                if (err != nil) {
-                    // If there is an error parsing JSON, print it to the console
-                    println("JSON Error \(err!.localizedDescription)")
-                    return
-                }
-                
-                if let success = jsonResult["success"] as? Int {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        if success == 0 {
-                            //                        println()
-                            let alertController = UIAlertController(title: "Sign In Failed", message:
-                                "The username or the password is incorrect!", preferredStyle: UIAlertControllerStyle.Alert)
-                            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
-                            
-                            self.presentViewController(alertController, animated: true, completion: nil)
-                        } else {
-                            User.UID = jsonResult["id"] as! Int
-                            let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
-                            self.presentViewController(mainPage, animated:true, completion:nil)
-                        }
-                    })
-                }
-                
+            if error != nil {
+                println("error=\(error)")
+                return
             }
-            task.resume()
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if (err != nil) {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+            if let success = jsonResult["success"] as? Int {
+                dispatch_async(dispatch_get_main_queue(), {
+                    if success == 0 {
+                        //                        println()
+                        let alertController = UIAlertController(title: "Sign In Failed", message:
+                            "The username or the password is incorrect!", preferredStyle: UIAlertControllerStyle.Alert)
+                        alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+                        
+                        self.presentViewController(alertController, animated: true, completion: nil)
+                    } else {
+                        User.UID = jsonResult["id"] as! Int
+                        let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
+                        self.presentViewController(mainPage, animated:true, completion:nil)
+                    }
+                })
+            }
+            
         }
+        task.resume()
     }
 
     
