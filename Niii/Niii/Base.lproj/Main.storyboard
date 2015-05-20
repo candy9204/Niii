@@ -291,12 +291,14 @@
                         <constraints>
                             <constraint firstItem="dou-Ll-amw" firstAttribute="width" secondItem="aKA-oJ-Ueu" secondAttribute="width" id="I6P-Ly-1MU"/>
                             <constraint firstItem="WKE-MR-rx8" firstAttribute="top" secondItem="dou-Ll-amw" secondAttribute="bottom" constant="1" id="rRh-wi-i9C"/>
+                            <constraint firstItem="BOC-ty-nbH" firstAttribute="top" secondItem="WKE-MR-rx8" secondAttribute="bottom" id="u2w-iY-hBG"/>
                             <constraint firstItem="dou-Ll-amw" firstAttribute="top" secondItem="j2f-sB-8RG" secondAttribute="bottom" constant="-20" id="vPu-Xg-JSZ"/>
                             <constraint firstAttribute="width" secondItem="WKE-MR-rx8" secondAttribute="width" id="wTC-ut-Jxy"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="eventInfo" destination="WKE-MR-rx8" id="6sT-QA-vT1"/>
+                        <outlet property="titleLabel" destination="lSa-hd-Gqr" id="2gi-yW-FNn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0Ik-E1-juO" userLabel="First Responder" sceneMemberID="firstResponder"/>
