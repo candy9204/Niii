@@ -1,3 +1,4 @@
+from __future__ import division
 from django.shortcuts import render
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
@@ -179,4 +180,39 @@ def rate(request, userid):
 		res = {'success': False, 'message': 'Invalid ratee_id or score'}
 		return JsonResponse(res)
 	return JsonResponse({'success': True})
+
+def recommend(request, userid):
+	participated = {}
+	recommendations = []
+	res = []
+	currentUser = User.objects.get(id = userid)
+	users = User.objects.all()
+	for user in users:
+		participations = user.participations.values('id', 'name', 'time', 'place', 'category')
+		participated[user] = participations
+
+	list1 = participated[currentUser]
+	for user in users:
+		if user != currentUser:
+			list2 = participated[user]
+			intersectCount = len(set(list1) & set(list2))
+			countOfUser2 = len(list2)
+			if countOfUser2 != 0:
+				sim = intersectCount/countOfUser2
+			else:
+				sim = 0
+			if sim >= 0.5:
+				recommendations.extend(list(set(list1) | set(list2)))
+	for r in recommendations:
+		info = {}
+		info['id'] = r['id']
+		info['name'] = r['name']
+		info['time'] = r['time']
+		info['place'] = r['place']
+		try:
+			info['category'] = f['category'].url
+		except:
+			info['category'] = None
+		res.append(info)
+	return JsonResponse({'recommendations': res})
 	
