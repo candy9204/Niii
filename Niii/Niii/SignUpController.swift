@@ -63,10 +63,53 @@ class SignUpController: UIViewController {
             
             // If the username is exist, prompt error
             
-            // Else go to main page
-            let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
-            mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-            self.presentViewController(mainPage, animated:true, completion:nil)
+            if password.text != confirm.text {
+                let alertController = UIAlertController(title: "Sign Up Failed", message:
+                    "Confirm does not match with your password", preferredStyle: UIAlertControllerStyle.Alert)
+                alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+            } else {
+                var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/user/register/")!)
+                request.HTTPMethod = "POST"
+                let postString = "username=" + username.text + "&password=" + password.text
+                request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+                
+                let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+                    data, response, error in
+                    
+                    if error != nil {
+                        println("error=\(error)")
+                        return
+                    }
+                    
+                    var err: NSError?
+                    let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+                    
+                    if (err != nil) {
+                        println("JSON Error \(err!.localizedDescription)")
+                        return
+                    }
+                    
+                    if let success = jsonResult["success"] as? Int {
+                        dispatch_async(dispatch_get_main_queue(), {
+                            if success == 0 {
+                                
+                                let msg = jsonResult["message"] as? String
+                                let alertController = UIAlertController(title: "Sign Up Failed", message:
+                                    msg, preferredStyle: UIAlertControllerStyle.Alert)
+                                alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default,handler: nil))
+                                
+                                self.presentViewController(alertController, animated: true, completion: nil)
+                            } else {
+                                User.UID = jsonResult["id"] as! Int
+                                let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
+                                self.presentViewController(mainPage, animated:true, completion:nil)
+                            }
+                        })
+                    }
+                    
+                }
+                task.resume()
+            }
         }
         
     }
