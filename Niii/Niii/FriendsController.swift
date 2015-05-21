@@ -62,6 +62,7 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
             let label = UILabel();
             label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
             label.text = self.followers[i].nickName
+            label.font = UIFont(name: "AmericanTypewriter", size: 18)
             subView.addSubview(label)
             
             // Cell
@@ -94,6 +95,7 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
             let label = UILabel();
             label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
             label.text = self.following[i].nickName
+            label.font = UIFont(name: "AmericanTypewriter", size: 18)
             subView.addSubview(label)
             
             // Cell

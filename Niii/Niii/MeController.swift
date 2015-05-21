@@ -25,7 +25,7 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
         // Do any additional setup after loading the view, typically from a nib.
         self.settingList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         println("Count")
-        self.settings = ["Name: " + User.nickname, "Sex: " + User.gender, "Rating: " + User.rating, "Favourite", "History", "Settings"]
+        self.settings = ["Name: " + User.nickname, "Gender: " + User.gender, "Rating: " + User.rating, "Favourite", "History", "Settings"]
         if !User.updated {
             updateWithHTTP()
         }
@@ -60,13 +60,17 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
                 let eh = (sh - 20) / 3
                 label1.frame = CGRect(x: sh+30, y: 5, width: sw-sh-60, height: eh)
                 label1.text = self.settings[0]
+                label1.font = UIFont(name: "AmericanTypewriter", size: 20)
                 label2.frame = CGRect(x: sh+30, y: 10+eh, width: sw-sh-60, height: eh)
                 label2.text = self.settings[1]
+                label2.font = UIFont(name: "AmericanTypewriter", size: 20)
                 label3.frame = CGRect(x: sh+30, y: 15+2*eh, width: sw-sh-60, height: eh)
                 label3.text = self.settings[2]
+                label3.font = UIFont(name: "AmericanTypewriter", size: 20)
                 subView.addSubview(label1)
                 subView.addSubview(label2)
                 subView.addSubview(label3)
+                cell.selectionStyle = UITableViewCellSelectionStyle.None
             } else {
                 let th = otherRowHeight
                 // Subview
@@ -76,11 +80,25 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
                 let sh = subView.bounds.height
                 let sw = subView.bounds.width
                 
+                // Image
+                let imageName:String
+                if i == 1 {
+                    imageName = "like.png"
+                } else if i == 2 {
+                    imageName = "history.png"
+                } else {
+                    imageName = "settings.png"
+                }
+                let image = UIImage(named: imageName)
+                let imageView = UIImageView(image: image!)
+                imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
+                subView.addSubview(imageView)
                 
                 // label
                 let label = UILabel();
-                label.frame = CGRect(x: 20, y: 5, width: sw-20, height: sh-10)
+                label.frame = CGRect(x: 20+2*sh, y: 5, width: sw-sh-40, height: sh-10)
                 label.text = self.settings[i+2]
+                label.font = UIFont(name: "AmericanTypewriter", size: 20)
                 subView.addSubview(label)
                 
                 // Cell
@@ -138,7 +156,7 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
                 }
                 User.updated = true
                 self.label1.text = "Name: " + User.nickname
-                self.label2.text = "Sex: " + User.gender
+                self.label2.text = "Gender: " + User.gender
                 self.label3.text = "Rating: " + User.rating
                 self.label1.reloadInputViews()
                 self.label2.reloadInputViews()
@@ -171,10 +189,24 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        
-//        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEvent") as! UIViewController
-//        singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-//        self.presentViewController(singleEvent, animated:true, completion:nil)
+        if indexPath.row == 3 {
+            let settingsPage = self.storyboard?.instantiateViewControllerWithIdentifier("settingsPage") as! SettingsController
+            settingsPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+            settingsPage.parentController = 3
+            self.presentViewController(settingsPage, animated:true, completion:nil)
+        } else if indexPath.row == 2 {
+            let fAndHListPage = self.storyboard?.instantiateViewControllerWithIdentifier("fAndHListPage") as! FAndHListController
+            fAndHListPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+            fAndHListPage.parentController = 3
+            fAndHListPage.parentCall = 1
+            self.presentViewController(fAndHListPage, animated:true, completion:nil)
+        } else if indexPath.row == 1 {
+            let fAndHListPage = self.storyboard?.instantiateViewControllerWithIdentifier("fAndHListPage") as! FAndHListController
+            fAndHListPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+            fAndHListPage.parentController = 3
+            fAndHListPage.parentCall = 0
+            self.presentViewController(fAndHListPage, animated:true, completion:nil)
+        }
     }
     
     func setSelected(selected: Bool, animated: Bool) {

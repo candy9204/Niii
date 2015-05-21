@@ -1,16 +1,18 @@
 //
-//  FirstViewController.swift
+//  FAndHListController.swift
 //  Niii
 //
-//  Created by LinShengyi on 4/14/15.
+//  Created by LinShengyi on 5/21/15.
 //  Copyright (c) 2015 LinShengyi. All rights reserved.
 //
 
 import UIKit
 
-class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var eventList: UITableView!
+    var parentController = 0
+    var parentCall = 0
     var events = [String]()
     var images = [UIImage]()
     var cells:[UITableViewCell] = [UITableViewCell]()
@@ -26,22 +28,21 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
         loadEvents()
         createCells()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.events.count;
     }
     
-    @IBAction func addEvent(sender: AnyObject) {
-        let createEvent = self.storyboard?.instantiateViewControllerWithIdentifier("createEventPage") as! CreateEventController
-        createEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-        createEvent.parentController = 0
-        // println("haha")
-        self.presentViewController(createEvent, animated:true, completion:nil)
+    @IBAction func backToMe(sender: AnyObject) {
+        let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
+        mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        mainPage.selectedIndex = parentController
+        self.presentViewController(mainPage, animated:true, completion:nil)
     }
     
     func createCells(){
@@ -97,7 +98,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func loadEvents(){
         // TODO: Load events from server
-        
+        // parentCall == 0 for Favourite, parentCall == 1 for History
         
         // Done
         for i in 1...7 {
@@ -127,4 +128,3 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.setHightlighted(highlighted, animated: animated)
     }
 }
-

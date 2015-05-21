@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		258E149D1B0DD73300E97BE8 /* FriendProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258E149C1B0DD73300E97BE8 /* FriendProfile.swift */; };
+		258E149F1B0DE50500E97BE8 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258E149E1B0DE50500E97BE8 /* SettingsController.swift */; };
+		258E14A11B0DF2E100E97BE8 /* FAndHListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258E14A01B0DF2E100E97BE8 /* FAndHListController.swift */; };
 		259CD7101B0AF39900CD34E7 /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259CD70F1B0AF39900CD34E7 /* SignUpController.swift */; };
 		259CD7161B0BD9C200CD34E7 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 259CD7151B0BD9C200CD34E7 /* Event.swift */; };
 		25C06A271B0D11CA0014D75F /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25C06A261B0D11CA0014D75F /* User.swift */; };
@@ -40,6 +42,8 @@
 
 /* Begin PBXFileReference section */
 		258E149C1B0DD73300E97BE8 /* FriendProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendProfile.swift; sourceTree = "<group>"; };
+		258E149E1B0DE50500E97BE8 /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
+		258E14A01B0DF2E100E97BE8 /* FAndHListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAndHListController.swift; sourceTree = "<group>"; };
 		259CD70F1B0AF39900CD34E7 /* SignUpController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
 		259CD7151B0BD9C200CD34E7 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		25C06A261B0D11CA0014D75F /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -103,12 +107,14 @@
 		25E1F2F31ADDDBBE008FD067 /* Niii */ = {
 			isa = PBXGroup;
 			children = (
-				25E1F2F81ADDDBBE008FD067 /* EventsController.swift */,
+				258E14A01B0DF2E100E97BE8 /* FAndHListController.swift */,
+				258E149E1B0DE50500E97BE8 /* SettingsController.swift */,
+				25E1F31A1ADDF6D7008FD067 /* MeController.swift */,
 				25C06A281B0D41FB0014D75F /* CreateEventController.swift */,
+				25E1F2F81ADDDBBE008FD067 /* EventsController.swift */,
 				25E6C7B11AF2873100451C10 /* SingleEventController.swift */,
 				25E1F31C1ADDFEA7008FD067 /* SearchController.swift */,
 				25E1F3181ADDF6BB008FD067 /* FriendsController.swift */,
-				25E1F31A1ADDF6D7008FD067 /* MeController.swift */,
 				25E1F2F61ADDDBBE008FD067 /* AppDelegate.swift */,
 				25E1F2FC1ADDDBBE008FD067 /* Main.storyboard */,
 				25E1F3011ADDDBBE008FD067 /* LaunchScreen.xib */,
@@ -259,10 +265,12 @@
 				25E6C7B41B093F2800451C10 /* UIColorFromHex.swift in Sources */,
 				25C06A271B0D11CA0014D75F /* User.swift in Sources */,
 				259CD7101B0AF39900CD34E7 /* SignUpController.swift in Sources */,
+				258E149F1B0DE50500E97BE8 /* SettingsController.swift in Sources */,
 				25E1F3211ADF4052008FD067 /* SignInController.swift in Sources */,
 				25E1F2F91ADDDBBE008FD067 /* EventsController.swift in Sources */,
 				25E6C7B21AF2873100451C10 /* SingleEventController.swift in Sources */,
 				25E1F31B1ADDF6D7008FD067 /* MeController.swift in Sources */,
+				258E14A11B0DF2E100E97BE8 /* FAndHListController.swift in Sources */,
 				E16932891B0D7195001F0A04 /* Annotation.swift in Sources */,
 				259CD7161B0BD9C200CD34E7 /* Event.swift in Sources */,
 				258E149D1B0DD73300E97BE8 /* FriendProfile.swift in Sources */,

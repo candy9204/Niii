@@ -133,17 +133,26 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             // label
             let label = UILabel();
-            label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
+            label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: (sh-10)/2.0)
             label.text = self.results[i][1]
+            label.font = UIFont(name: "AmericanTypewriter", size: 18)
+            subView.addSubview(label)
             
             //TODO: Format for subtitle
             if self.results[i][0] == "0" {
                 let label2 = UILabel();
-                label2.frame = CGRect(x: sh+30, y: 3, width: sw-sh-30, height: sh-10)
-                label2.text = "Location: " + self.results[i][3] + "   Time: " + self.results[i][4]
+                label2.frame = CGRect(x: sh+30, y: 5+(sh-10)/2.0, width: sw-sh-30, height: (sh-10)/4.0)
+                label2.text = "Location: " + self.results[i][3]
+                label2.font = UIFont(name: "AlNile", size: 12)
                 subView.addSubview(label2)
             }
-            subView.addSubview(label)
+            if self.results[i][0] == "0" {
+                let label2 = UILabel();
+                label2.frame = CGRect(x: sh+30, y: 5+(sh-10)*3.0/4.0, width: sw-sh-30, height: (sh-10)/4.0)
+                label2.text = "Time: " + self.results[i][4]
+                label2.font = UIFont(name: "AlNile", size: 12)
+                subView.addSubview(label2)
+            }
             
             // Cell
             cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
