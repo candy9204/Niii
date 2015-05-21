@@ -202,7 +202,7 @@ def recommend(request, userid):
 			else:
 				sim = 0
 			if sim >= 0.5:
-				recommendations.extend(list(set(list1) | set(list2)))
+				recommendations.extend(list(set(list2) - set(list1)))
 	for r in recommendations:
 		info = {}
 		info['id'] = r['id']
@@ -210,7 +210,7 @@ def recommend(request, userid):
 		info['time'] = r['time']
 		info['place'] = r['place']
 		try:
-			info['category'] = f['category'].url
+			info['category'] = r['category']
 		except:
 			info['category'] = None
 		res.append(info)
