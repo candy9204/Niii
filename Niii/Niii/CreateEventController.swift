@@ -77,10 +77,37 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
         }
     }
     
+    func checkInfo() -> Bool{
+        if categoryField.text != "Leisure" && categoryField.text != "Travel" && categoryField.text != "Arts" && categoryField.text != "Sports" && categoryField.text != "Education" {
+            let alertMessage = UIAlertController(title: "Fail", message: "Category should be from Leisure, Travel, Arts, Sports, Education.", preferredStyle: .Alert)
+            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            self.presentViewController(alertMessage, animated: true, completion: nil)
+            return false
+        }
+        
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
+        var date = dateFormatter.dateFromString(dayAndTimeField.text)
+        if date == nil {
+            let alertMessage = UIAlertController(title: "Fail", message: "Date & Time format is wrong! It should be MM-dd-yyyy HH:mm.", preferredStyle: .Alert)
+            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            self.presentViewController(alertMessage, animated: true, completion: nil)
+            return false
+
+        }
+        
+        return true
+        
+    }
+    
     func submitEventInfo(gesture: UIGestureRecognizer){
         // TODO: Submit the infomation of the event to server
         // NOTE: Remember to compress the image first!!!
         // Data: titleField.text, descriptionField.text, dateAndTimeField.text, locationField.text, imageField.image
+        
+        if !self.checkInfo() {
+            return
+        }
         
         var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/event/add/")!)
         request.HTTPMethod = "POST"
@@ -101,7 +128,7 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
         location = location.stringByReplacingOccurrencesOfString(" ", withString: "+", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
         description = description.stringByReplacingOccurrencesOfString(" ", withString: "+", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
         
-        let postString = "name=" + title! + "&organizor=" + User.UID + "&place=" + location! + "&description=" + description! + "&time=" + time!
+        let postString = "name=" + title! + "&organizor=" + User.UID + "&place=" + location! + "&description=" + description! + "&time=" + time! + "&category=" + convertCategoryID()
         
         request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
@@ -216,5 +243,24 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssxxx"
         let dateString = dateFormatter.stringFromDate(date!)
         return dateString
+    }
+    
+    func convertCategoryID() -> String {
+        if categoryField.text != "Leisure" {
+            return "2"
+        }
+        if categoryField.text != "Travel" {
+            return "3"
+        }
+        if categoryField.text != "Arts" {
+            return "4"
+        }
+        if categoryField.text != "Sports" {
+            return "5"
+        }
+        if categoryField.text != "Education" {
+            return "6"
+        }
+        return "2"
     }
 }
