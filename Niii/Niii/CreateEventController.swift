@@ -84,7 +84,7 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
         // NOTE: Remember to compress the image first!!!
         // Data: titleField.text, descriptionField.text, dateAndTimeField.text, locationField.text, imageField.image
         
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/event/add/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/event/add/")!)
         request.HTTPMethod = "POST"
         
         let characterSet = NSMutableCharacterSet.alphanumericCharacterSet()
