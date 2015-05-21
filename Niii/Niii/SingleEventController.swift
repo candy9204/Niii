@@ -13,7 +13,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBOutlet weak var eventInfo: UITableView!
     @IBOutlet weak var titleLabel: UILabel!
-    
+    @IBOutlet weak var scrollView: UIScrollView!
     var mapView: MKMapView!
     let manager = CLLocationManager()
     var location = CLLocation(latitude: 40.8121195, longitude: -73.9585067)
@@ -36,6 +36,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         self.manager.desiredAccuracy = kCLLocationAccuracyBest
         self.manager.startUpdatingLocation()
         // Get event information from database
+        eventInfo.frame.size.height = 0
         getInformationFromDatabase()
     }
     
@@ -69,9 +70,10 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             
             var subView:UIView!
             let tw = self.eventInfo.bounds.width
+            var th:CGFloat = 0
             
             if indexPath.row == 0 {
-                let th = infoRowHeight
+                th = infoRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 // Subview
@@ -142,7 +144,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 
             } else if indexPath.row == 1 {
-                let th = titleRowHeight
+                th = titleRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
@@ -160,7 +162,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 subView.addSubview(label)
                 
             } else if indexPath.row == 2 {
-                let th = descriptionRowHeight
+                th = descriptionRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
@@ -172,14 +174,14 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 let sw = subView.bounds.width
                 
                 let label = UILabel();
-                label.frame = CGRect(x: 20, y: 5, width: sw-10, height: sh-10)
+                label.frame = CGRect(x: 20, y: 5, width: sw-40, height: sh-10)
                 label.text = event.description
                 label.numberOfLines = 0;
                 label.lineBreakMode = NSLineBreakMode.ByWordWrapping
                 subView.addSubview(label)
                 
             } else if indexPath.row == 3 {
-                let th = titleRowHeight
+                th = titleRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
@@ -197,7 +199,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 subView.addSubview(label)
                 
             } else if indexPath.row == 4 {
-                let th = participantsRowHeight
+                th = participantsRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
@@ -216,7 +218,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 }
                 
             } else if indexPath.row == 5 {
-                let th = activityRowHeight
+                th = activityRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
@@ -249,7 +251,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 subView.addSubview(join)
                 
             } else if indexPath.row == 6 {
-                let th = titleRowHeight
+                th = titleRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
@@ -280,7 +282,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 subView.addSubview(label)
                 
             } else {
-                let th = commentRowHeight
+                th = commentRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
@@ -306,7 +308,8 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 let label_content = UILabel()
                 label_content.text = comment[2]
-                label_content.frame = CGRect(x: 20, y: 5+subh, width: sw-10, height: subh)
+                label_content.frame = CGRect(x: 20, y: 5+subh, width: sw-40, height: subh)
+                label_content.lineBreakMode = NSLineBreakMode.ByWordWrapping
                 
                 subView.addSubview(label_name)
                 subView.addSubview(label_time)
@@ -316,6 +319,8 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             cell.backgroundColor = UIColor.clearColor();
             cell.contentView.addSubview(subView)
             cell.selectionStyle = UITableViewCellSelectionStyle.None
+            eventInfo.frame.size.height += th
+            println("height: " + String(stringInterpolationSegment: eventInfo.frame.size.height))
         }
         return cell
     }
@@ -522,7 +527,12 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 }
                 self.searchInMap(address, time: dateString)
                 self.mapView.reloadInputViews()
+                
                 self.eventInfo.reloadData()
+                self.scrollView.frame.size.height = self.eventInfo.frame.size.height
+                println(self.eventInfo.frame.size.height)
+                println(self.scrollView.frame.size.height)
+                
                 self.titleLabel.reloadInputViews()
                 
             })
@@ -565,7 +575,11 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     self.event.comments.append([username, dateString, content])
                 }
+                
                 self.eventInfo.reloadData()
+                self.scrollView.frame.size.height = self.eventInfo.frame.size.height
+                println(self.eventInfo.frame.size.height)
+                println(self.scrollView.frame.size.height)
                 
             })
         }
@@ -719,12 +733,18 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     self.event.comments.append([nickname, dateString, content])
                     self.eventInfo.reloadData()
+                    self.scrollView.frame.size.height = self.eventInfo.frame.size.height
+                    println(self.eventInfo.frame.size.height)
+                    println(self.scrollView.frame.size.height)
                 })
             }
             task.resume()
         } else {
             self.event.comments.append([User.nickname, dateString, content])
             self.eventInfo.reloadData()
+            self.scrollView.frame.size.height = self.eventInfo.frame.size.height
+            println(self.eventInfo.frame.size.height)
+            println(self.scrollView.frame.size.height)
         }
 
     }
