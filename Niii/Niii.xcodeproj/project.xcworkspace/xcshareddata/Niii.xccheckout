@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>AFDB12C3-18AF-4BDE-98F8-AB5636DC4ED2</string>
 	<key>IDESourceControlProjectName</key>
-	<string>Niii</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>C95565A262F3F8969C88AF34C83203649D3F1D21</key>
 		<string>https://github.com/candy9204/Niii.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Niii/Niii.xcodeproj</string>
+	<string>Niii/Niii.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>C95565A262F3F8969C88AF34C83203649D3F1D21</key>
@@ -34,7 +34,7 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>C95565A262F3F8969C88AF34C83203649D3F1D21</string>
 			<key>IDESourceControlWCCName</key>
-			<string>Niii</string>
+			<string>Niii_Project</string>
 		</dict>
 	</array>
 </dict>

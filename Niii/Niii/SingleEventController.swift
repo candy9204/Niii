@@ -13,7 +13,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     
     @IBOutlet weak var eventInfo: UITableView!
     @IBOutlet weak var titleLabel: UILabel!
-    
+    @IBOutlet weak var scrollView: UIScrollView!
     var mapView: MKMapView!
     let manager = CLLocationManager()
     var location = CLLocation(latitude: 40.8121195, longitude: -73.9585067)
@@ -36,6 +36,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         self.manager.desiredAccuracy = kCLLocationAccuracyBest
         self.manager.startUpdatingLocation()
         // Get event information from database
+        eventInfo.frame.size.height = 0
         getInformationFromDatabase()
     }
     
@@ -69,9 +70,10 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             
             var subView:UIView!
             let tw = self.eventInfo.bounds.width
+            var th:CGFloat = 0
             
             if indexPath.row == 0 {
-                let th = infoRowHeight
+                th = infoRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 // Subview
@@ -96,6 +98,8 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 let label1 = UILabel()
                 label1.frame = CGRect(x: 20, y: 5, width: sw/2.0-25, height: eh)
                 label1.text = event.holderName
+                label1.font = UIFont(name: "AmericanTypewriter", size: 20)
+
                 
                 // rating
                 let subw = min(sw/20.0, eh)
@@ -128,11 +132,15 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 let label2 = UILabel()
                 label2.frame = CGRect(x: 20, y: 20+2*eh, width: sw/2.0-25, height: eh)
                 label2.text = event.address
+                label2.font = UIFont(name: "AmericanTypewriter", size: 20)
+
                 
                 // date
                 let label3 = UILabel()
                 label3.frame = CGRect(x: 20, y: 25+3*eh, width: sw/2.0-25, height: eh)
                 label3.text = event.date
+                label3.font = UIFont(name: "AmericanTypewriter", size: 20)
+
                 
                 subView.addSubview(label1)
                 subView.addSubview(label2)
@@ -142,7 +150,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 
             } else if indexPath.row == 1 {
-                let th = titleRowHeight
+                th = titleRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
@@ -156,11 +164,11 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 let label = UILabel();
                 label.frame = CGRect(x: 20, y: 5, width: sw-10, height: sh-10)
                 label.text = "Description:"
-                label.font = UIFont(name: label.font.fontName, size: 20)
+                label.font = UIFont(name: "AmericanTypewriter", size: 20)
                 subView.addSubview(label)
                 
             } else if indexPath.row == 2 {
-                let th = descriptionRowHeight
+                th = descriptionRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
@@ -171,15 +179,15 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 let sh = subView.bounds.height
                 let sw = subView.bounds.width
                 
-                let label = UILabel();
-                label.frame = CGRect(x: 20, y: 5, width: sw-10, height: sh-10)
-                label.text = event.description
-                label.numberOfLines = 0;
-                label.lineBreakMode = NSLineBreakMode.ByWordWrapping
-                subView.addSubview(label)
+                let textView = UITextView();
+                textView.frame = CGRect(x: 20, y: 5, width: sw-40, height: sh-10)
+                textView.text = event.description
+                textView.font = UIFont(name: "AlNile", size: 16)
+                textView.editable = false
+                subView.addSubview(textView)
                 
             } else if indexPath.row == 3 {
-                let th = titleRowHeight
+                th = titleRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
@@ -193,11 +201,11 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 let label = UILabel();
                 label.frame = CGRect(x: 20, y: 5, width: sw-10, height: sh-10)
                 label.text = "Participants:"
-                label.font = UIFont(name: label.font.fontName, size: 20)
+                label.font = UIFont(name: "AmericanTypewriter", size: 20)
                 subView.addSubview(label)
                 
             } else if indexPath.row == 4 {
-                let th = participantsRowHeight
+                th = participantsRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
@@ -216,7 +224,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 }
                 
             } else if indexPath.row == 5 {
-                let th = activityRowHeight
+                th = activityRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
@@ -249,7 +257,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 subView.addSubview(join)
                 
             } else if indexPath.row == 6 {
-                let th = titleRowHeight
+                th = titleRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
@@ -265,7 +273,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 let label = UILabel();
                 label.frame = CGRect(x: 20, y: 5, width: sw-btw-40, height: sh-10)
                 label.text = "Comments:"
-                label.font = UIFont(name: label.font.fontName, size: 20)
+                label.font = UIFont(name: "AmericanTypewriter", size: 20)
                 
                 let add = UIButton()
                 let image = UIImage(named: "addred.png")
@@ -280,7 +288,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 subView.addSubview(label)
                 
             } else {
-                let th = commentRowHeight
+                th = commentRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
@@ -297,25 +305,29 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 let label_name = UILabel()
                 label_name.frame = CGRect(x: 20, y: 5, width: (sw-10)/2.0, height: subh)
                 label_name.text = comment[0] + ":"
-                label_name.font = UIFont(name:"HelveticaNeue-Bold", size: 16.0)
+                label_name.font = UIFont(name:"AmericanTypewriter", size: 16.0)
                 
                 let label_time = UILabel()
                 label_time.text = comment[1]
                 label_time.frame = CGRect(x: 20+(sw-10)/2.0, y: 5, width: (sw-10)/2.0, height: subh)
-                label_time.font = UIFont(name:label_time.font.fontName, size: 10.0)
+                label_time.font = UIFont(name:"AmericanTypewriter", size: 10.0)
                 
-                let label_content = UILabel()
-                label_content.text = comment[2]
-                label_content.frame = CGRect(x: 20, y: 5+subh, width: sw-10, height: subh)
+                let content = UITextView()
+                content.text = comment[2]
+                content.frame = CGRect(x: 20, y: 5+subh, width: sw-40, height: subh)
+                content.font = UIFont(name: "AlNile", size: 16)
+                content.editable = false
                 
                 subView.addSubview(label_name)
                 subView.addSubview(label_time)
-                subView.addSubview(label_content)
+                subView.addSubview(content)
             }
             
             cell.backgroundColor = UIColor.clearColor();
             cell.contentView.addSubview(subView)
             cell.selectionStyle = UITableViewCellSelectionStyle.None
+            eventInfo.frame.size.height += th
+            println("height: " + String(stringInterpolationSegment: eventInfo.frame.size.height))
         }
         return cell
     }
@@ -522,7 +534,12 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 }
                 self.searchInMap(address, time: dateString)
                 self.mapView.reloadInputViews()
+                
                 self.eventInfo.reloadData()
+                self.scrollView.frame.size.height = self.eventInfo.frame.size.height
+                println(self.eventInfo.frame.size.height)
+                println(self.scrollView.frame.size.height)
+                
                 self.titleLabel.reloadInputViews()
                 
             })
@@ -565,7 +582,11 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     self.event.comments.append([username, dateString, content])
                 }
+                
                 self.eventInfo.reloadData()
+                self.scrollView.frame.size.height = self.eventInfo.frame.size.height
+                println(self.eventInfo.frame.size.height)
+                println(self.scrollView.frame.size.height)
                 
             })
         }
@@ -719,12 +740,18 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     self.event.comments.append([nickname, dateString, content])
                     self.eventInfo.reloadData()
+                    self.scrollView.frame.size.height = self.eventInfo.frame.size.height
+                    println(self.eventInfo.frame.size.height)
+                    println(self.scrollView.frame.size.height)
                 })
             }
             task.resume()
         } else {
             self.event.comments.append([User.nickname, dateString, content])
             self.eventInfo.reloadData()
+            self.scrollView.frame.size.height = self.eventInfo.frame.size.height
+            println(self.eventInfo.frame.size.height)
+            println(self.scrollView.frame.size.height)
         }
 
     }
