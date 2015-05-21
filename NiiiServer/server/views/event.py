@@ -34,6 +34,11 @@ def viewEvent(request, eventid):
 			'username' : part.username
 		}
 		res['participants'].append(info)
+	# check if current user has joined/favorited
+	user_id = request.GET['user_id']
+	user = User.objects.get(id = user_id)
+	res['is_joined'] = True if user in event.participants.all() else False
+	res['is_favorited'] = False if user in event.favoriters.all() else False
 
 	return JsonResponse(res)
 
