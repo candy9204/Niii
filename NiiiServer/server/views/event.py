@@ -17,7 +17,6 @@ from server.models import Event, Category, Comment, Picture, Rating, Profile
 def viewEvent(request, eventid):
 	event = Event.objects.select_related().get(id = eventid)
 	res = model_to_dict(event, fields = ['name', 'place', 'description', 'time'])
-	print res
 	res['organizor'] = {
 		'id': event.organizor.pk,
 		'username': event.organizor.username,
