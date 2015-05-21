@@ -9,17 +9,19 @@
 import UIKit
 
 struct Event {
-    var eventName:String
-    var holderName:String
-    var address:String
-    var date:String
-    var followers:[UIImage]
-    var comments:[[String]]
-    var rating:Int
-    var description:String
-    init(eventName:String = "", holderName:String = "", address:String = "", date:String = "", followers:[UIImage] = [UIImage](), comments:[[String]] = [[String]](), rating:Int = 5, description:String = ""){
+    var eventName: String
+    var holderName: String
+    var holderID: String
+    var address: String
+    var date: String
+    var followers: [UIImage]
+    var comments: [[String]]
+    var rating: Int
+    var description: String
+    init(eventName: String = "", holderName: String = "", holderID: String = "", address: String = "", date: String = "", followers: [UIImage] = [UIImage](), comments: [[String]] = [[String]](), rating: Int = 5, description: String = ""){
         self.eventName = eventName
         self.holderName = holderName
+        self.holderID = holderID
         self.address = address
         self.date = date
         self.followers = followers

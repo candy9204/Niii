@@ -9,10 +9,15 @@
 import UIKit
 import MapKit
 
-class SingleEventController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SingleEventController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
     
     @IBOutlet weak var eventInfo: UITableView!
     @IBOutlet weak var titleLabel: UILabel!
+    
+    var mapView: MKMapView!
+    let manager = CLLocationManager()
+    var location = CLLocation(latitude: 40.8121195, longitude: -73.9585067)
+    let searchRadius: CLLocationDistance = 1000
     var event:Event = Event()
     var parentController = 0
     var infoRowHeight:CGFloat = 200.0
@@ -27,6 +32,9 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.eventInfo.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.manager.delegate = self
+        self.manager.desiredAccuracy = kCLLocationAccuracyBest
+        self.manager.startUpdatingLocation()
         // Get event information from database
         getInformationFromDatabase()
     }
@@ -80,7 +88,9 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 // TODO: Add map
                 let w = min(sw/2.0-25, sh-10)
                 let os = (sw/2.0 - w) / 2.0
-                let mapView = MKMapView(frame: CGRectMake(sw/2.0+os, os, w, w))
+                mapView = MKMapView(frame: CGRectMake(sw/2.0+os, os, w, w))
+                let coordinateRegion = MKCoordinateRegionMakeWithDistance(self.location.coordinate, self.searchRadius * 2.0, self.searchRadius * 2.0)
+                mapView.setRegion(coordinateRegion, animated: false)
                 
                 // holder name
                 let eh = (sh - 25) / 5.0
@@ -321,6 +331,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             let rating = ratingTextField.text.toInt()
             // TODO: Submit the rating to server
             
+            self.ratingHolder(rating!)
             
             // Done
             let alertMessage = UIAlertController(title: "Success", message: "You have submitted the rating for this event!", preferredStyle: .Alert)
@@ -356,6 +367,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             let comment = commentTextField.text
             // TODO: Submit the new comment to server
             
+            self.AddComment(comment)
             
             // Done
             let alertMessage = UIAlertController(title: "Success", message: "You have submitted the comment for this event!", preferredStyle: .Alert)
@@ -388,6 +400,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             action in
             // TODO: Send the "favorite" message to server
             
+            self.favoriteEvent()
             
             // Done
             let alertMessage = UIAlertController(title: "Success", message: "You have favorited this event!", preferredStyle: .Alert)
@@ -411,6 +424,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             action in
             // TODO: Send the "join in" message to server
             
+            self.joinEvent()
             
             // Done
             let alertMessage = UIAlertController(title: "Success", message: "You have joined in this event!", preferredStyle: .Alert)
@@ -450,16 +464,14 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     func getInformationFromDatabase(){
         
         // TODO: Get information from database
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/event/" + User.EventID + "/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/event/" + User.eventID + "/")!)
         request.HTTPMethod = "POST"
-        var flag = true
         
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
             data, response, error in
             
             if error != nil {
                 println("error=\(error)")
-                flag = false
                 return
             }
             
@@ -469,18 +481,18 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             if  err != nil {
                 // If there is an error parsing JSON, print it to the console
                 println("JSON Error \(err!.localizedDescription)")
-                flag = false
                 return
             }
             
-            println(jsonResult)
-            
             let eventName = jsonResult["name"] as! String
             let address = jsonResult["place"] as! String
-            let date = jsonResult["time"] as! String
+            let dateString = self.timeToString(jsonResult["time"] as! String)
+            
             let description = jsonResult["description"] as! String
             let organizor = jsonResult["organizor"] as! NSDictionary
             let holderName = organizor["nickname"] as! String
+            
+            let holderID = String(organizor["id"] as! Int)
             let pCount = jsonResult["participants"] as! Int
             var r = organizor["rating"] as? Int
             var rating = 0
@@ -491,26 +503,311 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             dispatch_async(dispatch_get_main_queue(), {
                 self.event.eventName = eventName
                 self.event.holderName = holderName
+                self.event.holderID = holderID
                 self.event.address = address
-                self.event.date = "June 1, 2015"
+
                 for _ in 1...pCount {
                     self.event.followers.append(UIImage(named:"head.jpg")!)
                 }
                 
-                self.event.comments.append(["Yilin", "11:00am April 29, 2015", "Interesting!!!"])
-                self.event.comments.append(["Mengdi", "12:00pm April 30, 2015", "Yes!!! Very interesting!!!"])
+                self.updateComments()
+                
                 self.event.rating = rating
                 self.event.description = description
+                self.event.date = dateString
                 self.titleLabel.text = self.event.eventName
                 
                 for var i = 0; i < self.flags.count; i++ {
                     self.flags[i] = false
                 }
+                self.searchInMap(address, time: dateString)
+                self.mapView.reloadInputViews()
                 self.eventInfo.reloadData()
                 self.titleLabel.reloadInputViews()
                 
             })
         }
+        task.resume()
+        
+    }
+    
+    func updateComments() {
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/event/" + User.eventID + "/comments/")!)
+        request.HTTPMethod = "POST"
+        
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            data, response, error in
+            
+            if error != nil {
+                println("error=\(error)")
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+            println(jsonResult)
+            
+            let comments = jsonResult["comments"] as! NSArray
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                for comment in comments {
+                    let content = comment["content"] as! String
+                    let user = comment["user"] as! NSDictionary
+                    let username = user["nickname"] as! String
+                    let dateString = self.timeToString(comment["time"] as! String)
+                    
+                    self.event.comments.append([username, dateString, content])
+                }
+                self.eventInfo.reloadData()
+                
+            })
+        }
+        task.resume()
+    }
+    
+    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
+        CLGeocoder().reverseGeocodeLocation(manager.location, completionHandler: { (placemarks, error) -> Void in
+            
+            if error != nil {
+                println("ERROR: " + error.localizedDescription)
+                return
+            }
+            
+            if placemarks.count > 0 {
+                let pm = placemarks[0] as! CLPlacemark
+                self.location = manager.location
+                self.manager.stopUpdatingLocation()
+                
+            } else {
+                self.location = manager.location
+            }
+        })
+        
+    }
+    
+    func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+        println("ERROR!!!")
+    }
+    
+    func searchInMap(address: String, time: String) {
+
+        let request = MKLocalSearchRequest()
+        request.naturalLanguageQuery = address
+
+        let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+        request.region = MKCoordinateRegion(center: location.coordinate, span: span)
+
+        let search = MKLocalSearch(request: request)
+        search.startWithCompletionHandler {
+            (response: MKLocalSearchResponse!, error: NSError!) in
+            
+            if response != nil {
+                for item in response.mapItems as! [MKMapItem] {
+                    self.addPinToMapView(item.name, subtitle: time, latitude: item.placemark.location.coordinate.latitude, longitude: item.placemark.location.coordinate.longitude)
+                    break
+                }
+            } else {
+                
+            }
+        }
+    }
+    
+    func addPinToMapView(title: String, subtitle: String, latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
+        let location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        let annotation = MyAnnotation(coordinate: location, title: title, subtitle: subtitle)
+        let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        let region = MKCoordinateRegionMakeWithDistance(coordinate, 2000.0, 2000.0)
+        mapView.setRegion(region, animated: false)
+        mapView.addAnnotation(annotation)
+    }
+    
+    func timeToString(time: String) -> String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-ddEEEEEHH:mm:ssxxx"
+        var date = dateFormatter.dateFromString(time)
+        if date == nil {
+            dateFormatter.dateFormat = "yyyy-MM-ddEEEEEHH:mm:ss.SSSxxx"
+            date = dateFormatter.dateFromString(time)
+        }
+        dateFormatter.dateFormat = "MMM dd, yyyy HH:mm"
+        let dateString = dateFormatter.stringFromDate(date!)
+        return dateString
+    }
+    
+    func AddComment(comment: String) {
+        self.updateUserInfo(comment)
+        
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/event/" + User.eventID + "/comments/add/")!)
+        request.HTTPMethod = "POST"
+        
+        let postString = "user_id=" + User.UID + "&content=" + comment
+        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            data, response, error in
+            
+            if error != nil {
+                println("error=\(error)")
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+        }
+        task.resume()
+    }
+    
+    func updateUserInfo(comment: String) {
+        let content = comment
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy HH:mm"
+        let dateString = dateFormatter.stringFromDate(NSDate())
+        
+        if !User.updated {
+            var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/user/" + User.UID + "/profile/")!)
+            request.HTTPMethod = "POST"
+            
+            let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+                data, response, error in
+                
+                if error != nil {
+                    println("error=\(error)")
+                    return
+                }
+                
+                var err: NSError?
+                let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+                
+                if  err != nil {
+                    // If there is an error parsing JSON, print it to the console
+                    println("JSON Error \(err!.localizedDescription)")
+                    return
+                }
+                
+                println(jsonResult)
+                
+                let nickname = jsonResult["nickname"] as! String
+                let g = jsonResult["gender"] as? Int
+                let gender: String
+                if g == 1 {
+                    gender = "Male"
+                } else {
+                    gender = "Female"
+                }
+                let rating = jsonResult["rating"] as? String
+                println(nickname)
+                dispatch_async(dispatch_get_main_queue(), {
+                    User.nickname = nickname
+                    User.gender = gender as String!
+                    if rating != nil {
+                        User.rating = rating as String!
+                    }
+                    User.updated = true
+                    
+                    self.event.comments.append([nickname, dateString, content])
+                    self.eventInfo.reloadData()
+                })
+            }
+            task.resume()
+        } else {
+            self.event.comments.append([User.nickname, dateString, content])
+            self.eventInfo.reloadData()
+        }
+
+    }
+    
+    func ratingHolder(rating: Int) {
+        
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/user/" + self.event.holderID + "/rate/")!)
+        request.HTTPMethod = "POST"
+        let postString = "ratee_id=" + User.UID + "&score=" + String(rating)
+        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            data, response, error in
+            
+            if error != nil {
+                println("error=\(error)")
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+            println(jsonResult)
+            
+        }
+        task.resume()
+
+    }
+    
+    func favoriteEvent() {
+        
+        let urlPath = "http://localhost:8000/event/" + User.eventID + "/favorite/?user_id=" + User.UID
+        let url = NSURL(string: urlPath)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
+            if error != nil {
+                println("error=\(error)")
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+            println(jsonResult)
+            
+        })
+        task.resume()
+        
+    }
+    
+    func joinEvent() {
+        let urlPath = "http://localhost:8000/event/" + User.eventID + "/join/?user_id=" + User.UID
+        let url = NSURL(string: urlPath)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
+            if error != nil {
+                println("error=\(error)")
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+            println(jsonResult)
+            
+        })
         task.resume()
         
     }

@@ -60,9 +60,9 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
             let g = jsonResult["gender"] as? Int
             let gender: String
             if g == 1 {
-                gender = "male"
+                gender = "Male"
             } else {
-                gender = "female"
+                gender = "Female"
             }
             let rating = jsonResult["rating"] as? String
             println(nickname)
