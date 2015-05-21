@@ -18,7 +18,8 @@ struct Event {
     var comments: [[String]]
     var rating: Int
     var description: String
-    init(eventName: String = "", holderName: String = "", holderID: String = "", address: String = "", date: String = "", followers: [UIImage] = [UIImage](), comments: [[String]] = [[String]](), rating: Int = 5, description: String = ""){
+    var updated: Bool
+    init(eventName: String = "", holderName: String = "", holderID: String = "", address: String = "", date: String = "", followers: [UIImage] = [UIImage](), comments: [[String]] = [[String]](), rating: Int = 5, description: String = "", updated: Bool = false){
         self.eventName = eventName
         self.holderName = holderName
         self.holderID = holderID
@@ -28,5 +29,6 @@ struct Event {
         self.comments = comments
         self.rating = rating
         self.description = description
+        self.updated = false
     }
 }

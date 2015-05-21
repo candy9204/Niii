@@ -14,7 +14,8 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBOutlet weak var searchBar: UISearchBar!
     var results = [String]()
     var images = [UIImage]()
-    
+    var cells:[UITableViewCell] = [UITableViewCell]()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -25,6 +26,7 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.searchBar.layer.backgroundColor = UIColorFromHex.color(0x0075FF).CGColor
         
         loadResults()
+        createCells()
     }
     
     override func didReceiveMemoryWarning() {
@@ -44,43 +46,48 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
         }
     }
     
+    func createCells(){
+        for var i = 0; i < self.results.count; i++ {
+            
+            var cell:UITableViewCell = self.resultsList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+            
+            let th = self.resultsList.rowHeight;
+            let tw = self.resultsList.bounds.width;
+            
+            // Subview
+            var subView:UIView!
+            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+            subView.backgroundColor = UIColor.whiteColor()
+            
+            let sh = subView.bounds.height
+            let sw = subView.bounds.width
+            
+            // Image
+            let imageView = UIImageView(image: images[i])
+            imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
+            subView.addSubview(imageView)
+            
+            // label
+            let label = UILabel();
+            label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
+            label.text = self.results[i]
+            subView.addSubview(label)
+            
+            // Cell
+            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell.backgroundColor = UIColor.clearColor();
+            cell.contentView.addSubview(subView)
+            
+            cells.append(cell)
+        }
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.results.count;
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell:UITableViewCell = self.resultsList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
-
-        let th = self.resultsList.rowHeight;
-        let tw = self.resultsList.bounds.width;
-        
-        // Subview
-        var subView:UIView!
-        subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-        subView.backgroundColor = UIColor.whiteColor()
-        
-        let sh = subView.bounds.height
-        let sw = subView.bounds.width
-        
-        // Image
-        let imageName = "climbing.png"
-        let image = UIImage(named: imageName)
-        let imageView = UIImageView(image: image!)
-        imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
-        subView.addSubview(imageView)
-        
-        // label
-        let label = UILabel();
-        label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
-        label.text = self.results[indexPath.row]
-        subView.addSubview(label)
-        
-        // Cell
-        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-        cell.backgroundColor = UIColor.clearColor();
-        cell.contentView.addSubview(subView)
-        
-        return cell
+        return cells[indexPath.row]
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

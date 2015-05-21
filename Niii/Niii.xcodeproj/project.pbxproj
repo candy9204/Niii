@@ -104,10 +104,10 @@
 			isa = PBXGroup;
 			children = (
 				25E1F2F81ADDDBBE008FD067 /* EventsController.swift */,
-				25C06A281B0D41FB0014D75F /* CreateEventController.swift */,
 				25E6C7B11AF2873100451C10 /* SingleEventController.swift */,
-				25C06A261B0D11CA0014D75F /* User.swift */,
 				25E1F31C1ADDFEA7008FD067 /* SearchController.swift */,
+				25C06A281B0D41FB0014D75F /* CreateEventController.swift */,
+				25C06A261B0D11CA0014D75F /* User.swift */,
 				25E1F3181ADDF6BB008FD067 /* FriendsController.swift */,
 				259CD7111B0BC2D800CD34E7 /* SingleFriendController.swift */,
 				25E1F31A1ADDF6D7008FD067 /* MeController.swift */,

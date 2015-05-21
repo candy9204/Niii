@@ -13,6 +13,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBOutlet weak var eventList: UITableView!
     var events = [String]()
     var images = [UIImage]()
+    var cells:[UITableViewCell] = [UITableViewCell]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +23,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.eventList.rowHeight = 100.0
         
         loadEvents()
+        createCells()
     }
 
     override func didReceiveMemoryWarning() {
@@ -41,6 +43,43 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.presentViewController(createEvent, animated:true, completion:nil)
     }
     
+    func createCells(){
+        for var i = 0; i < self.events.count; i++ {
+            
+            var cell:UITableViewCell = self.eventList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+            
+            
+            let th = self.eventList.rowHeight;
+            let tw = self.eventList.bounds.width;
+            
+            // Subview
+            var subView:UIView!
+            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+            subView.backgroundColor = UIColor.whiteColor()
+            
+            
+            let sh = subView.bounds.height
+            let sw = subView.bounds.width
+            
+            // Image
+            let imageView = UIImageView(image: images[i])
+            imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
+            subView.addSubview(imageView)
+            
+            // label
+            let label = UILabel();
+            label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
+            label.text = self.events[i]
+            subView.addSubview(label)
+            
+            // Cell
+            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell.backgroundColor = UIColor.clearColor()
+            cell.contentView.addSubview(subView)
+            cells.append(cell)
+        }
+    }
+    
     func loadEvents(){
         // TODO: Load events from server
         
@@ -54,38 +93,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell:UITableViewCell = self.eventList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
-
-            
-        let th = self.eventList.rowHeight;
-        let tw = self.eventList.bounds.width;
-        
-        // Subview
-        var subView:UIView!
-        subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-        subView.backgroundColor = UIColor.whiteColor()
-        
-        
-        let sh = subView.bounds.height
-        let sw = subView.bounds.width
-        
-        // Image
-        let imageView = UIImageView(image: images[indexPath.row])
-        imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
-        subView.addSubview(imageView)
-        
-        // label
-        let label = UILabel();
-        label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
-        label.text = self.events[indexPath.row]
-        subView.addSubview(label)
-        
-        // Cell
-        cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-        cell.backgroundColor = UIColor.clearColor()
-        cell.contentView.addSubview(subView)
-        
-        return cell
+        return cells[indexPath.row]
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

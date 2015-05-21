@@ -14,6 +14,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var eventInfo: UITableView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
+    
     var mapView: MKMapView!
     let manager = CLLocationManager()
     var location = CLLocation(latitude: 40.8121195, longitude: -73.9585067)
@@ -26,7 +27,10 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     var commentRowHeight:CGFloat = 100.0
     var descriptionRowHeight:CGFloat = 100.0
     var activityRowHeight:CGFloat = 60.0
-    var flags:[Bool] = [Bool]()
+    var isJoined: Bool = false
+    var isFavorite: Bool = false
+    
+    var cells:[UITableViewCell] = [UITableViewCell]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,51 +41,36 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         self.manager.startUpdatingLocation()
         // Get event information from database
         eventInfo.frame.size.height = 0
-        getInformationFromDatabase()
-    }
-    
-    func popToRoot(sender:UIBarButtonItem){
-        self.navigationController!.popToRootViewControllerAnimated(true)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    @IBAction func BackToEvents(sender: AnyObject) {
-        let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
-        mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-        mainPage.selectedIndex = parentController;
-        self.presentViewController(mainPage, animated:true, completion:nil)
-    }
-    
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        for var i = flags.count; i < (event.comments.count+7); i++ {
-            self.flags.append(false)
+        if !self.event.updated {
+            getInformationFromDatabase()
+//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
+//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
+//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
+//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
+//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
+//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
+            self.event.updated = true
         }
-        return event.comments.count + 7;
+        self.creatCells()
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
-        if !self.flags[indexPath.row] {
-            self.flags[indexPath.row] = true
+    func creatCells() {
+        cells = []
+        for var i = 0; i < (event.comments.count + 7); i++ {
+            let cell: UITableViewCell = eventInfo.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+            //println("cell #: " + String(indexPath.row))
             
             var subView:UIView!
             let tw = self.eventInfo.bounds.width
             var th:CGFloat = 0
             
-            if indexPath.row == 0 {
+            if i == 0 {
                 th = infoRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 // Subview
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
-                subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
-                subView.layer.shadowOffset = CGSizeMake(0, 3.0)
-                subView.layer.shadowOpacity = 0.2
                 
                 let sh = subView.bounds.height
                 let sw = subView.bounds.width
@@ -99,7 +88,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 label1.frame = CGRect(x: 20, y: 5, width: sw/2.0-25, height: eh)
                 label1.text = event.holderName
                 label1.font = UIFont(name: "AmericanTypewriter", size: 20)
-
+                
                 
                 // rating
                 let subw = min(sw/20.0, eh)
@@ -132,31 +121,29 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 let label2 = UILabel()
                 label2.frame = CGRect(x: 20, y: 20+2*eh, width: sw/2.0-25, height: eh)
                 label2.text = event.address
-                label2.font = UIFont(name: "AmericanTypewriter", size: 20)
-
+                label2.font = UIFont(name: "AmericanTypewriter", size: 12)
+                
                 
                 // date
                 let label3 = UILabel()
                 label3.frame = CGRect(x: 20, y: 25+3*eh, width: sw/2.0-25, height: eh)
                 label3.text = event.date
-                label3.font = UIFont(name: "AmericanTypewriter", size: 20)
-
+                label3.font = UIFont(name: "AmericanTypewriter", size: 12)
+                
                 
                 subView.addSubview(label1)
                 subView.addSubview(label2)
                 subView.addSubview(label3)
                 subView.addSubview(mapView)
-                
-                
-                
-            } else if indexPath.row == 1 {
+                if self.event.updated {
+                    searchInMap(self.event.address, time: self.event.date)
+                }
+            
+            } else if i == 1 {
                 th = titleRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
-                subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
-                subView.layer.shadowOffset = CGSizeMake(-200.0, 3.0)
-                subView.layer.shadowOpacity = 0.1
                 
                 let sh = subView.bounds.height
                 let sw = subView.bounds.width
@@ -167,14 +154,11 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 label.font = UIFont(name: "AmericanTypewriter", size: 20)
                 subView.addSubview(label)
                 
-            } else if indexPath.row == 2 {
+            } else if i == 2 {
                 th = descriptionRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
-                subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
-                subView.layer.shadowOffset = CGSizeMake(0, 3.0)
-                subView.layer.shadowOpacity = 0.2
                 
                 let sh = subView.bounds.height
                 let sw = subView.bounds.width
@@ -186,14 +170,11 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 textView.editable = false
                 subView.addSubview(textView)
                 
-            } else if indexPath.row == 3 {
+            } else if i == 3 {
                 th = titleRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
-                subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
-                subView.layer.shadowOffset = CGSizeMake(-200.0, 3.0)
-                subView.layer.shadowOpacity = 0.1
                 
                 let sh = subView.bounds.height
                 let sw = subView.bounds.width
@@ -204,14 +185,11 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 label.font = UIFont(name: "AmericanTypewriter", size: 20)
                 subView.addSubview(label)
                 
-            } else if indexPath.row == 4 {
+            } else if i == 4 {
                 th = participantsRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
-                subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
-                subView.layer.shadowOffset = CGSizeMake(0, 3.0)
-                subView.layer.shadowOpacity = 0.2
                 
                 let sh = subView.bounds.height
                 let sw = subView.bounds.width
@@ -223,14 +201,11 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     subView.addSubview(imageView)
                 }
                 
-            } else if indexPath.row == 5 {
+            } else if i == 5 {
                 th = activityRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
-                subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
-                subView.layer.shadowOffset = CGSizeMake(0, 3.0)
-                subView.layer.shadowOpacity = 0.2
                 
                 let sh = subView.bounds.height
                 let sw = subView.bounds.width
@@ -256,14 +231,11 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 subView.addSubview(like)
                 subView.addSubview(join)
                 
-            } else if indexPath.row == 6 {
+            } else if i == 6 {
                 th = titleRowHeight
                 
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
-                subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
-                subView.layer.shadowOffset = CGSizeMake(-200.0, 3.0)
-                subView.layer.shadowOpacity = 0.1
                 
                 let sh = subView.bounds.height
                 let sw = subView.bounds.width
@@ -293,15 +265,12 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
                 subView.backgroundColor = UIColor.whiteColor()
-                subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
-                subView.layer.shadowOffset = CGSizeMake(-50.0, 3.0)
-                subView.layer.shadowOpacity = 0.1
                 
                 let sh = subView.bounds.height
                 let sw = subView.bounds.width
                 let subh = (sh - 10) / 2.0
                 
-                let comment = event.comments[indexPath.row-7]
+                let comment = event.comments[i-7]
                 let label_name = UILabel()
                 label_name.frame = CGRect(x: 20, y: 5, width: (sw-10)/2.0, height: subh)
                 label_name.text = comment[0] + ":"
@@ -326,10 +295,35 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             cell.backgroundColor = UIColor.clearColor();
             cell.contentView.addSubview(subView)
             cell.selectionStyle = UITableViewCellSelectionStyle.None
-            eventInfo.frame.size.height += th
-            println("height: " + String(stringInterpolationSegment: eventInfo.frame.size.height))
+            
+            cells.append(cell)
         }
-        return cell
+
+    }
+    
+    func popToRoot(sender:UIBarButtonItem){
+        self.navigationController!.popToRootViewControllerAnimated(true)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func BackToEvents(sender: AnyObject) {
+        let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
+        mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        mainPage.selectedIndex = parentController;
+        self.presentViewController(mainPage, animated:true, completion:nil)
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return event.comments.count + 7;
+        //println("cell #: " + String(indexPath.row))
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        return cells[indexPath.row]
     }
     
     func ratingTapGesture(gesture: UIGestureRecognizer) {
@@ -473,13 +467,12 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func getInformationFromDatabase(){
-        
+        println("TEST!!!")
         // TODO: Get information from database
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/event/" + User.eventID + "/")!)
-        request.HTTPMethod = "POST"
-        
-        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
-            data, response, error in
+        let urlPath = "http://52.25.65.141:8000/event/" + User.eventID + "/?user_id=" + User.UID
+        let url = NSURL(string: urlPath)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
             
             if error != nil {
                 println("error=\(error)")
@@ -512,6 +505,9 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 rating = r!
             }
             
+            self.isJoined = jsonResult["is_joined"] as! Bool
+            self.isFavorite = jsonResult["is_favorited"] as! Bool
+            
             dispatch_async(dispatch_get_main_queue(), {
                 self.event.eventName = eventName
                 self.event.holderName = holderName
@@ -529,27 +525,20 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 self.event.date = dateString
                 self.titleLabel.text = self.event.eventName
                 
-                for var i = 0; i < self.flags.count; i++ {
-                    self.flags[i] = false
-                }
                 self.searchInMap(address, time: dateString)
                 self.mapView.reloadInputViews()
-                
+                self.creatCells()
                 self.eventInfo.reloadData()
-                self.scrollView.frame.size.height = self.eventInfo.frame.size.height
-                println(self.eventInfo.frame.size.height)
-                println(self.scrollView.frame.size.height)
-                
                 self.titleLabel.reloadInputViews()
                 
             })
-        }
+        })
         task.resume()
         
     }
     
     func updateComments() {
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/event/" + User.eventID + "/comments/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/event/" + User.eventID + "/comments/")!)
         request.HTTPMethod = "POST"
         
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
@@ -569,7 +558,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 return
             }
             
-            println(jsonResult)
+            //println(jsonResult)
             
             let comments = jsonResult["comments"] as! NSArray
             
@@ -582,12 +571,8 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     self.event.comments.append([username, dateString, content])
                 }
-                
+                self.creatCells()
                 self.eventInfo.reloadData()
-                self.scrollView.frame.size.height = self.eventInfo.frame.size.height
-                println(self.eventInfo.frame.size.height)
-                println(self.scrollView.frame.size.height)
-                
             })
         }
         task.resume()
@@ -665,7 +650,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     func AddComment(comment: String) {
         self.updateUserInfo(comment)
         
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/event/" + User.eventID + "/comments/add/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/event/" + User.eventID + "/comments/add/")!)
         request.HTTPMethod = "POST"
         
         let postString = "user_id=" + User.UID + "&content=" + comment
@@ -698,7 +683,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         let dateString = dateFormatter.stringFromDate(NSDate())
         
         if !User.updated {
-            var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/user/" + User.UID + "/profile/")!)
+            var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/user/" + User.UID + "/profile/")!)
             request.HTTPMethod = "POST"
             
             let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
@@ -718,7 +703,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     return
                 }
                 
-                println(jsonResult)
+                //println(jsonResult)
                 
                 let nickname = jsonResult["nickname"] as! String
                 let g = jsonResult["gender"] as? Int
@@ -729,7 +714,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     gender = "Female"
                 }
                 let rating = jsonResult["rating"] as? String
-                println(nickname)
+                //println(nickname)
                 dispatch_async(dispatch_get_main_queue(), {
                     User.nickname = nickname
                     User.gender = gender as String!
@@ -740,25 +725,19 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     self.event.comments.append([nickname, dateString, content])
                     self.eventInfo.reloadData()
-                    self.scrollView.frame.size.height = self.eventInfo.frame.size.height
-                    println(self.eventInfo.frame.size.height)
-                    println(self.scrollView.frame.size.height)
                 })
             }
             task.resume()
         } else {
             self.event.comments.append([User.nickname, dateString, content])
             self.eventInfo.reloadData()
-            self.scrollView.frame.size.height = self.eventInfo.frame.size.height
-            println(self.eventInfo.frame.size.height)
-            println(self.scrollView.frame.size.height)
         }
 
     }
     
     func ratingHolder(rating: Int) {
         
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/user/" + self.event.holderID + "/rate/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/user/" + self.event.holderID + "/rate/")!)
         request.HTTPMethod = "POST"
         let postString = "ratee_id=" + User.UID + "&score=" + String(rating)
         request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
@@ -779,7 +758,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 return
             }
             
-            println(jsonResult)
+            //println(jsonResult)
             
         }
         task.resume()
@@ -788,7 +767,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     
     func favoriteEvent() {
         
-        let urlPath = "http://localhost:8000/event/" + User.eventID + "/favorite/?user_id=" + User.UID
+        let urlPath = "http://52.25.65.141:8000/event/" + User.eventID + "/favorite/?user_id=" + User.UID
         let url = NSURL(string: urlPath)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
@@ -806,7 +785,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 return
             }
             
-            println(jsonResult)
+            //println(jsonResult)
             
         })
         task.resume()
@@ -814,7 +793,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func joinEvent() {
-        let urlPath = "http://localhost:8000/event/" + User.eventID + "/join/?user_id=" + User.UID
+        let urlPath = "http://52.25.65.141:8000/event/" + User.eventID + "/join/?user_id=" + User.UID
         let url = NSURL(string: urlPath)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
@@ -832,7 +811,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 return
             }
             
-            println(jsonResult)
+            //println(jsonResult)
             
         })
         task.resume()
