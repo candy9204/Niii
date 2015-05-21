@@ -39,14 +39,6 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         getInformationFromDatabase()
     }
     
-    
-    @IBAction func BackToEvents(sender: AnyObject) {
-        let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
-        mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-        mainPage.selectedIndex = parentController;
-        self.presentViewController(mainPage, animated:true, completion:nil)
-    }
-    
     func popToRoot(sender:UIBarButtonItem){
         self.navigationController!.popToRootViewControllerAnimated(true)
     }
@@ -54,6 +46,13 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @IBAction func BackToEvents(sender: AnyObject) {
+        let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
+        mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        mainPage.selectedIndex = parentController;
+        self.presentViewController(mainPage, animated:true, completion:nil)
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

@@ -15,6 +15,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     var images = [UIImage]()
     var flags:[Bool] = [Bool]()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,6 +37,14 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
             self.flags.append(false)
         }
         return self.events.count;
+    }
+    
+    @IBAction func addEvent(sender: AnyObject) {
+        let createEvent = self.storyboard?.instantiateViewControllerWithIdentifier("createEventPage") as! CreateEventController
+        createEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        createEvent.parentController = 0
+        // println("haha")
+        self.presentViewController(createEvent, animated:true, completion:nil)
     }
     
     func loadEvents(){
