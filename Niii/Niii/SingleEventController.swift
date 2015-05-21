@@ -14,6 +14,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var eventInfo: UITableView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var scrollView: UIScrollView!
+    
     var mapView: MKMapView!
     let manager = CLLocationManager()
     var location = CLLocation(latitude: 40.8121195, longitude: -73.9585067)
@@ -29,6 +30,8 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     var isJoined: Bool = false
     var isFavorite: Bool = false
     
+    var cells:[UITableViewCell] = [UITableViewCell]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -38,7 +41,264 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         self.manager.startUpdatingLocation()
         // Get event information from database
         eventInfo.frame.size.height = 0
-        getInformationFromDatabase()
+        if !self.event.updated {
+            getInformationFromDatabase()
+//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
+//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
+//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
+//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
+//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
+//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
+            self.event.updated = true
+        }
+        self.creatCells()
+    }
+    
+    func creatCells() {
+        cells = []
+        for var i = 0; i < (event.comments.count + 7); i++ {
+            let cell: UITableViewCell = eventInfo.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+            //println("cell #: " + String(indexPath.row))
+            
+            var subView:UIView!
+            let tw = self.eventInfo.bounds.width
+            var th:CGFloat = 0
+            
+            if i == 0 {
+                th = infoRowHeight
+                
+                subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+                // Subview
+                subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+                subView.backgroundColor = UIColor.whiteColor()
+                
+                let sh = subView.bounds.height
+                let sw = subView.bounds.width
+                
+                // TODO: Add map
+                let w = min(sw/2.0-25, sh-10)
+                let os = (sw/2.0 - w) / 2.0
+                mapView = MKMapView(frame: CGRectMake(sw/2.0+os, os, w, w))
+                let coordinateRegion = MKCoordinateRegionMakeWithDistance(self.location.coordinate, self.searchRadius * 2.0, self.searchRadius * 2.0)
+                mapView.setRegion(coordinateRegion, animated: false)
+                
+                // holder name
+                let eh = (sh - 25) / 5.0
+                let label1 = UILabel()
+                label1.frame = CGRect(x: 20, y: 5, width: sw/2.0-25, height: eh)
+                label1.text = event.holderName
+                label1.font = UIFont(name: "AmericanTypewriter", size: 20)
+                
+                
+                // rating
+                let subw = min(sw/20.0, eh)
+                for var i = 0; i < event.rating; i++ {
+                    let image = UIImage(named: "starY.png")
+                    let imageView = UIImageView(image: image)
+                    imageView.frame = CGRect(x: 20+CGFloat(i)*subw, y: 10+eh, width: subw, height: subw)
+                    subView.addSubview(imageView)
+                }
+                for var i = event.rating; i < 5; i++ {
+                    let image = UIImage(named: "starN.png")
+                    let imageView = UIImageView(image: image)
+                    imageView.frame = CGRect(x: 20+CGFloat(i)*subw, y: 10+eh, width: subw, height: subw)
+                    subView.addSubview(imageView)
+                }
+                
+                let button = UIButton()
+                let image = UIImage(named: "rating.png")
+                button.setBackgroundImage(image, forState: UIControlState.Normal)
+                button.frame = CGRect(x: 20+6.0*subw, y: 10+eh, width: subw, height: subw)
+                
+                let ratingTapGesture = UITapGestureRecognizer(target: self, action: "ratingTapGesture:")
+                button.addGestureRecognizer(ratingTapGesture)
+                button.userInteractionEnabled = true
+                
+                subView.addSubview(button)
+                
+                
+                // address
+                let label2 = UILabel()
+                label2.frame = CGRect(x: 20, y: 20+2*eh, width: sw/2.0-25, height: eh)
+                label2.text = event.address
+                label2.font = UIFont(name: "AmericanTypewriter", size: 12)
+                
+                
+                // date
+                let label3 = UILabel()
+                label3.frame = CGRect(x: 20, y: 25+3*eh, width: sw/2.0-25, height: eh)
+                label3.text = event.date
+                label3.font = UIFont(name: "AmericanTypewriter", size: 12)
+                
+                
+                subView.addSubview(label1)
+                subView.addSubview(label2)
+                subView.addSubview(label3)
+                subView.addSubview(mapView)
+                if self.event.updated {
+                    searchInMap(self.event.address, time: self.event.date)
+                }
+            
+            } else if i == 1 {
+                th = titleRowHeight
+                
+                subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+                subView.backgroundColor = UIColor.whiteColor()
+                
+                let sh = subView.bounds.height
+                let sw = subView.bounds.width
+                
+                let label = UILabel();
+                label.frame = CGRect(x: 20, y: 5, width: sw-10, height: sh-10)
+                label.text = "Description:"
+                label.font = UIFont(name: "AmericanTypewriter", size: 20)
+                subView.addSubview(label)
+                
+            } else if i == 2 {
+                th = descriptionRowHeight
+                
+                subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+                subView.backgroundColor = UIColor.whiteColor()
+                
+                let sh = subView.bounds.height
+                let sw = subView.bounds.width
+                
+                let textView = UITextView();
+                textView.frame = CGRect(x: 20, y: 5, width: sw-40, height: sh-10)
+                textView.text = event.description
+                textView.font = UIFont(name: "AlNile", size: 16)
+                textView.editable = false
+                subView.addSubview(textView)
+                
+            } else if i == 3 {
+                th = titleRowHeight
+                
+                subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+                subView.backgroundColor = UIColor.whiteColor()
+                
+                let sh = subView.bounds.height
+                let sw = subView.bounds.width
+                
+                let label = UILabel();
+                label.frame = CGRect(x: 20, y: 5, width: sw-10, height: sh-10)
+                label.text = "Participants:"
+                label.font = UIFont(name: "AmericanTypewriter", size: 20)
+                subView.addSubview(label)
+                
+            } else if i == 4 {
+                th = participantsRowHeight
+                
+                subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+                subView.backgroundColor = UIColor.whiteColor()
+                
+                let sh = subView.bounds.height
+                let sw = subView.bounds.width
+                
+                for var i = 0; i < event.followers.count; i++ {
+                    let image = event.followers[i]
+                    let imageView = UIImageView(image: image)
+                    imageView.frame = CGRect(x: 20+CGFloat(i)*sh, y: 10, width: sh-20, height: sh-20)
+                    subView.addSubview(imageView)
+                }
+                
+            } else if i == 5 {
+                th = activityRowHeight
+                
+                subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+                subView.backgroundColor = UIColor.whiteColor()
+                
+                let sh = subView.bounds.height
+                let sw = subView.bounds.width
+                let subw = min(sh-10, (sw-40)/2.0)
+                let offset = (sw - 40 - 2.0 * subw) / 3.0
+                
+                let like = UIButton();
+                like.frame = CGRect(x: offset+20, y: 5, width: subw, height: subw)
+                let image1 = UIImage(named: "like.png")
+                like.setBackgroundImage(image1, forState: UIControlState.Normal)
+                let likeTapGesture = UITapGestureRecognizer(target: self, action: "likeTapGesture:")
+                like.addGestureRecognizer(likeTapGesture)
+                like.userInteractionEnabled = true
+                
+                let join = UIButton();
+                join.frame = CGRect(x: 2*offset+subw+20, y: 5, width: subw, height: subw)
+                let image2 = UIImage(named: "go.png")
+                join.setBackgroundImage(image2, forState: UIControlState.Normal)
+                let joinTapGesture = UITapGestureRecognizer(target: self, action: "joinTapGesture:")
+                join.addGestureRecognizer(joinTapGesture)
+                join.userInteractionEnabled = true
+                
+                subView.addSubview(like)
+                subView.addSubview(join)
+                
+            } else if i == 6 {
+                th = titleRowHeight
+                
+                subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+                subView.backgroundColor = UIColor.whiteColor()
+                
+                let sh = subView.bounds.height
+                let sw = subView.bounds.width
+                
+                let btw = sh-10
+                
+                let label = UILabel();
+                label.frame = CGRect(x: 20, y: 5, width: sw-btw-40, height: sh-10)
+                label.text = "Comments:"
+                label.font = UIFont(name: "AmericanTypewriter", size: 20)
+                
+                let add = UIButton()
+                let image = UIImage(named: "addred.png")
+                add.setBackgroundImage(image, forState: UIControlState.Normal)
+                add.frame = CGRect(x: sw-btw-20, y: 5, width: btw, height: btw)
+                
+                let addTapGesture = UITapGestureRecognizer(target: self, action: "addTapGesture:")
+                add.addGestureRecognizer(addTapGesture)
+                add.userInteractionEnabled = true
+                
+                subView.addSubview(add)
+                subView.addSubview(label)
+                
+            } else {
+                th = commentRowHeight
+                
+                subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+                subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+                subView.backgroundColor = UIColor.whiteColor()
+                
+                let sh = subView.bounds.height
+                let sw = subView.bounds.width
+                let subh = (sh - 10) / 2.0
+                
+                let comment = event.comments[i-7]
+                let label_name = UILabel()
+                label_name.frame = CGRect(x: 20, y: 5, width: (sw-10)/2.0, height: subh)
+                label_name.text = comment[0] + ":"
+                label_name.font = UIFont(name:"AmericanTypewriter", size: 16.0)
+                
+                let label_time = UILabel()
+                label_time.text = comment[1]
+                label_time.frame = CGRect(x: 20+(sw-10)/2.0, y: 5, width: (sw-10)/2.0, height: subh)
+                label_time.font = UIFont(name:"AmericanTypewriter", size: 10.0)
+                
+                let content = UITextView()
+                content.text = comment[2]
+                content.frame = CGRect(x: 20, y: 5+subh, width: sw-40, height: subh)
+                content.font = UIFont(name: "AlNile", size: 16)
+                content.editable = false
+                
+                subView.addSubview(label_name)
+                subView.addSubview(label_time)
+                subView.addSubview(content)
+            }
+            
+            cell.backgroundColor = UIColor.clearColor();
+            cell.contentView.addSubview(subView)
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            
+            cells.append(cell)
+        }
+
     }
     
     func popToRoot(sender:UIBarButtonItem){
@@ -59,246 +319,11 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return event.comments.count + 7;
+        //println("cell #: " + String(indexPath.row))
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
-        println("cell #: " + String(indexPath.row))
-        
-        var subView:UIView!
-        let tw = self.eventInfo.bounds.width
-        var th:CGFloat = 0
-        
-        if indexPath.row == 0 {
-            th = infoRowHeight
-            
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            // Subview
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            subView.backgroundColor = UIColor.whiteColor()
-            
-            let sh = subView.bounds.height
-            let sw = subView.bounds.width
-            
-            // TODO: Add map
-            let w = min(sw/2.0-25, sh-10)
-            let os = (sw/2.0 - w) / 2.0
-            mapView = MKMapView(frame: CGRectMake(sw/2.0+os, os, w, w))
-            let coordinateRegion = MKCoordinateRegionMakeWithDistance(self.location.coordinate, self.searchRadius * 2.0, self.searchRadius * 2.0)
-            mapView.setRegion(coordinateRegion, animated: false)
-            
-            // holder name
-            let eh = (sh - 25) / 5.0
-            let label1 = UILabel()
-            label1.frame = CGRect(x: 20, y: 5, width: sw/2.0-25, height: eh)
-            label1.text = event.holderName
-            label1.font = UIFont(name: "AmericanTypewriter", size: 20)
-            
-            
-            // rating
-            let subw = min(sw/20.0, eh)
-            for var i = 0; i < event.rating; i++ {
-                let image = UIImage(named: "starY.png")
-                let imageView = UIImageView(image: image)
-                imageView.frame = CGRect(x: 20+CGFloat(i)*subw, y: 10+eh, width: subw, height: subw)
-                subView.addSubview(imageView)
-            }
-            for var i = event.rating; i < 5; i++ {
-                let image = UIImage(named: "starN.png")
-                let imageView = UIImageView(image: image)
-                imageView.frame = CGRect(x: 20+CGFloat(i)*subw, y: 10+eh, width: subw, height: subw)
-                subView.addSubview(imageView)
-            }
-            
-            let button = UIButton()
-            let image = UIImage(named: "rating.png")
-            button.setBackgroundImage(image, forState: UIControlState.Normal)
-            button.frame = CGRect(x: 20+6.0*subw, y: 10+eh, width: subw, height: subw)
-            
-            let ratingTapGesture = UITapGestureRecognizer(target: self, action: "ratingTapGesture:")
-            button.addGestureRecognizer(ratingTapGesture)
-            button.userInteractionEnabled = true
-            
-            subView.addSubview(button)
-            
-            
-            // address
-            let label2 = UILabel()
-            label2.frame = CGRect(x: 20, y: 20+2*eh, width: sw/2.0-25, height: eh)
-            label2.text = event.address
-            label2.font = UIFont(name: "AmericanTypewriter", size: 12)
-            
-            
-            // date
-            let label3 = UILabel()
-            label3.frame = CGRect(x: 20, y: 25+3*eh, width: sw/2.0-25, height: eh)
-            label3.text = event.date
-            label3.font = UIFont(name: "AmericanTypewriter", size: 12)
-            
-            
-            subView.addSubview(label1)
-            subView.addSubview(label2)
-            subView.addSubview(label3)
-            subView.addSubview(mapView)
-            
-        } else if indexPath.row == 1 {
-            th = titleRowHeight
-            
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            subView.backgroundColor = UIColor.whiteColor()
-            
-            let sh = subView.bounds.height
-            let sw = subView.bounds.width
-            
-            let label = UILabel();
-            label.frame = CGRect(x: 20, y: 5, width: sw-10, height: sh-10)
-            label.text = "Description:"
-            label.font = UIFont(name: "AmericanTypewriter", size: 20)
-            subView.addSubview(label)
-            
-        } else if indexPath.row == 2 {
-            th = descriptionRowHeight
-            
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            subView.backgroundColor = UIColor.whiteColor()
-            
-            let sh = subView.bounds.height
-            let sw = subView.bounds.width
-            
-            let textView = UITextView();
-            textView.frame = CGRect(x: 20, y: 5, width: sw-40, height: sh-10)
-            textView.text = event.description
-            textView.font = UIFont(name: "AlNile", size: 16)
-            textView.editable = false
-            subView.addSubview(textView)
-            
-        } else if indexPath.row == 3 {
-            th = titleRowHeight
-            
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            subView.backgroundColor = UIColor.whiteColor()
-            
-            let sh = subView.bounds.height
-            let sw = subView.bounds.width
-            
-            let label = UILabel();
-            label.frame = CGRect(x: 20, y: 5, width: sw-10, height: sh-10)
-            label.text = "Participants:"
-            label.font = UIFont(name: "AmericanTypewriter", size: 20)
-            subView.addSubview(label)
-            
-        } else if indexPath.row == 4 {
-            th = participantsRowHeight
-            
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            subView.backgroundColor = UIColor.whiteColor()
-            
-            let sh = subView.bounds.height
-            let sw = subView.bounds.width
-            
-            for var i = 0; i < event.followers.count; i++ {
-                let image = event.followers[i]
-                let imageView = UIImageView(image: image)
-                imageView.frame = CGRect(x: 20+CGFloat(i)*sh, y: 10, width: sh-20, height: sh-20)
-                subView.addSubview(imageView)
-            }
-            
-        } else if indexPath.row == 5 {
-            th = activityRowHeight
-            
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            subView.backgroundColor = UIColor.whiteColor()
-            
-            let sh = subView.bounds.height
-            let sw = subView.bounds.width
-            let subw = min(sh-10, (sw-40)/2.0)
-            let offset = (sw - 40 - 2.0 * subw) / 3.0
-            
-            let like = UIButton();
-            like.frame = CGRect(x: offset+20, y: 5, width: subw, height: subw)
-            let image1 = UIImage(named: "like.png")
-            like.setBackgroundImage(image1, forState: UIControlState.Normal)
-            let likeTapGesture = UITapGestureRecognizer(target: self, action: "likeTapGesture:")
-            like.addGestureRecognizer(likeTapGesture)
-            like.userInteractionEnabled = true
-            
-            let join = UIButton();
-            join.frame = CGRect(x: 2*offset+subw+20, y: 5, width: subw, height: subw)
-            let image2 = UIImage(named: "go.png")
-            join.setBackgroundImage(image2, forState: UIControlState.Normal)
-            let joinTapGesture = UITapGestureRecognizer(target: self, action: "joinTapGesture:")
-            join.addGestureRecognizer(joinTapGesture)
-            join.userInteractionEnabled = true
-            
-            subView.addSubview(like)
-            subView.addSubview(join)
-            
-        } else if indexPath.row == 6 {
-            th = titleRowHeight
-            
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            subView.backgroundColor = UIColor.whiteColor()
-            
-            let sh = subView.bounds.height
-            let sw = subView.bounds.width
-            
-            let btw = sh-10
-            
-            let label = UILabel();
-            label.frame = CGRect(x: 20, y: 5, width: sw-btw-40, height: sh-10)
-            label.text = "Comments:"
-            label.font = UIFont(name: "AmericanTypewriter", size: 20)
-            
-            let add = UIButton()
-            let image = UIImage(named: "addred.png")
-            add.setBackgroundImage(image, forState: UIControlState.Normal)
-            add.frame = CGRect(x: sw-btw-20, y: 5, width: btw, height: btw)
-            
-            let addTapGesture = UITapGestureRecognizer(target: self, action: "addTapGesture:")
-            add.addGestureRecognizer(addTapGesture)
-            add.userInteractionEnabled = true
-            
-            subView.addSubview(add)
-            subView.addSubview(label)
-            
-        } else {
-            th = commentRowHeight
-            
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            subView.backgroundColor = UIColor.whiteColor()
-            
-            let sh = subView.bounds.height
-            let sw = subView.bounds.width
-            let subh = (sh - 10) / 2.0
-            
-            let comment = event.comments[indexPath.row-7]
-            let label_name = UILabel()
-            label_name.frame = CGRect(x: 20, y: 5, width: (sw-10)/2.0, height: subh)
-            label_name.text = comment[0] + ":"
-            label_name.font = UIFont(name:"AmericanTypewriter", size: 16.0)
-            
-            let label_time = UILabel()
-            label_time.text = comment[1]
-            label_time.frame = CGRect(x: 20+(sw-10)/2.0, y: 5, width: (sw-10)/2.0, height: subh)
-            label_time.font = UIFont(name:"AmericanTypewriter", size: 10.0)
-            
-            let content = UITextView()
-            content.text = comment[2]
-            content.frame = CGRect(x: 20, y: 5+subh, width: sw-40, height: subh)
-            content.font = UIFont(name: "AlNile", size: 16)
-            content.editable = false
-            
-            subView.addSubview(label_name)
-            subView.addSubview(label_time)
-            subView.addSubview(content)
-        }
-        
-        cell.backgroundColor = UIColor.clearColor();
-        cell.contentView.addSubview(subView)
-        cell.selectionStyle = UITableViewCellSelectionStyle.None
-        
-        return cell
+        return cells[indexPath.row]
     }
     
     func ratingTapGesture(gesture: UIGestureRecognizer) {
@@ -442,7 +467,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func getInformationFromDatabase(){
-        
+        println("TEST!!!")
         // TODO: Get information from database
         let urlPath = "http://52.25.65.141:8000/event/" + User.eventID + "/?user_id=" + User.UID
         let url = NSURL(string: urlPath)
@@ -502,7 +527,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 
                 self.searchInMap(address, time: dateString)
                 self.mapView.reloadInputViews()
-                
+                self.creatCells()
                 self.eventInfo.reloadData()
                 self.titleLabel.reloadInputViews()
                 
@@ -533,7 +558,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 return
             }
             
-            println(jsonResult)
+            //println(jsonResult)
             
             let comments = jsonResult["comments"] as! NSArray
             
@@ -546,7 +571,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     
                     self.event.comments.append([username, dateString, content])
                 }
-                
+                self.creatCells()
                 self.eventInfo.reloadData()
             })
         }
@@ -678,7 +703,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     return
                 }
                 
-                println(jsonResult)
+                //println(jsonResult)
                 
                 let nickname = jsonResult["nickname"] as! String
                 let g = jsonResult["gender"] as? Int
@@ -689,7 +714,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     gender = "Female"
                 }
                 let rating = jsonResult["rating"] as? String
-                println(nickname)
+                //println(nickname)
                 dispatch_async(dispatch_get_main_queue(), {
                     User.nickname = nickname
                     User.gender = gender as String!
@@ -733,7 +758,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 return
             }
             
-            println(jsonResult)
+            //println(jsonResult)
             
         }
         task.resume()
@@ -760,7 +785,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 return
             }
             
-            println(jsonResult)
+            //println(jsonResult)
             
         })
         task.resume()
@@ -786,7 +811,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 return
             }
             
-            println(jsonResult)
+            //println(jsonResult)
             
         })
         task.resume()
