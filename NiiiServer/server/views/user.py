@@ -65,7 +65,7 @@ def viewProfile(request, userid):
 	user = User.objects.get(id = userid)
 	profile = Profile.objects.get(user = user)
 	res['username'] = user.username
-	res.update(model_to_dict(profile, fields = ['nickname', 'gender']))
+	res.update(model_to_dict(profile, fields = ['nickname', 'email', 'gender']))
 	try:
 		res['photo'] = profile.photo.url
 	except:
@@ -82,6 +82,8 @@ def updateProfile(request, userid):
 	profile = Profile.objects.get(user = user)
 	if request.POST.get('nickname', None):
 		profile.nickname = request.POST['nickname']
+	if request.POST.get('email', None):
+		profile.email = request.POST['email']
 	if request.POST.get('gender', None):
 		profile.gender = True if request.POST['gender'] == 'male' else False
 	if request.FILES.get('photo', None):

@@ -6,7 +6,7 @@ from django.core.files.base import ContentFile
 from django.forms.models import model_to_dict
 from django.core import serializers
 #from django.core.exceptions import DoesNotExist
-from django.db.models import Avg
+from django.db.models import Avg, Count
 
 import dateutil.parser
 import datetime
@@ -40,6 +40,12 @@ def viewEvent(request, eventid):
 	res['is_favorited'] = True if user in event.favoriters.all() else False
 
 	return JsonResponse(res)
+
+def viewPopularEvents(request):
+	events = Event.objects.annotate(total_count = Count('participants', distinct = True) + Count('favoriters', distinct = True)).order_by('-total_count').values('id', 'name', 'place', 'time')[:10]
+	for event in events:
+		event['time'] = event['time'].isoformat()
+	return JsonResponse({'events': list(events)})
 
 def addEvent(request):
 	try:

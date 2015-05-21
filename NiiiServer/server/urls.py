@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^user/(?P<userid>[0-9]+)/recommend/$', user.recommend, name = 'recommend'),
 
     url(r'^event/(?P<eventid>[0-9]+)/$', event.viewEvent, name = 'viewevent'),
+    url(r'^event/popular/$', event.viewPopularEvents, name = 'viewepopularvents'),
     url(r'^event/add/$', event.addEvent, name = 'addevent'),
     url(r'^event/categories/$', event.viewCategories, name = 'viewcategories'),
 

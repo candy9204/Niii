@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
 	user = models.OneToOneField(User)
 	nickname = models.CharField(max_length = 50, blank = True)
+	email = models.CharField(max_length = 50, blank = True)
 	gender = models.NullBooleanField(blank = True)
 	photo = models.ImageField(upload_to = 'photos', null = True, blank = True)
 	followings = models.ManyToManyField('self', related_name = 'followers', symmetrical = False, blank = True)
