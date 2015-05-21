@@ -165,11 +165,11 @@ def viewFollowers(request, userid):
 	return JsonResponse({'followers': res})
 
 def viewParticipations(request, userid):
-	participations = User.objects.select_related('profile').get(id = userid).participations.values('id', 'name')
+	participations = User.objects.select_related('profile').get(id = userid).participations.values('id', 'name', 'place','time')
 	return JsonResponse({'participations': list(participations)})
 
 def viewFavorites(request, userid):
-	favorites = User.objects.select_related('profile').get(id = userid).favorites.values('id', 'name')
+	favorites = User.objects.select_related('profile').get(id = userid).favorites.values('id', 'name', 'place','time')
 	return JsonResponse({'favorites': list(favorites)})
 
 def rate(request, userid):
