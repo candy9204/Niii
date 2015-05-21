@@ -84,6 +84,50 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
         // NOTE: Remember to compress the image first!!!
         // Data: titleField.text, descriptionField.text, dateAndTimeField.text, locationField.text, imageField.image
         
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/event/add/")!)
+        request.HTTPMethod = "POST"
+        
+        let characterSet = NSMutableCharacterSet.alphanumericCharacterSet()
+        characterSet.addCharactersInString(" ")
+        
+        var title = titleField.text
+        var location = locationField.text
+        var description = descriptionField.text
+        var time = self.converTime(dayAndTimeField.text as String) as String!
+        
+        title = title.stringByAddingPercentEncodingWithAllowedCharacters(characterSet)
+        location = location.stringByAddingPercentEncodingWithAllowedCharacters(characterSet)
+        description = description.stringByAddingPercentEncodingWithAllowedCharacters(characterSet)
+        time = time.stringByAddingPercentEncodingWithAllowedCharacters(characterSet)
+        title = title.stringByReplacingOccurrencesOfString(" ", withString: "+", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
+        location = location.stringByReplacingOccurrencesOfString(" ", withString: "+", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
+        description = description.stringByReplacingOccurrencesOfString(" ", withString: "+", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
+        
+        let postString = "name=" + title! + "&organizor=" + User.UID + "&place=" + location! + "&description=" + description! + "&time=" + time!
+        
+        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            data, response, error in
+            
+            if error != nil {
+                println("error=\(error)")
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+        }
+        task.resume()
+        
+        
+        
         
         // Done
         let alertMessage = UIAlertController(title: "Success", message: "You have created the event!", preferredStyle: .Alert)
@@ -169,5 +213,14 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
         
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         return cell;
+    }
+    
+    func converTime(time: String) -> String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
+        var date = dateFormatter.dateFromString(time)
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssxxx"
+        let dateString = dateFormatter.stringFromDate(date!)
+        return dateString
     }
 }
