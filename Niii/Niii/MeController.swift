@@ -30,7 +30,7 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func updateWithHTTP(){
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://localhost:8000/user/" + User.UID + "/profile/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/user/" + User.UID + "/profile/")!)
         request.HTTPMethod = "POST"
         var flag = true
         
