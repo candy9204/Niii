@@ -103,13 +103,13 @@ def search(request):
 			res.append(info)
 		return JsonResponse({'events': res})
 	else:
-		words = searchString.lower().split()
+		searchString= searchString.lower()
 		events = Event.objects.all()
 		for event in events:
-			names = event.name.lower().split()
-			descript = event.description.lower().split()
-			searchField = names + descript
-			if set(words) <= set(searchField):
+			eventName = event.name.lower()
+			descript = event.description.lower()
+			searchField = eventName + descript
+			if searchField.find(searchString) >=0:
 				info = {}
 				info['id'] = event.id
 				info['name'] = event.name
@@ -126,8 +126,10 @@ def search(request):
 		for user in users:
 			if user.username != "admin":
 				p = Profile.objects.get(user = user)
-				names = p.nickname.lower().split()
-				if set(words) <= set(names):
+				names1 = p.nickname.lower()
+				names2 = user.username.lower()
+				names = names1 + names2
+				if names.find(searchString) >=0:
 					info = {}
 					info['id'] = user.id
 					info['nickname'] = p.nickname
