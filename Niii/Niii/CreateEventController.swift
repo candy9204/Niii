@@ -22,13 +22,96 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
     var categoryField:UITextView = UITextView()
     var imageField:UIImageView = UIImageView()
     var submitButton:UIButton = UIButton()
-    
+    var cells:[UITableViewCell] = [UITableViewCell]()
+    var bounds: CGRect = UIScreen.mainScreen().bounds
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         picker.delegate = self
         self.eventInfo.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        createCells()
+    }
+    
+    func createCells(){
+        for var i = 0; i < 7; i++ {
+            var cell:UITableViewCell = self.eventInfo.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+            
+            let tw = self.bounds.width
+            var th : CGFloat
+            
+            if i == 4 || i == 5 {
+                th = largeRowHeight
+            } else {
+                th = smallRowHeight
+            }
+            
+            let subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+            subView.backgroundColor = UIColor.whiteColor()
+            
+            let sh = subView.bounds.height
+            let sw = subView.bounds.width
+            
+            if i == 6 {
+                submitButton.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)/3.0, sh-10)
+                let image = UIImage(named: "button.png")
+                submitButton.setBackgroundImage(image, forState: UIControlState.Normal)
+                submitButton.setTitle("Submit", forState: .Normal)
+                submitButton.setTitleColor(UIColorFromHex.color(0x0075FF), forState: .Normal)
+                submitButton.addTarget(self, action: "submitEventInfo:", forControlEvents: .TouchUpInside)
+                subView.addSubview(submitButton)
+            } else {
+                let title = UILabel(frame: CGRectMake(20, 5, (sw-40)/3.0, sh-10))
+                
+                if i == 0 {
+                    title.text = "Title:"
+                    titleField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
+                    titleField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
+                    titleField.layer.cornerRadius = 5.0
+                    subView.addSubview(titleField)
+                } else if i == 1 {
+                    title.text = "Date & Time:"
+                    dayAndTimeField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
+                    dayAndTimeField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
+                    dayAndTimeField.layer.cornerRadius = 5.0
+                    subView.addSubview(dayAndTimeField)
+                } else if i == 2 {
+                    title.text = "Location:"
+                    locationField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
+                    locationField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
+                    locationField.layer.cornerRadius = 5.0
+                    subView.addSubview(locationField)
+                } else if i == 3 {
+                    title.text = "Category:"
+                    categoryField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
+                    categoryField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
+                    categoryField.layer.cornerRadius = 5.0
+                    subView.addSubview(categoryField)
+                } else if i == 4 {
+                    title.text = "Description:"
+                    descriptionField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
+                    descriptionField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
+                    descriptionField.layer.cornerRadius = 5.0
+                    subView.addSubview(descriptionField)
+                } else {
+                    title.text = "Image:"
+                    imageField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
+                    imageField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
+                    imageField.layer.cornerRadius = 5.0
+                    let selectPhotoGesture = UITapGestureRecognizer(target: self, action: "selectPhoto:")
+                    imageField.addGestureRecognizer(selectPhotoGesture)
+                    imageField.userInteractionEnabled = true
+                    subView.addSubview(imageField)
+                }
+                
+                subView.addSubview(title)
+            }
+            
+            cell.addSubview(subView)
+            cell.backgroundColor = UIColor.clearColor()
+            cell.selectionStyle = UITableViewCellSelectionStyle.None
+            cells.append(cell)
+        }
     }
     
     func popToRoot(sender:UIBarButtonItem){
@@ -93,7 +176,6 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
             alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
             self.presentViewController(alertMessage, animated: true, completion: nil)
             return false
-
         }
         
         return true
@@ -158,82 +240,7 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
-
-        let tw = self.eventInfo.bounds.width
-        var th : CGFloat
-        
-        if indexPath.row == 4 || indexPath.row == 5 {
-            th = largeRowHeight
-        } else {
-            th = smallRowHeight
-        }
-        
-        let subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-        subView.backgroundColor = UIColor.whiteColor()
-        
-        let sh = subView.bounds.height
-        let sw = subView.bounds.width
-        
-        if indexPath.row == 6 {
-            submitButton.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)/3.0, sh-10)
-            let image = UIImage(named: "button.png")
-            submitButton.setBackgroundImage(image, forState: UIControlState.Normal)
-            submitButton.setTitle("Submit", forState: .Normal)
-            submitButton.setTitleColor(UIColorFromHex.color(0x0075FF), forState: .Normal)
-            submitButton.addTarget(self, action: "submitEventInfo:", forControlEvents: .TouchUpInside)
-            subView.addSubview(submitButton)
-        } else {
-            let title = UILabel(frame: CGRectMake(20, 5, (sw-40)/3.0, sh-10))
-            
-            if indexPath.row == 0 {
-                title.text = "Title:"
-                titleField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
-                titleField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
-                titleField.layer.cornerRadius = 5.0
-                subView.addSubview(titleField)
-            } else if indexPath.row == 1 {
-                title.text = "Date & Time:"
-                dayAndTimeField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
-                dayAndTimeField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
-                dayAndTimeField.layer.cornerRadius = 5.0
-                subView.addSubview(dayAndTimeField)
-            } else if indexPath.row == 2 {
-                title.text = "Location:"
-                locationField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
-                locationField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
-                locationField.layer.cornerRadius = 5.0
-                subView.addSubview(locationField)
-            } else if indexPath.row == 3 {
-                title.text = "Category:"
-                categoryField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
-                categoryField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
-                categoryField.layer.cornerRadius = 5.0
-                subView.addSubview(categoryField)
-            } else if indexPath.row == 4 {
-                title.text = "Description:"
-                descriptionField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
-                descriptionField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
-                descriptionField.layer.cornerRadius = 5.0
-                subView.addSubview(descriptionField)
-            } else {
-                title.text = "Image:"
-                imageField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
-                imageField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
-                imageField.layer.cornerRadius = 5.0
-                let selectPhotoGesture = UITapGestureRecognizer(target: self, action: "selectPhoto:")
-                imageField.addGestureRecognizer(selectPhotoGesture)
-                imageField.userInteractionEnabled = true
-                subView.addSubview(imageField)
-            }
-            
-            subView.addSubview(title)
-        }
-        
-        cell.addSubview(subView)
-        cell.backgroundColor = UIColor.clearColor()
-        cell.selectionStyle = UITableViewCellSelectionStyle.None
-        return cell;
+        return cells[indexPath.row]
     }
     
     func converTime(time: String) -> String {

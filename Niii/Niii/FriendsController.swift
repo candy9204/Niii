@@ -14,11 +14,9 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
     @IBOutlet weak var controller: UISegmentedControl!
     @IBOutlet weak var followingList: UITableView!
     @IBOutlet weak var followersList: UITableView!
-    var followers = [String]()
-    var following = [String]()
-    var images_followers = [UIImage]()
-    var images_following = [UIImage]()
+    var followers = [FriendProfile]()
     var cells_followers:[UITableViewCell] = [UITableViewCell]()
+    var following = [FriendProfile]()
     var cells_following:[UITableViewCell] = [UITableViewCell]()
     var bounds: CGRect = UIScreen.mainScreen().bounds
     
@@ -56,14 +54,14 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
             let sw = subView.bounds.width
             
             // Image
-            let imageView = UIImageView(image: images_followers[i])
+            let imageView = UIImageView(image: followers[i].image)
             imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
             subView.addSubview(imageView)
             
             // label
             let label = UILabel();
             label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
-            label.text = self.followers[i]
+            label.text = self.followers[i].nickName
             subView.addSubview(label)
             
             // Cell
@@ -88,14 +86,14 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
             let sw = subView.bounds.width
             
             // Image
-            let imageView = UIImageView(image: images_following[i])
+            let imageView = UIImageView(image: following[i].image)
             imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
             subView.addSubview(imageView)
             
             // label
             let label = UILabel();
             label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
-            label.text = self.following[i]
+            label.text = self.following[i].nickName
             subView.addSubview(label)
             
             // Cell
@@ -116,16 +114,14 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
         // TODO: Load the information of friends from database
         let imageName = "me.png"
         // Followers
-        self.followers = ["Li Ding", "Yilin Xiong", "Mengdi Zhang", "Di Li"]
-        self.images_followers.append(UIImage(named: imageName)!)
-        self.images_followers.append(UIImage(named: imageName)!)
-        self.images_followers.append(UIImage(named: imageName)!)
-        self.images_followers.append(UIImage(named: imageName)!)
+        self.followers.append(FriendProfile(userName: "HAHA", nickName: "XIXI", rating: 4, email: "asdf@df.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
+        self.followers.append(FriendProfile(userName: "AO", nickName: "AI", rating: 4, email: "asdf@ds.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
+        self.followers.append(FriendProfile(userName: "DO", nickName: "AQ", rating: 4, email: "aasdf@ds.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
         // Following
-        self.following = ["Yilin Xiong", "Li Ding", "Jiangyu"]
-        self.images_following.append(UIImage(named: imageName)!)
-        self.images_following.append(UIImage(named: imageName)!)
-        self.images_following.append(UIImage(named: imageName)!)
+        self.following.append(FriendProfile(userName: "AO", nickName: "AI", rating: 4, email: "asdf@ds.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
+        self.following.append(FriendProfile(userName: "DO", nickName: "AQ", rating: 4, email: "aasdf@ds.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
+        self.following.append(FriendProfile(userName: "HAHA", nickName: "XIXI", rating: 4, email: "asdf@df.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
+        self.following.append(FriendProfile(userName: "HAASDFHA", nickName: "XASDFI", rating: 4, email: "asdf@df.com", numberOfFollowers: 5, numberOfFollowing: 5, gender: 1, image: UIImage(named: imageName)!, updated: true))
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -159,19 +155,57 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        
+        var friends:[FriendProfile]
         if tableView == self.followersList {
-            let followers = self.storyboard?.instantiateViewControllerWithIdentifier("singleFriendPage") as! SingleFriendController
-            followers.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-            followers.parentController = 2
-            followers.parentTab = 1
-            self.presentViewController(followers, animated:true, completion:nil)
+            friends = followers
         } else {
-            let following = self.storyboard?.instantiateViewControllerWithIdentifier("singleFriendPage") as! SingleFriendController
-            following.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-            following.parentController = 2
-            following.parentTab = 0
-            self.presentViewController(following, animated:true, completion:nil)
+            friends = following
         }
+        let id = indexPath.row
+        var gender:String
+        if friends[id].gender == 0 {
+            gender = "Unknown"
+        } else if friends[id].gender == 1 {
+            gender = "Female"
+        } else {
+            gender = "Male"
+        }
+        
+        let alertController = UIAlertController(title: friends[id].nickName, message:
+            "--------\nUsername: "+friends[id].userName+"\nGender: "+gender+"\nEmail: "+friends[id].email+"\nRating: "+String(friends[id].rating)+"\nNumber of Followers: "+String(friends[id].numberOfFollowers)+"\nNumber of Following: "+String(friends[id].numberOfFollowing), preferredStyle: UIAlertControllerStyle.Alert)
+        
+        
+        
+        let followAction = UIAlertAction(title: "Follow", style: .Default, handler: {
+            action in
+            // TODO: Submit the follow request to server
+            
+            
+            // Done
+            let alertMessage = UIAlertController(title: "Success", message: "You have followed "+friends[id].nickName, preferredStyle: .Alert)
+            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            self.presentViewController(alertMessage, animated: true, completion: nil)
+        })
+        
+        let unfollowAction = UIAlertAction(title: "Unfollow", style: .Default, handler: {
+            action in
+            // TODO: Submit the unfollow request to server
+            
+            
+            // Done
+            let alertMessage = UIAlertController(title: "Success", message: "You have unfollowed "+friends[id].nickName, preferredStyle: .Alert)
+            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            self.presentViewController(alertMessage, animated: true, completion: nil)
+        })
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Default) { (_) in }
+        
+        alertController.addAction(followAction)
+        alertController.addAction(unfollowAction)
+        alertController.addAction(cancelAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
     
     func setSelected(selected: Bool, animated: Bool) {
