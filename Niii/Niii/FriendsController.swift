@@ -16,8 +16,6 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
     @IBOutlet weak var followersList: UITableView!
     var followers = [String]()
     var following = [String]()
-    var flags_following = [Bool]()
-    var flags_followers = [Bool]()
     var images_followers = [UIImage]()
     var images_following = [UIImage]()
     
@@ -60,14 +58,8 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if  tableView == self.followersList {
-            for var i = flags_followers.count; i < followers.count; i++ {
-                flags_followers.append(false)
-            }
             return self.followers.count;
         } else {
-            for var i = flags_following.count; i < following.count; i++ {
-                flags_following.append(false)
-            }
             return self.following.count;
         }
     }
@@ -76,8 +68,7 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
         var cell:UITableViewCell = self.followersList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
         var subView:UIView!
         
-        if tableView == self.followersList && !flags_followers[indexPath.row]{
-            flags_followers[indexPath.row] = true
+        if tableView == self.followersList {
             
             let th = self.followersList.rowHeight;
             let tw = self.followersList.bounds.width;
@@ -85,9 +76,6 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
             // Subview
             subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
             subView.backgroundColor = UIColor.whiteColor()
-            subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
-            subView.layer.shadowOffset = CGSizeMake(0, 3.0)
-            subView.layer.shadowOpacity = 0.2
             
             let sh = subView.bounds.height
             let sw = subView.bounds.width
@@ -108,8 +96,7 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
             cell.backgroundColor = UIColor.clearColor();
             cell.contentView.addSubview(subView)
             
-        } else if tableView == self.followingList {
-            flags_following[indexPath.row] = true
+        } else {
             
             let th = self.followingList.rowHeight;
             let tw = self.followingList.bounds.width;
@@ -117,9 +104,6 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
             // Subview
             subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
             subView.backgroundColor = UIColor.whiteColor()
-            subView.layer.shadowColor = UIColorFromHex.color(0x0075FF).CGColor
-            subView.layer.shadowOffset = CGSizeMake(0, 3.0)
-            subView.layer.shadowOpacity = 0.2
             
             let sh = subView.bounds.height
             let sw = subView.bounds.width
