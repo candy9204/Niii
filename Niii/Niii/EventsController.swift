@@ -8,18 +8,16 @@
 
 import UIKit
 
-class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSource,UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var eventList: UITableView!
     var events = [String]()
     var images = [UIImage]()
     var flags:[Bool] = [Bool]()
-    var picker:UIImagePickerController = UIImagePickerController()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        picker.delegate = self
         
         // Do any additional setup after loading the view, typically from a nib.
         self.eventList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
@@ -42,20 +40,11 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     @IBAction func addEvent(sender: AnyObject) {
-        picker.allowsEditing = false //2
-        picker.sourceType = .PhotoLibrary //3
-        presentViewController(picker, animated: true, completion: nil)//4
-    }
-    
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-        var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
-//        myImageView.contentMode = .ScaleAspectFit //3
-//        myImageView.image = chosenImage //4
-        dismissViewControllerAnimated(true, completion: nil) //5
+        let createEvent = self.storyboard?.instantiateViewControllerWithIdentifier("createEventPage") as! CreateEventController
+        createEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        createEvent.parentController = 0
+        // println("haha")
+        self.presentViewController(createEvent, animated:true, completion:nil)
     }
     
     func loadEvents(){

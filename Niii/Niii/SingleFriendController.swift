@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import AVFoundation
 
 class SingleFriendController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -40,11 +39,15 @@ class SingleFriendController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // Number of cells
         return 0;
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var cell:UITableViewCell = tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+        // Initialize cell
+        // indexPath.row #
+        
         return cell;
     }
 }

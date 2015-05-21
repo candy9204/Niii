@@ -304,10 +304,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="dou-Ll-amw" firstAttribute="width" secondItem="aKA-oJ-Ueu" secondAttribute="width" id="I6P-Ly-1MU"/>
+                            <constraint firstItem="WKE-MR-rx8" firstAttribute="width" secondItem="aKA-oJ-Ueu" secondAttribute="width" id="Vm0-MF-cCw"/>
                             <constraint firstItem="WKE-MR-rx8" firstAttribute="top" secondItem="dou-Ll-amw" secondAttribute="bottom" constant="1" id="rRh-wi-i9C"/>
                             <constraint firstItem="BOC-ty-nbH" firstAttribute="top" secondItem="WKE-MR-rx8" secondAttribute="bottom" id="u2w-iY-hBG"/>
                             <constraint firstItem="dou-Ll-amw" firstAttribute="top" secondItem="j2f-sB-8RG" secondAttribute="bottom" constant="-20" id="vPu-Xg-JSZ"/>
-                            <constraint firstAttribute="width" secondItem="WKE-MR-rx8" secondAttribute="width" id="wTC-ut-Jxy"/>
                         </constraints>
                     </view>
                     <connections>
@@ -677,6 +677,72 @@
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="93g-Me-ugs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1445" y="1068"/>
+        </scene>
+        <!--CreateEvent-->
+        <scene sceneID="zgV-JD-PWV">
+            <objects>
+                <viewController storyboardIdentifier="createEventPage" title="CreateEvent" id="ZkF-01-dat" userLabel="CreateEvent" customClass="CreateEventController" customModule="Niii" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="caU-3z-iR3"/>
+                        <viewControllerLayoutGuide type="bottom" id="lJi-fU-FxZ"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="7wb-Jq-bsu">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Npq-8g-O79">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="67"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Create an Event" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WxR-xa-59v">
+                                        <rect key="frame" x="230" y="23" width="141" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tLQ-aI-cbt">
+                                        <rect key="frame" x="13" y="26" width="70" height="30"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <state key="normal" title="〈  Events">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="backToEvents:" destination="ZkF-01-dat" eventType="touchUpInside" id="Z6N-OL-8l9"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="tLQ-aI-cbt" firstAttribute="leading" secondItem="Npq-8g-O79" secondAttribute="leading" constant="13" id="HR4-zC-v6v"/>
+                                    <constraint firstAttribute="centerX" secondItem="WxR-xa-59v" secondAttribute="centerX" id="RgV-Ds-gtP"/>
+                                </constraints>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="ogb-WS-22Y">
+                                <rect key="frame" x="0.0" y="68" width="600" height="532"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="ZkF-01-dat" id="GkI-DB-Jpy"/>
+                                    <outlet property="delegate" destination="ZkF-01-dat" id="GLc-F7-Tw5"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Npq-8g-O79" firstAttribute="top" secondItem="caU-3z-iR3" secondAttribute="bottom" constant="-20" id="DQy-x0-1Dg"/>
+                            <constraint firstAttribute="width" secondItem="ogb-WS-22Y" secondAttribute="width" id="QZk-S1-pSL"/>
+                            <constraint firstItem="Npq-8g-O79" firstAttribute="leading" secondItem="7wb-Jq-bsu" secondAttribute="leadingMargin" constant="-16" id="Vet-cp-mN2"/>
+                            <constraint firstItem="lJi-fU-FxZ" firstAttribute="top" secondItem="ogb-WS-22Y" secondAttribute="bottom" id="gDf-7N-L4i"/>
+                            <constraint firstItem="ogb-WS-22Y" firstAttribute="top" secondItem="Npq-8g-O79" secondAttribute="bottom" constant="1" id="lUZ-cP-l3t"/>
+                            <constraint firstItem="Npq-8g-O79" firstAttribute="width" secondItem="7wb-Jq-bsu" secondAttribute="width" id="tBf-H2-hh9"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="eventInfo" destination="ogb-WS-22Y" id="5Hg-82-amR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Rrx-yZ-XQW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1445" y="360"/>
         </scene>
