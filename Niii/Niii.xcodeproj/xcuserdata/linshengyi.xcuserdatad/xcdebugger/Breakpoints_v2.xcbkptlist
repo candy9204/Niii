@@ -74,7 +74,7 @@
                   moduleName = "Niii"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/linshengyi/Desktop/Niii_Project/Niii/Niii/UIColorFromHex.swift"
-                  timestampString = "453886780.641372"
+                  timestampString = "453893448.257076"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "0"
@@ -89,7 +89,7 @@
                   moduleName = "Niii"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/linshengyi/Desktop/Niii_Project/Niii/Niii/UIColorFromHex.swift"
-                  timestampString = "453886780.641667"
+                  timestampString = "453893448.257229"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "11"
@@ -97,6 +97,22 @@
                   offsetFromSymbolStart = "8">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Niii/EventsController.swift"
+            timestampString = "453889289.616358"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
+            landmarkName = "EventsController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

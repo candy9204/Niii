@@ -29,7 +29,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     var activityRowHeight:CGFloat = 60.0
     var isJoined: Bool = false
     var isFavorite: Bool = false
-    
+    var bounds: CGRect = UIScreen.mainScreen().bounds
     var cells:[UITableViewCell] = [UITableViewCell]()
     
     override func viewDidLoad() {
@@ -40,15 +40,8 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         self.manager.desiredAccuracy = kCLLocationAccuracyBest
         self.manager.startUpdatingLocation()
         // Get event information from database
-        eventInfo.frame.size.height = 0
         if !self.event.updated {
             getInformationFromDatabase()
-//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
-//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
-//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
-//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
-//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
-//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
             self.event.updated = true
         }
         self.creatCells()
@@ -61,7 +54,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             //println("cell #: " + String(indexPath.row))
             
             var subView:UIView!
-            let tw = self.eventInfo.bounds.width
+            let tw = self.bounds.width
             var th:CGFloat = 0
             
             if i == 0 {
@@ -422,17 +415,27 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func joinTapGesture(gesture: UIGestureRecognizer) {
-        let alertController = UIAlertController(title: "Join In Event", message:
-            "Are you sure to join in this event?", preferredStyle: UIAlertControllerStyle.Alert)
+        var joinTitle = "Join In Event"
+        var joinMessage = "Are you sure to join in this event?"
+        var button = "join"
+        var successMsg = "You have joined in this event!"
         
-        let joinAction = UIAlertAction(title: "Join In", style: .Default, handler: {
+        if self.isJoined {
+            joinTitle = "Unjoin Event"
+            joinMessage = "You have already joined in this event. Are you sure to unjoin this event?"
+            button = "unjoin"
+            successMsg = "You have unjoined this event!"
+        }
+        let alertController = UIAlertController(title: joinTitle, message: joinMessage, preferredStyle: UIAlertControllerStyle.Alert)
+        
+        let joinAction = UIAlertAction(title: button, style: .Default, handler: {
             action in
             // TODO: Send the "join in" message to server
             
-            self.joinEvent()
+            self.joinEvent(button)
             
             // Done
-            let alertMessage = UIAlertController(title: "Success", message: "You have joined in this event!", preferredStyle: .Alert)
+            let alertMessage = UIAlertController(title: "Success", message: successMsg, preferredStyle: .Alert)
             alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
             self.presentViewController(alertMessage, animated: true, completion: nil)
         })
@@ -467,7 +470,6 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func getInformationFromDatabase(){
-        println("TEST!!!")
         // TODO: Get information from database
         let urlPath = "http://52.25.65.141:8000/event/" + User.eventID + "/?user_id=" + User.UID
         let url = NSURL(string: urlPath)
@@ -505,16 +507,16 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 rating = r!
             }
             
-            self.isJoined = jsonResult["is_joined"] as! Bool
-            self.isFavorite = jsonResult["is_favorited"] as! Bool
-            
             dispatch_async(dispatch_get_main_queue(), {
+                
+                self.isJoined = jsonResult["is_joined"] as! Bool
+                self.isFavorite = jsonResult["is_favorited"] as! Bool
                 self.event.eventName = eventName
                 self.event.holderName = holderName
                 self.event.holderID = holderID
                 self.event.address = address
 
-                for _ in 1...pCount {
+                for var i = 0; i < pCount; i++ {
                     self.event.followers.append(UIImage(named:"head.jpg")!)
                 }
                 
@@ -792,8 +794,8 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         
     }
     
-    func joinEvent() {
-        let urlPath = "http://52.25.65.141:8000/event/" + User.eventID + "/join/?user_id=" + User.UID
+    func joinEvent(join: String) {
+        let urlPath = "http://52.25.65.141:8000/event/" + User.eventID + "/" + join + "/?user_id=" + User.UID
         let url = NSURL(string: urlPath)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in

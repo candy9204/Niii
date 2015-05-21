@@ -8,25 +8,31 @@
 
 import UIKit
 
-class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
    
     @IBOutlet weak var resultsList: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
-    var results = [String]()
+    var results = [[String]]()
     var images = [UIImage]()
     var cells:[UITableViewCell] = [UITableViewCell]()
+    var bounds: CGRect = UIScreen.mainScreen().bounds
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.resultsList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.resultsList.rowHeight = 100.0
+        self.searchBar.delegate = (self as UISearchBarDelegate)
         self.searchBar.layer.borderWidth = 1
         self.searchBar.layer.borderColor = UIColorFromHex.color(0x0075FF).CGColor
         self.searchBar.layer.backgroundColor = UIColorFromHex.color(0x0075FF).CGColor
         
-        loadResults()
         createCells()
+    }
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        println("CHANGE!!!")
+        loadResults(searchText)
     }
     
     override func didReceiveMemoryWarning() {
@@ -34,25 +40,83 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
         // Dispose of any resources that can be recreated.
     }
     
-    func loadResults(){
+    func loadResults(text: String){
         // TODO: Load results from server
+        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/search/")!)
+        request.HTTPMethod = "POST"
         
+        let characterSet = NSMutableCharacterSet.alphanumericCharacterSet()
+        characterSet.addCharactersInString(" ")
         
-        // Done
-        for i in 1...5 {
-            let imageName = "climbing.png"
-            self.results.append("Event " + String(i))
-            images.append(UIImage(named: imageName)!)
+        var query = text
+        
+        query = query.stringByAddingPercentEncodingWithAllowedCharacters(characterSet)!
+        query = query.stringByReplacingOccurrencesOfString(" ", withString: "+", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
+        
+        let postString = "searchString=" + query
+        
+        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            data, response, error in
+            
+            if error != nil {
+                println("error=\(error)")
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+            println(jsonResult)
+            
+            let res = jsonResult["results"] as! NSArray
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                self.results = []
+                self.images = []
+                for r in res {
+                    let type = r["type"] as! Int
+                    if type == 0 {
+                        let name = r["name"] as! String
+                        let id = r["id"] as! Int
+                        let place = r["place"] as! String
+                        let time = self.timeToString(r["time"] as! String)
+                        self.results.append([String(type), name, String(id), place, time])
+                        //TODO: Image for category!!!
+                        let imageName = "climbing.png"
+                        self.images.append(UIImage(named: imageName)!)
+                    } else {
+                        let name = r["nickname"] as! String
+                        let id = r["id"] as! Int
+                        self.results.append([String(type), name, String(id)])
+                        //TODO: User Image URL!!!
+                        let imageName = "head.png"
+                        self.images.append(UIImage(named: imageName)!)
+                    }
+                }
+                self.createCells()
+                self.resultsList.reloadData()
+                
+            })
+            
         }
+        task.resume()
     }
     
-    func createCells(){
+    func createCells() {
+        self.cells = []
         for var i = 0; i < self.results.count; i++ {
-            
+            println(results[i][1])
             var cell:UITableViewCell = self.resultsList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
             
             let th = self.resultsList.rowHeight;
-            let tw = self.resultsList.bounds.width;
+            let tw = self.bounds.width;
             
             // Subview
             var subView:UIView!
@@ -70,7 +134,15 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
             // label
             let label = UILabel();
             label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
-            label.text = self.results[i]
+            label.text = self.results[i][1]
+            
+            //TODO: Format for subtitle
+            if self.results[i][0] == "0" {
+                let label2 = UILabel();
+                label2.frame = CGRect(x: sh+30, y: 3, width: sw-sh-30, height: sh-10)
+                label2.text = "Location: " + self.results[i][3] + "   Time: " + self.results[i][4]
+                subView.addSubview(label2)
+            }
             subView.addSubview(label)
             
             // Cell
@@ -92,10 +164,13 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEventPage") as! SingleEventController
-        singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-        singleEvent.parentController = 1
-        self.presentViewController(singleEvent, animated:true, completion:nil)
+        if results[indexPath.row][0] == "0" {
+            User.eventID = results[indexPath.row][2]
+            let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEventPage") as! SingleEventController
+            singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+            singleEvent.parentController = 1
+            self.presentViewController(singleEvent, animated:true, completion:nil)
+        }
     }
     
     func setSelected(selected: Bool, animated: Bool) {
@@ -104,5 +179,18 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func setHightlighted(highlighted: Bool, animated: Bool) {
         self.setHightlighted(highlighted, animated: animated)
+    }
+    
+    func timeToString(time: String) -> String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-ddEEEEEHH:mm:ssxxx"
+        var date = dateFormatter.dateFromString(time)
+        if date == nil {
+            dateFormatter.dateFormat = "yyyy-MM-ddEEEEEHH:mm:ss.SSSxxx"
+            date = dateFormatter.dateFromString(time)
+        }
+        dateFormatter.dateFormat = "MMM dd"
+        let dateString = dateFormatter.stringFromDate(date!)
+        return dateString
     }
 }

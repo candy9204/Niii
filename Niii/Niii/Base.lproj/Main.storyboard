@@ -630,66 +630,6 @@
             </objects>
             <point key="canvasLocation" x="1" y="360"/>
         </scene>
-        <!--SingleFriend-->
-        <scene sceneID="hFV-o4-eLk">
-            <objects>
-                <viewController storyboardIdentifier="singleFriendPage" title="Friend" id="D8r-8e-gYn" userLabel="SingleFriend" customClass="SingleFriendController" customModule="Niii" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="pyU-EB-hPP"/>
-                        <viewControllerLayoutGuide type="bottom" id="vMt-l6-xrc"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="wTB-KY-888">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p8L-Gr-RJH">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="67"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Friend" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LVX-pW-fjM">
-                                        <rect key="frame" x="264" y="23" width="72" height="36"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ICm-9k-UjE">
-                                        <rect key="frame" x="13" y="26" width="70" height="30"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <state key="normal" title="〈  Friends">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="backToFriends:" destination="D8r-8e-gYn" eventType="touchUpInside" id="ohv-A2-SCz"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstItem="ICm-9k-UjE" firstAttribute="leading" secondItem="p8L-Gr-RJH" secondAttribute="leading" constant="13" id="WwS-Fu-ZHm"/>
-                                    <constraint firstAttribute="centerX" secondItem="LVX-pW-fjM" secondAttribute="centerX" id="XWX-km-eeP"/>
-                                </constraints>
-                            </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="OwF-9l-VP6">
-                                <rect key="frame" x="0.0" y="68" width="600" height="532"/>
-                                <color key="backgroundColor" red="0.90588235289999997" green="0.94509803920000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="p8L-Gr-RJH" firstAttribute="width" secondItem="wTB-KY-888" secondAttribute="width" id="0lj-fr-n5T"/>
-                            <constraint firstAttribute="width" secondItem="p8L-Gr-RJH" secondAttribute="width" id="2U5-9k-jEX"/>
-                            <constraint firstItem="p8L-Gr-RJH" firstAttribute="leading" secondItem="wTB-KY-888" secondAttribute="leadingMargin" constant="-16" id="9zd-iq-MIM"/>
-                            <constraint firstItem="OwF-9l-VP6" firstAttribute="top" secondItem="p8L-Gr-RJH" secondAttribute="bottom" constant="1" id="KZm-2u-07U"/>
-                            <constraint firstItem="p8L-Gr-RJH" firstAttribute="top" secondItem="pyU-EB-hPP" secondAttribute="bottom" constant="-20" id="Uf8-H4-hOg"/>
-                            <constraint firstItem="vMt-l6-xrc" firstAttribute="top" secondItem="OwF-9l-VP6" secondAttribute="bottom" id="g6k-MP-9ge"/>
-                            <constraint firstAttribute="width" secondItem="OwF-9l-VP6" secondAttribute="width" id="oVA-H9-kge"/>
-                        </constraints>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="93g-Me-ugs" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1445" y="1068"/>
-        </scene>
         <!--CreateEvent-->
         <scene sceneID="zgV-JD-PWV">
             <objects>

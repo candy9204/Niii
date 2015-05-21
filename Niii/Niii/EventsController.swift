@@ -14,6 +14,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     var events = [String]()
     var images = [UIImage]()
     var cells:[UITableViewCell] = [UITableViewCell]()
+    var bounds: CGRect = UIScreen.mainScreen().bounds
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,7 +51,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
             
             
             let th = self.eventList.rowHeight;
-            let tw = self.eventList.bounds.width;
+            let tw = self.bounds.width;
             
             // Subview
             var subView:UIView!
