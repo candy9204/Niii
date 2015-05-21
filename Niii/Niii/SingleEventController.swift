@@ -29,7 +29,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     var activityRowHeight:CGFloat = 60.0
     var isJoined: Bool = false
     var isFavorite: Bool = false
-    
+    var bounds: CGRect = UIScreen.mainScreen().bounds
     var cells:[UITableViewCell] = [UITableViewCell]()
     
     override func viewDidLoad() {
@@ -40,15 +40,8 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         self.manager.desiredAccuracy = kCLLocationAccuracyBest
         self.manager.startUpdatingLocation()
         // Get event information from database
-        eventInfo.frame.size.height = 0
         if !self.event.updated {
             getInformationFromDatabase()
-//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
-//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
-//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
-//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
-//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
-//            self.event.comments.append(["YILIN", "sdfsdf", "asdfasdf"])
             self.event.updated = true
         }
         self.creatCells()
@@ -61,7 +54,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             //println("cell #: " + String(indexPath.row))
             
             var subView:UIView!
-            let tw = self.eventInfo.bounds.width
+            let tw = self.bounds.width
             var th:CGFloat = 0
             
             if i == 0 {

@@ -18,6 +18,9 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
     var following = [String]()
     var images_followers = [UIImage]()
     var images_following = [UIImage]()
+    var cells_followers:[UITableViewCell] = [UITableViewCell]()
+    var cells_following:[UITableViewCell] = [UITableViewCell]()
+    var bounds: CGRect = UIScreen.mainScreen().bounds
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +36,75 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
         self.searchBar.layer.backgroundColor = UIColorFromHex.color(0x0075FF).CGColor
         
         loadFriends()
+        createCells()
+    }
+    
+    func createCells(){
+        for var i = 0; i < self.followers.count; i++ {
+            var cell:UITableViewCell = self.followersList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+            var subView:UIView!
+            
+            let tw = self.bounds.width;
+            
+            let th = self.followersList.rowHeight
+            
+            // Subview
+            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+            subView.backgroundColor = UIColor.whiteColor()
+            
+            let sh = subView.bounds.height
+            let sw = subView.bounds.width
+            
+            // Image
+            let imageView = UIImageView(image: images_followers[i])
+            imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
+            subView.addSubview(imageView)
+            
+            // label
+            let label = UILabel();
+            label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
+            label.text = self.followers[i]
+            subView.addSubview(label)
+            
+            // Cell
+            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell.backgroundColor = UIColor.clearColor();
+            cell.contentView.addSubview(subView)
+            
+            cells_followers.append(cell)
+        }
+        for var i = 0; i < self.following.count; i++ {
+            var cell:UITableViewCell = self.followersList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+            var subView:UIView!
+            
+            let tw = self.bounds.width;
+            let th = self.followingList.rowHeight
+            
+            // Subview
+            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+            subView.backgroundColor = UIColor.whiteColor()
+            
+            let sh = subView.bounds.height
+            let sw = subView.bounds.width
+            
+            // Image
+            let imageView = UIImageView(image: images_following[i])
+            imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
+            subView.addSubview(imageView)
+            
+            // label
+            let label = UILabel();
+            label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
+            label.text = self.following[i]
+            subView.addSubview(label)
+            
+            // Cell
+            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            cell.backgroundColor = UIColor.clearColor();
+            cell.contentView.addSubview(subView)
+            
+            cells_following.append(cell)
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -65,67 +137,11 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell:UITableViewCell = self.followersList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
-        var subView:UIView!
-        
         if tableView == self.followersList {
-            
-            let th = self.followersList.rowHeight;
-            let tw = self.followersList.bounds.width;
-            
-            // Subview
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            subView.backgroundColor = UIColor.whiteColor()
-            
-            let sh = subView.bounds.height
-            let sw = subView.bounds.width
-            
-            // Image
-            let imageView = UIImageView(image: images_followers[indexPath.row])
-            imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
-            subView.addSubview(imageView)
-            
-            // label
-            let label = UILabel();
-            label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
-            label.text = self.followers[indexPath.row]
-            subView.addSubview(label)
-            
-            // Cell
-            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-            cell.backgroundColor = UIColor.clearColor();
-            cell.contentView.addSubview(subView)
-            
+            return cells_followers[indexPath.row]
         } else {
-            
-            let th = self.followingList.rowHeight;
-            let tw = self.followingList.bounds.width;
-            
-            // Subview
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            subView.backgroundColor = UIColor.whiteColor()
-            
-            let sh = subView.bounds.height
-            let sw = subView.bounds.width
-            
-            // Image
-            let imageView = UIImageView(image: images_following[indexPath.row])
-            imageView.frame = CGRect(x: 20, y: 5, width: sh-10, height: sh-10)
-            subView.addSubview(imageView)
-            
-            // label
-            let label = UILabel();
-            label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: sh-10)
-            label.text = self.following[indexPath.row]
-            subView.addSubview(label)
-            
-            // Cell
-            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-            cell.backgroundColor = UIColor.clearColor();
-            cell.contentView.addSubview(subView)
+            return cells_following[indexPath.row]
         }
-    
-        return cell
     }
     
     @IBAction func controllerIndexChanged(sender: UISegmentedControl) {

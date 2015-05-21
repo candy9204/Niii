@@ -12,6 +12,7 @@ class SingleFriendController: UIViewController, UITableViewDelegate, UITableView
     
     var parentController = 0
     var parentTab = 0
+    var cells:[UITableViewCell] = [UITableViewCell]()
     
     override func viewDidLoad() {
         super.viewDidLoad()

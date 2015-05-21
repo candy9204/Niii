@@ -15,6 +15,7 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
     var results = [String]()
     var images = [UIImage]()
     var cells:[UITableViewCell] = [UITableViewCell]()
+    var bounds: CGRect = UIScreen.mainScreen().bounds
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +53,7 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
             var cell:UITableViewCell = self.resultsList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
             
             let th = self.resultsList.rowHeight;
-            let tw = self.resultsList.bounds.width;
+            let tw = self.bounds.width;
             
             // Subview
             var subView:UIView!

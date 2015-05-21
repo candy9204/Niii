@@ -17,6 +17,8 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
     var settings = [String]()
     var firstRowHeight : CGFloat = 140.0
     var otherRowHeight : CGFloat = 50.0
+    var bounds: CGRect = UIScreen.mainScreen().bounds
+    var cells:[UITableViewCell] = [UITableViewCell]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +28,69 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.settings = ["Name: " + User.nickname, "Sex: " + User.gender, "Rating: " + User.rating, "Favourite", "History", "Settings"]
         if !User.updated {
             updateWithHTTP()
+        }
+        createCells()
+    }
+    
+    func createCells(){
+        for var i = 0; i < self.settings.count-2; i++ {
+            
+            var cell:UITableViewCell = self.settingList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+            var subView:UIView!
+            let tw = self.bounds.width
+            
+            if i == 0 {
+                let th = firstRowHeight
+                
+                // Subview
+                subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+                subView.backgroundColor = UIColor.whiteColor()
+                
+                let sh = subView.bounds.height
+                let sw = subView.bounds.width
+                
+                // Image
+                let imageName = "head.png"
+                let image = UIImage(named: imageName)
+                let imageView = UIImageView(image: image!)
+                imageView.frame = CGRect(x: 20, y: 10, width: sh-20, height: sh-20)
+                subView.addSubview(imageView)
+                
+                // label
+                let eh = (sh - 20) / 3
+                label1.frame = CGRect(x: sh+30, y: 5, width: sw-sh-60, height: eh)
+                label1.text = self.settings[0]
+                label2.frame = CGRect(x: sh+30, y: 10+eh, width: sw-sh-60, height: eh)
+                label2.text = self.settings[1]
+                label3.frame = CGRect(x: sh+30, y: 15+2*eh, width: sw-sh-60, height: eh)
+                label3.text = self.settings[2]
+                subView.addSubview(label1)
+                subView.addSubview(label2)
+                subView.addSubview(label3)
+            } else {
+                let th = otherRowHeight
+                // Subview
+                subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
+                subView.backgroundColor = UIColor.whiteColor()
+                
+                let sh = subView.bounds.height
+                let sw = subView.bounds.width
+                
+                
+                // label
+                let label = UILabel();
+                label.frame = CGRect(x: 20, y: 5, width: sw-20, height: sh-10)
+                label.text = self.settings[i+2]
+                subView.addSubview(label)
+                
+                // Cell
+                cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+            }
+            
+            cell.backgroundColor = UIColor.clearColor()
+            cell.contentView.addSubview(subView)
+            
+            cells.append(cell)
         }
     }
     
@@ -101,65 +166,7 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        var cell:UITableViewCell = self.settingList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
-        var subView:UIView!
-
-        if indexPath.row == 0 {
-            let th = firstRowHeight;
-            let tw = self.settingList.bounds.width;
-            
-            // Subview
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            subView.backgroundColor = UIColor.whiteColor()
-
-            let sh = subView.bounds.height
-            let sw = subView.bounds.width
-            
-            // Image
-            let imageName = "head.png"
-            let image = UIImage(named: imageName)
-            let imageView = UIImageView(image: image!)
-            imageView.frame = CGRect(x: 20, y: 10, width: sh-20, height: sh-20)
-            subView.addSubview(imageView)
-            
-            // label
-            let eh = (sh - 20) / 3
-            label1.frame = CGRect(x: sh+30, y: 5, width: sw-sh-60, height: eh)
-            label1.text = self.settings[0]
-            label2.frame = CGRect(x: sh+30, y: 10+eh, width: sw-sh-60, height: eh)
-            label2.text = self.settings[1]
-            label3.frame = CGRect(x: sh+30, y: 15+2*eh, width: sw-sh-60, height: eh)
-            label3.text = self.settings[2]
-            subView.addSubview(label1)
-            subView.addSubview(label2)
-            subView.addSubview(label3)
-        } else {
-            let th = otherRowHeight;
-            let tw = self.settingList.bounds.width;
-            
-            // Subview
-            subView = UIView(frame: CGRectMake(0, 0, tw, th-5))
-            subView.backgroundColor = UIColor.whiteColor()
-
-            let sh = subView.bounds.height
-            let sw = subView.bounds.width
-            
-            
-            // label
-            let label = UILabel();
-            label.frame = CGRect(x: 20, y: 5, width: sw-20, height: sh-10)
-            label.text = self.settings[indexPath.row+2]
-            subView.addSubview(label)
-            
-            // Cell
-            cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
-        }
-        
-        cell.backgroundColor = UIColor.clearColor()
-        cell.contentView.addSubview(subView)
-        
-        return cell
+        return cells[indexPath.row]
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
