@@ -421,7 +421,6 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         var successMsg = "You have joined in this event!"
         
         if self.isJoined {
-            println("TEST")
             joinTitle = "Unjoin Event"
             joinMessage = "You have already joined in this event. Are you sure to unjoin this event?"
             button = "unjoin"
@@ -471,7 +470,6 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func getInformationFromDatabase(){
-        println("TEST!!!")
         // TODO: Get information from database
         let urlPath = "http://52.25.65.141:8000/event/" + User.eventID + "/?user_id=" + User.UID
         let url = NSURL(string: urlPath)
@@ -512,7 +510,6 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             dispatch_async(dispatch_get_main_queue(), {
                 
                 self.isJoined = jsonResult["is_joined"] as! Bool
-                println(self.isJoined)
                 self.isFavorite = jsonResult["is_favorited"] as! Bool
                 self.event.eventName = eventName
                 self.event.holderName = holderName
