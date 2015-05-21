@@ -42,7 +42,7 @@ def viewEvent(request, eventid):
 	return JsonResponse(res)
 
 def viewPopularEvents(request):
-	events = Event.objects.annotate(total_count = Count('participants', distinct = True) + Count('favoriters', distinct = True)).order_by('-total_count').values('id', 'name', 'place', 'time')[:10]
+	events = Event.objects.annotate(total_count = Count('participants', distinct = True) + Count('favoriters', distinct = True)).order_by('-total_count').values('id', 'name', 'place', 'time','category__name')[:10]
 	for event in events:
 		event['time'] = event['time'].isoformat()
 	return JsonResponse({'events': list(events)})
@@ -89,34 +89,56 @@ def search(request):
 	except:
 		res['success'] = False
 		res['message'] = 'Invalid Request'
-	words = searchString.lower().split()
-	events = Event.objects.all()
-	for event in events:
-		names = event.name.lower().split()
-		descript = event.description.lower().split()
-		searchField = names + descript
-		if set(words) <= set(searchField):
+	if searchString == "":
+		pevents = Event.objects.annotate(total_count = Count('participants', distinct = True) + Count('favoriters', distinct = True)).order_by('-total_count').values('id', 'name', 'place', 'time','category__name')[:10]
+		for event in pevents:
+			event['time'] = event['time'].isoformat()
 			info = {}
-			info['id'] = event.id
-			info['name'] = event.name
-			info['time'] = event.time
-			info['place'] = event.place
-			# type = 0 event
+			info['id'] = event['id']
+			info['name'] = event['name']
+			info['time'] = event['time']
+			info['place'] = event['place']	
+			info['category'] = event['category__name']
 			info['type'] = 0
 			res.append(info)
-	users = User.objects.all()
-	for user in users:
-		if user.username != "admin":
-			p = Profile.objects.get(user = user)
-			names = p.nickname.lower().split()
-			if set(words) <= set(names):
+		return JsonResponse({'events': res})
+	else:
+		words = searchString.lower().split()
+		events = Event.objects.all()
+		for event in events:
+			names = event.name.lower().split()
+			descript = event.description.lower().split()
+			searchField = names + descript
+			if set(words) <= set(searchField):
 				info = {}
-				info['id'] = user.id
-				info['nickname'] = p.nickname
-				# type = 1 user
-				info['type'] = 1
+				info['id'] = event.id
+				info['name'] = event.name
+				info['time'] = event.time
+				info['place'] = event.place
+				if event.category:
+					info['category'] = event.category.name
+				else:
+					info['category'] = None
+				# type = 0 event
+				info['type'] = 0
 				res.append(info)
-	return JsonResponse({'results': res})
+		users = User.objects.all()
+		for user in users:
+			if user.username != "admin":
+				p = Profile.objects.get(user = user)
+				names = p.nickname.lower().split()
+				if set(words) <= set(names):
+					info = {}
+					info['id'] = user.id
+					info['nickname'] = p.nickname
+					if p.photo:
+						info['photo'] = p.photo.url
+					else:
+						info['photo'] = None
+					# type = 1 user
+					info['type'] = 1
+					res.append(info)
+		return JsonResponse({'results': res})
 
 def viewEventsByCat(request, categoryid):
 	res = []

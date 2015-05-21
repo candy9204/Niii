@@ -72,6 +72,7 @@ def viewProfile(request, userid):
 		res['photo'] = None
 	res['followings'] = profile.followings.count()
 	res['followers'] = profile.followers.count()
+	res['email'] = profile.email
 	res['rating'] = Rating.objects.filter(ratee = user).aggregate(Avg('score'))['score__avg']
 	return JsonResponse(res)
 
@@ -95,17 +96,20 @@ def updateProfile(request, userid):
 
 def viewFollowings(request, userid):
 	user = User.objects.get(id = userid)
-	followings = Profile.objects.get(user = user).followings.values('user__id', 'user__username', 'user__profile__nickname', 'photo')
+	followings = Profile.objects.get(user = user).followings.all()
 	res = []
 	for f in list(followings):
 		info = {}
-		info['id'] = f['user__id']
-		info['username'] = f['user__username']
-		info['nickname'] = f['user__profile__nickname']
+		info['id'] = f.user.id
+		info['username'] = f.user.username
+		info['nickname'] = f.nickname
 		try:
-			info['photo'] = f['photo'].url
+			info['photo'] = f.photo.url
 		except:
 			info['photo'] = None
+		info['email'] = f.email
+		info['gender'] = f.gender
+		info['rating'] = Rating.objects.filter(ratee = f.user).aggregate(Avg('score'))['score__avg']
 		res.append(info)
 	return JsonResponse({'followings': res})
 
@@ -143,17 +147,20 @@ def removeFollowings(request, userid):
 
 def viewFollowers(request, userid):
 	user = User.objects.get(id = userid)
-	followers = Profile.objects.get(user = user).followers.values('user__id', 'user__username', 'user__profile__nickname', 'photo')
+	followers = Profile.objects.get(user = user).followers.all()
 	res = []
 	for f in list(followers):
 		info = {}
-		info['id'] = f['user__id']
-		info['username'] = f['user__username']
-		info['nickname'] = f['user__profile__nickname']
+		info['id'] = f.user.id
+		info['username'] = f.user.username
+		info['nickname'] = f.nickname
 		try:
-			info['photo'] = f['photo'].url
+			info['photo'] = f.photo.url
 		except:
 			info['photo'] = None
+		info['email'] = f.email
+		info['gender'] = f.gender
+		info['rating'] = Rating.objects.filter(ratee = f.user).aggregate(Avg('score'))['score__avg']
 		res.append(info)
 	return JsonResponse({'followers': res})
 
@@ -189,14 +196,10 @@ def recommend(request, userid):
 	res = []
 	currentUser = User.objects.get(id = userid)
 	users = User.objects.all()
+	list1 = currentUser.participations.all()
 	for user in users:
-		participations = user.participations.values('id', 'name', 'time', 'place', 'category')
-		participated[user] = participations
-
-	list1 = participated[currentUser]
-	for user in users:
-		if user != currentUser:
-			list2 = participated[user]
+		list2 = user.participations.all()
+		if user != currentUser: 
 			intersectCount = len(set(list1) & set(list2))
 			countOfUser2 = len(list2)
 			if countOfUser2 != 0:
@@ -207,12 +210,12 @@ def recommend(request, userid):
 				recommendations.extend(list(set(list2) - set(list1)))
 	for r in recommendations:
 		info = {}
-		info['id'] = r['id']
-		info['name'] = r['name']
-		info['time'] = r['time']
-		info['place'] = r['place']
+		info['id'] = r.id
+		info['name'] = r.name
+		info['time'] = r.time
+		info['place'] = r.place
 		try:
-			info['category'] = r['category']
+			info['category'] = r.category.name
 		except:
 			info['category'] = None
 		res.append(info)
