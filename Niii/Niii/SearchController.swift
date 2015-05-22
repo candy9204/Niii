@@ -158,7 +158,11 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     func createCells() {
-        self.cells = []
+        let pre = cells.count
+        self.cells.removeAll(keepCapacity: false)
+        for var i = pre-1; i >= 0; i-- {
+            
+        }
         for var i = 0; i < self.results.count; i++ {
             var cell:UITableViewCell = self.resultsList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
             
@@ -215,6 +219,7 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         return cells[indexPath.row]
     }
     

@@ -176,7 +176,8 @@ class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDat
         User.eventID = self.events[indexPath.row][1]
         let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEventPage") as! SingleEventController
         singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-        singleEvent.parentController = 0
+        singleEvent.parentController = 4
+        singleEvent.parentCall = parentCall
         self.presentViewController(singleEvent, animated:true, completion:nil)
     }
     

@@ -21,6 +21,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     let searchRadius: CLLocationDistance = 1000
     var event:Event = Event()
     var parentController = 0
+    var parentCall = 0
     var infoRowHeight:CGFloat = 200.0
     var participantsRowHeight:CGFloat = 100.0
     var titleRowHeight:CGFloat = 40.0
@@ -316,10 +317,18 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     @IBAction func BackToEvents(sender: AnyObject) {
-        let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
-        mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
-        mainPage.selectedIndex = parentController;
-        self.presentViewController(mainPage, animated:true, completion:nil)
+        if self.parentController <= 3 {
+            let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
+            mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+            mainPage.selectedIndex = parentController
+            self.presentViewController(mainPage, animated:true, completion:nil)
+        } else {
+            let fAndHListPage = self.storyboard?.instantiateViewControllerWithIdentifier("fAndHListPage") as! FAndHListController
+            fAndHListPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+            fAndHListPage.parentController = 3
+            fAndHListPage.parentCall = self.parentCall
+            self.presentViewController(fAndHListPage, animated:true, completion:nil)
+        }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -569,8 +578,8 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 self.event.description = description
                 self.event.date = dateString
                 var title:String = self.event.eventName
-                if count(self.event.eventName) > 21 {
-                    title = (title as NSString).substringToIndex(19) + "..."
+                if count(self.event.eventName) > 20 {
+                    title = (title as NSString).substringToIndex(18) + "..."
                 }
                 self.titleLabel.text = title
                 
