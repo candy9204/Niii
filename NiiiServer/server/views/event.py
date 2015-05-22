@@ -30,7 +30,8 @@ def viewEvent(request, eventid):
 	for part in participants:
 		info = {
 			'id' : part.id,
-			'username' : part.username
+			'username' : part.username,
+			'photo': part.profile.photo.url if hasattr(part.profile.photo, 'url') else None
 		}
 		res['participants'].append(info)
 	# check if current user has joined/favorited
@@ -42,7 +43,7 @@ def viewEvent(request, eventid):
 	return JsonResponse(res)
 
 def viewPopularEvents(request):
-	events = Event.objects.annotate(total_count = Count('participants', distinct = True) + Count('favoriters', distinct = True)).order_by('-total_count').values('id', 'name', 'place', 'time','category__name')[:10]
+	events = Event.objects.annotate(total_count = Count('participants', distinct = True) + Count('favoriters', distinct = True)).order_by('-total_count').values('id', 'name', 'place', 'time','category__name', 'total_count')[:10]
 	for event in events:
 		event['time'] = event['time'].isoformat()
 	return JsonResponse({'events': list(events)})
