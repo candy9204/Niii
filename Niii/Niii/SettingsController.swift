@@ -60,7 +60,7 @@ class SettingsController: UIViewController, UITableViewDelegate, UITableViewData
                 submitButton.setTitle("Submit", forState: .Normal)
                 submitButton.setTitleColor(UIColorFromHex.color(0x0075FF), forState: .Normal)
                 submitButton.titleLabel?.font = UIFont(name: "AmericanTypewriter", size: 18)
-                submitButton.addTarget(self, action: "submitEventInfo:", forControlEvents: .TouchUpInside)
+                submitButton.addTarget(self, action: "submitUpdate:", forControlEvents: .TouchUpInside)
                 subView.addSubview(submitButton)
             } else if i == 5 {
                 let title = UILabel(frame: CGRectMake(20, 5, (sw-40)/3.0, sh-10))
@@ -94,8 +94,8 @@ class SettingsController: UIViewController, UITableViewDelegate, UITableViewData
                 } else {
                     title.text = "Username:"
                     textView = userName
-                    // TODO: Add username to User
-                    textView.text = "username"
+                    // Add username to User
+                    textView.text = User.username
                     textView.editable = false
                 }
                 title.font = UIFont(name: "AmericanTypewriter", size: 18)
@@ -160,59 +160,16 @@ class SettingsController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
-    func checkInfo() -> Bool{
-        if email.text != "Leisure" && email.text != "Travel" && email.text != "Arts" && email.text != "Sports" && email.text != "Education" {
-            let alertMessage = UIAlertController(title: "Fail", message: "Category should be from Leisure, Travel, Arts, Sports, Education.", preferredStyle: .Alert)
-            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-            self.presentViewController(alertMessage, animated: true, completion: nil)
-            return false
-        }
-        
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
-        var date = dateFormatter.dateFromString(gender.text)
-        if date == nil {
-            let alertMessage = UIAlertController(title: "Fail", message: "Date & Time format is wrong! It should be MM-dd-yyyy HH:mm.", preferredStyle: .Alert)
-            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-            self.presentViewController(alertMessage, animated: true, completion: nil)
-            return false
-        }
-        
-        return true
-        
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        return cells[indexPath.row]
     }
     
-    func submitEventInfo(gesture: UIGestureRecognizer){
-        // TODO: Submit the infomation of the event to server
-        // NOTE: Remember to compress the image first!!!
-        // Data: titleField.text, descriptionField.text, dateAndTimeField.text, locationField.text, imageField.image
-        
-        if !self.checkInfo() {
-            return
-        }
-        
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/event/add/")!)
+    func submitUpdate(gesture: UIGestureRecognizer){
+        var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/user/" + User.UID + "/profile/update/")!)
         request.HTTPMethod = "POST"
-        
-        let characterSet = NSMutableCharacterSet.alphanumericCharacterSet()
-        characterSet.addCharactersInString(" ")
-        
-        var title = nickName.text
-        var location = rating.text
-        var description = userName.text
-        var time = self.converTime(gender.text as String) as String!
-        
-        title = title.stringByAddingPercentEncodingWithAllowedCharacters(characterSet)
-        location = location.stringByAddingPercentEncodingWithAllowedCharacters(characterSet)
-        description = description.stringByAddingPercentEncodingWithAllowedCharacters(characterSet)
-        time = time.stringByAddingPercentEncodingWithAllowedCharacters(characterSet)
-        title = title.stringByReplacingOccurrencesOfString(" ", withString: "+", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
-        location = location.stringByReplacingOccurrencesOfString(" ", withString: "+", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
-        description = description.stringByReplacingOccurrencesOfString(" ", withString: "+", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
-        
-        let postString = "name=" + title! + "&organizor=" + User.UID + "&place=" + location! + "&description=" + description! + "&time=" + time! + "&category=" + convertCategoryID()
-        
+        let postString = "gender=" + gender.text + "&nickname=" + nickName.text// + "&email=" + email.text
         request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+        
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
             data, response, error in
             
@@ -224,50 +181,23 @@ class SettingsController: UIViewController, UITableViewDelegate, UITableViewData
             var err: NSError?
             let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
             
-            if  err != nil {
+            if (err != nil) {
                 // If there is an error parsing JSON, print it to the console
                 println("JSON Error \(err!.localizedDescription)")
                 return
             }
             
+            println(jsonResult)
+            
+            User.nickname = self.nickName.text
+            User.gender = self.gender.text
+            
         }
         task.resume()
         
         // Done
-        let alertMessage = UIAlertController(title: "Success", message: "You have created the event!", preferredStyle: .Alert)
+        let alertMessage = UIAlertController(title: "Success", message: "You have updated your info!", preferredStyle: .Alert)
         alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
         self.presentViewController(alertMessage, animated: true, completion: nil)
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        return cells[indexPath.row]
-    }
-    
-    func converTime(time: String) -> String {
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
-        var date = dateFormatter.dateFromString(time)
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssxxx"
-        let dateString = dateFormatter.stringFromDate(date!)
-        return dateString
-    }
-    
-    func convertCategoryID() -> String {
-        if email.text != "Leisure" {
-            return "2"
-        }
-        if email.text != "Travel" {
-            return "3"
-        }
-        if email.text != "Arts" {
-            return "4"
-        }
-        if email.text != "Sports" {
-            return "5"
-        }
-        if email.text != "Education" {
-            return "6"
-        }
-        return "2"
     }
 }

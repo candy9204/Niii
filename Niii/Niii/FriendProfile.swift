@@ -9,6 +9,7 @@
 import UIKit
 
 struct FriendProfile {
+    var id : String
     var userName : String
     var nickName : String
     var rating : Int
@@ -18,7 +19,8 @@ struct FriendProfile {
     var gender : Int
     var updated: Bool
     var image : UIImage
-    init(userName:String = "", nickName:String = "", rating:Int = 0, email:String = "", numberOfFollowers:Int = 0, numberOfFollowing:Int = 0, gender:Int = 0, image:UIImage = UIImage(), updated:Bool = false){
+    init(id:String = "", userName:String = "", nickName:String = "", rating:Int = 0, email:String = "", numberOfFollowers:Int = 0, numberOfFollowing:Int = 0, gender:Int = 0, image:UIImage = UIImage(), updated:Bool = false){
+        self.id = id
         self.userName = userName
         self.nickName = nickName
         self.rating = rating

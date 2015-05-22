@@ -75,7 +75,7 @@ class SignUpController: UIViewController {
     }
     
     func register() {
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/user/register/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/user/register/")!)
         request.HTTPMethod = "POST"
         let postString = "username=" + username.text + "&password=" + password.text
         request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
@@ -109,6 +109,7 @@ class SignUpController: UIViewController {
                     } else {
                         let id = jsonResult["id"] as! Int
                         User.UID = String(id)
+                        User.username = self.username.text
                         self.update()
                         let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
                         self.presentViewController(mainPage, animated:true, completion:nil)
@@ -121,7 +122,7 @@ class SignUpController: UIViewController {
     }
     
     func update(){
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/user/" + User.UID + "/profile/update/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/user/" + User.UID + "/profile/update/")!)
         request.HTTPMethod = "POST"
         let postString = "gender=" + sex.text + "&nickname=" + nickname.text
         request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)

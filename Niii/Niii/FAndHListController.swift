@@ -11,6 +11,7 @@ import UIKit
 class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var eventList: UITableView!
+    @IBOutlet weak var FHtitle: UILabel!
     var parentController = 0
     var parentCall = 0
     var events = [[String]]()
@@ -24,6 +25,13 @@ class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDat
         // Do any additional setup after loading the view, typically from a nib.
         self.eventList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.eventList.rowHeight = 100.0
+        
+        if self.parentCall == 0 {
+            FHtitle.text = "Favourite"
+        } else {
+            FHtitle.text = "History"
+        }
+        
         
         loadEvents()
         createCells()
@@ -39,7 +47,7 @@ class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     @IBAction func backToMe(sender: AnyObject) {
-        let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as UITabBarController
+        let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
         mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         mainPage.selectedIndex = parentController
         self.presentViewController(mainPage, animated:true, completion:nil)
@@ -48,7 +56,7 @@ class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDat
     func createCells(){
         for var i = 0; i < self.events.count; i++ {
             
-            var cell:UITableViewCell = self.eventList.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+            var cell:UITableViewCell = self.eventList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
             
             
             let th = self.eventList.rowHeight;
@@ -101,10 +109,10 @@ class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDat
         // parentCall == 0 for Favourite, parentCall == 1 for History
         var urlPath : String
         if parentCall == 1{
-            urlPath = "http://52.25.65.141:8000/user/" + User.UID + "/participations/"
+            urlPath = User.URLbase + "/user/" + User.UID + "/participations/"
         }
         else {
-            urlPath = "http://52.25.65.141:8000/user/" + User.UID + "/favorites/"
+            urlPath = User.URLbase + "/user/" + User.UID + "/favorites/"
         }
         let url = NSURL(string: urlPath)
         let session = NSURLSession.sharedSession()
@@ -117,7 +125,7 @@ class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDat
             }
             
             var err: NSError?
-            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as NSDictionary
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
             
             if  err != nil {
                 // If there is an error parsing JSON, print it to the console
@@ -128,18 +136,18 @@ class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDat
             println(jsonResult)
             var res : NSArray
             if self.parentCall == 1 {
-                res = jsonResult["participations"] as NSArray
+                res = jsonResult["participations"] as! NSArray
             }
             else{
-                res = jsonResult["favorites"] as NSArray
+                res = jsonResult["favorites"] as! NSArray
             }
             dispatch_async(dispatch_get_main_queue(), {
                 
                 self.events = []
                 self.images = []
                 for r in res {
-                    let name = r["name"] as String
-                    let id = r["id"] as Int
+                    let name = r["name"] as! String
+                    let id = r["id"] as! Int
                     //let place = r["place"] as String
                     //let time = self.timeToString(r["time"] as String)
                     let time = "test time"
@@ -163,7 +171,8 @@ class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDat
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEventPage") as SingleEventController
+        User.eventID = self.events[indexPath.row][1]
+        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEventPage") as! SingleEventController
         singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         singleEvent.parentController = 0
         self.presentViewController(singleEvent, animated:true, completion:nil)

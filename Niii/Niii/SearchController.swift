@@ -26,12 +26,11 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.searchBar.layer.borderWidth = 1
         self.searchBar.layer.borderColor = UIColorFromHex.color(0x0075FF).CGColor
         self.searchBar.layer.backgroundColor = UIColorFromHex.color(0x0075FF).CGColor
-        
+        loadResults("")
         createCells()
     }
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        println("CHANGE!!!")
         loadResults(searchText)
     }
     
@@ -42,7 +41,7 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func loadResults(text: String){
         // TODO: Load results from server
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/search/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/search/")!)
         request.HTTPMethod = "POST"
         
         let characterSet = NSMutableCharacterSet.alphanumericCharacterSet()

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var controller: UISegmentedControl!
@@ -37,7 +37,13 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
         createCells()
     }
     
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        //loadResults(searchText)
+    } //TODO remove search bar
+    
     func createCells(){
+        cells_followers = []
+        cells_following = []
         for var i = 0; i < self.followers.count; i++ {
             var cell:UITableViewCell = self.followersList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
             var subView:UIView!
@@ -112,18 +118,107 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
         // Dispose of any resources that can be recreated.
     }
     
+    func loadFollowers(){
+        let urlPath = User.URLbase + "/user/" + User.UID + "/followers/"
+        let url = NSURL(string: urlPath)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
+            
+            if error != nil {
+                println("error=\(error)")
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+            let fers = jsonResult["followers"] as! NSArray
+            
+            println(jsonResult)
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                for fer in fers {
+                    let id = String(fer["id"] as! Int)
+                    let nickname = fer["nickname"] as! String
+                    let username = fer["username"] as! String
+                    let imageURL = fer["photo"] as? String
+                    let imageName = "me.png"
+                    let gender = fer["gender"] as! Int
+                    let email = fer["email"] as! String
+                    var rating = 0
+                    if let r = fer["rating"] as? Int {
+                        rating = r
+                    }
+                    self.followers.append(FriendProfile(id: id, userName: username, nickName: nickname, rating: rating, email: email, numberOfFollowers: 5, numberOfFollowing: 6, gender: gender, image: UIImage(named: imageName)!, updated: true))
+                }
+                
+                
+                self.createCells()
+                self.followersList.reloadData()
+                
+            })
+        })
+        task.resume()
+
+    }
+    
+    func loadFollowing(){
+        
+        let urlPath = User.URLbase + "/user/" + User.UID + "/followings/"
+        let url = NSURL(string: urlPath)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
+            
+            if error != nil {
+                println("error=\(error)")
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+            let fins = jsonResult["followings"] as! NSArray
+            
+            println(jsonResult)
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                for fin in fins {
+                    let id = String(fin["id"] as! Int)
+                    let nickname = fin["nickname"] as! String
+                    let username = fin["username"] as! String
+                    let imageURL = fin["photo"] as? String
+                    
+                    let imageName = "me.png"
+                    self.following.append(FriendProfile(id: id, userName: username, nickName: nickname, rating: 4, email: "asdf@df.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
+                }
+                
+                
+                self.createCells()
+                self.followingList.reloadData()
+                
+            })
+        })
+        task.resume()
+    }
+    
     func loadFriends(){
         // TODO: Load the information of friends from database
-        let imageName = "me.png"
-        // Followers
-        self.followers.append(FriendProfile(userName: "HAHA", nickName: "XIXI", rating: 4, email: "asdf@df.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
-        self.followers.append(FriendProfile(userName: "AO", nickName: "AI", rating: 4, email: "asdf@ds.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
-        self.followers.append(FriendProfile(userName: "DO", nickName: "AQ", rating: 4, email: "aasdf@ds.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
-        // Following
-        self.following.append(FriendProfile(userName: "AO", nickName: "AI", rating: 4, email: "asdf@ds.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
-        self.following.append(FriendProfile(userName: "DO", nickName: "AQ", rating: 4, email: "aasdf@ds.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
-        self.following.append(FriendProfile(userName: "HAHA", nickName: "XIXI", rating: 4, email: "asdf@df.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
-        self.following.append(FriendProfile(userName: "HAASDFHA", nickName: "XASDFI", rating: 4, email: "asdf@df.com", numberOfFollowers: 5, numberOfFollowing: 5, gender: 1, image: UIImage(named: imageName)!, updated: true))
+        self.loadFollowers()
+        self.loadFollowing()
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -183,6 +278,7 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
             action in
             // TODO: Submit the follow request to server
             
+            self.followAction("add", friend: friends[id])
             
             // Done
             let alertMessage = UIAlertController(title: "Success", message: "You have followed "+friends[id].nickName, preferredStyle: .Alert)
@@ -195,6 +291,8 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
             // TODO: Submit the unfollow request to server
             
             
+            self.followAction("remove", friend: friends[id])
+            
             // Done
             let alertMessage = UIAlertController(title: "Success", message: "You have unfollowed "+friends[id].nickName, preferredStyle: .Alert)
             alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
@@ -203,11 +301,58 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .Default) { (_) in }
         
-        alertController.addAction(followAction)
-        alertController.addAction(unfollowAction)
+        if self.find(friends[id]) == nil {
+            alertController.addAction(followAction)
+        } else {
+            alertController.addAction(unfollowAction)
+        }
         alertController.addAction(cancelAction)
         
         self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func followAction(action: String, friend: FriendProfile) {
+        let urlPath = User.URLbase + "/user/" + User.UID + "/followings/" + action + "/?following_id=" + friend.id
+        let url = NSURL(string: urlPath)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
+            
+            if error != nil {
+                println("error=\(error)")
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                if action == "remove" {
+                    if let index = self.find(friend)
+                    {
+                        self.following.removeAtIndex(index)
+                    }
+                } else {
+                    if self.find(friend) == nil
+                    {
+                        self.following.append(friend)
+                    }
+                }
+                
+                self.createCells()
+                self.followingList.reloadData()
+
+            })
+            
+        })
+        task.resume()
+
     }
     
     func setSelected(selected: Bool, animated: Bool) {
@@ -216,5 +361,15 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
     
     func setHightlighted(highlighted: Bool, animated: Bool) {
         self.setHightlighted(highlighted, animated: animated)
+    }
+    
+    func find (friend: FriendProfile) -> Int? {
+        for var i = 0; i < self.following.count; i++ {
+            let ff = following[i] as FriendProfile
+            if ff.id == friend.id {
+                return i
+            }
+        }
+        return nil
     }
 }

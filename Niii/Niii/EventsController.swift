@@ -37,7 +37,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     @IBAction func addEvent(sender: AnyObject) {
-        let createEvent = self.storyboard?.instantiateViewControllerWithIdentifier("createEventPage") as CreateEventController
+        let createEvent = self.storyboard?.instantiateViewControllerWithIdentifier("createEventPage") as! CreateEventController
         createEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         createEvent.parentController = 0
         // println("haha")
@@ -47,7 +47,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     func createCells(){
         for var i = 0; i < self.events.count; i++ {
             
-            var cell:UITableViewCell = self.eventList.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+            var cell:UITableViewCell = self.eventList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
             
             
             let th = self.eventList.rowHeight;
@@ -98,7 +98,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     func loadEvents(){
         // TODO: Load events from server
         var urlPath : String
-        urlPath = "http://52.25.65.141:8000/user/" + User.UID + "/recommend/"
+        urlPath = User.URLbase + "/user/" + User.UID + "/recommend/"
 
         let url = NSURL(string: urlPath)
         let session = NSURLSession.sharedSession()
@@ -109,7 +109,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             
             var err: NSError?
-            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as NSDictionary
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
             
             if  err != nil {
                 // If there is an error parsing JSON, print it to the console
@@ -118,7 +118,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             
             println(jsonResult)
-            let res = jsonResult["recommendations"] as NSArray
+            let res = jsonResult["recommendations"] as! NSArray
 
 
             dispatch_async(dispatch_get_main_queue(), {
@@ -126,10 +126,10 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 self.events = []
                 self.images = []
                 for r in res {
-                    let name = r["name"] as String
-                    let id = r["id"] as Int
-                    let place = r["place"] as String
-                    let time = self.timeToString(r["time"] as String)
+                    let name = r["name"] as! String
+                    let id = r["id"] as! Int
+                    let place = r["place"] as! String
+                    let time = self.timeToString(r["time"] as! String)
                     self.events.append([name, String(id), place, time])
                     //TODO: Image for category!!!
                     let imageName = "climbing.png"
@@ -150,7 +150,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEventPage") as SingleEventController
+        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEventPage")as! SingleEventController
         singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         singleEvent.parentController = 0
         self.presentViewController(singleEvent, animated:true, completion:nil)

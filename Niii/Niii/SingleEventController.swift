@@ -471,7 +471,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     
     func getInformationFromDatabase(){
         // TODO: Get information from database
-        let urlPath = "http://52.25.65.141:8000/event/" + User.eventID + "/?user_id=" + User.UID
+        let urlPath = User.URLbase + "/event/" + User.eventID + "/?user_id=" + User.UID
         let url = NSURL(string: urlPath)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
@@ -540,7 +540,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func updateComments() {
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/event/" + User.eventID + "/comments/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/event/" + User.eventID + "/comments/")!)
         request.HTTPMethod = "POST"
         
         let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
@@ -652,7 +652,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     func AddComment(comment: String) {
         self.updateUserInfo(comment)
         
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/event/" + User.eventID + "/comments/add/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/event/" + User.eventID + "/comments/add/")!)
         request.HTTPMethod = "POST"
         
         let postString = "user_id=" + User.UID + "&content=" + comment
@@ -685,7 +685,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         let dateString = dateFormatter.stringFromDate(NSDate())
         
         if !User.updated {
-            var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/user/" + User.UID + "/profile/")!)
+            var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/user/" + User.UID + "/profile/")!)
             request.HTTPMethod = "POST"
             
             let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
@@ -739,7 +739,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     
     func ratingHolder(rating: Int) {
         
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/user/" + self.event.holderID + "/rate/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/user/" + self.event.holderID + "/rate/")!)
         request.HTTPMethod = "POST"
         let postString = "ratee_id=" + User.UID + "&score=" + String(rating)
         request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
@@ -769,7 +769,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     
     func favoriteEvent() {
         
-        let urlPath = "http://52.25.65.141:8000/event/" + User.eventID + "/favorite/?user_id=" + User.UID
+        let urlPath = User.URLbase + "/event/" + User.eventID + "/favorite/?user_id=" + User.UID
         let url = NSURL(string: urlPath)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
@@ -795,7 +795,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func joinEvent(join: String) {
-        let urlPath = "http://52.25.65.141:8000/event/" + User.eventID + "/" + join + "/?user_id=" + User.UID
+        let urlPath = User.URLbase + "/event/" + User.eventID + "/" + join + "/?user_id=" + User.UID
         let url = NSURL(string: urlPath)
         let session = NSURLSession.sharedSession()
         let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in

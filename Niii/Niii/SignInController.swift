@@ -50,7 +50,7 @@ class SignInController: UIViewController {
     }
     
     func loginWithHTTP() {
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/user/login/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/user/login/")!)
         request.HTTPMethod = "POST"
         let postString = "username=" + username.text + "&password=" + password.text
         request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
@@ -84,6 +84,7 @@ class SignInController: UIViewController {
                     } else {
                         let id = jsonResult["id"] as! Int
                         User.UID = String(id)
+                        User.username = self.username.text
                         let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
                         self.presentViewController(mainPage, animated:true, completion:nil)
                     }

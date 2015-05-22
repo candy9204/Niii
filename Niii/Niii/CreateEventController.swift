@@ -34,13 +34,13 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func createCells(){
-        for var i = 0; i < 7; i++ {
+        for var i = 0; i < 6; i++ {
             var cell:UITableViewCell = self.eventInfo.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
             
             let tw = self.bounds.width
             var th : CGFloat
             
-            if i == 4 || i == 5 {
+            if i == 4 {
                 th = largeRowHeight
             } else {
                 th = smallRowHeight
@@ -52,7 +52,7 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
             let sh = subView.bounds.height
             let sw = subView.bounds.width
             
-            if i == 6 {
+            if i == 5 {
                 submitButton.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)/3.0, sh-10)
                 let image = UIImage(named: "button.png")
                 submitButton.setBackgroundImage(image, forState: UIControlState.Normal)
@@ -93,15 +93,15 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
                     descriptionField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
                     descriptionField.layer.cornerRadius = 5.0
                     subView.addSubview(descriptionField)
-                } else {
-                    title.text = "Image:"
-                    imageField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
-                    imageField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
-                    imageField.layer.cornerRadius = 5.0
-                    let selectPhotoGesture = UITapGestureRecognizer(target: self, action: "selectPhoto:")
-                    imageField.addGestureRecognizer(selectPhotoGesture)
-                    imageField.userInteractionEnabled = true
-                    subView.addSubview(imageField)
+//                } else {
+//                    title.text = "Image:"
+//                    imageField.frame = CGRectMake(20+(sw-40)/3.0, 5, (sw-40)*2/3.0, sh-10)
+//                    imageField.layer.backgroundColor = UIColorFromHex.color(0xD4E7FF).CGColor
+//                    imageField.layer.cornerRadius = 5.0
+//                    let selectPhotoGesture = UITapGestureRecognizer(target: self, action: "selectPhoto:")
+//                    imageField.addGestureRecognizer(selectPhotoGesture)
+//                    imageField.userInteractionEnabled = true
+//                    subView.addSubview(imageField)
                 }
                 
                 subView.addSubview(title)
@@ -148,12 +148,12 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7;
+        return 6;
     }
     
     // Setting the height of the rows
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        if indexPath.row == 4 || indexPath.row == 5 {
+        if indexPath.row == 4 {
             return largeRowHeight
         } else {
             return smallRowHeight
@@ -161,18 +161,20 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func checkInfo() -> Bool{
-        if categoryField.text != "Leisure" && categoryField.text != "Travel" && categoryField.text != "Arts" && categoryField.text != "Sports" && categoryField.text != "Education" {
-            let alertMessage = UIAlertController(title: "Fail", message: "Category should be from Leisure, Travel, Arts, Sports, Education.", preferredStyle: .Alert)
-            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
-            self.presentViewController(alertMessage, animated: true, completion: nil)
-            return false
-        }
         
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
         var date = dateFormatter.dateFromString(dayAndTimeField.text)
         if date == nil {
             let alertMessage = UIAlertController(title: "Fail", message: "Date & Time format is wrong! It should be MM-dd-yyyy HH:mm.", preferredStyle: .Alert)
+            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            self.presentViewController(alertMessage, animated: true, completion: nil)
+            return false
+        }
+        
+        
+        if categoryField.text != "Leisure" && categoryField.text != "Travel" && categoryField.text != "Arts" && categoryField.text != "Sports" && categoryField.text != "Education" {
+            let alertMessage = UIAlertController(title: "Fail", message: "Category should be from Leisure, Travel, Arts, Sports, Education.", preferredStyle: .Alert)
             alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
             self.presentViewController(alertMessage, animated: true, completion: nil)
             return false
@@ -191,7 +193,7 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
             return
         }
         
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/event/add/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/event/add/")!)
         request.HTTPMethod = "POST"
         
         let characterSet = NSMutableCharacterSet.alphanumericCharacterSet()

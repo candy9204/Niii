@@ -19,6 +19,8 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
     var otherRowHeight : CGFloat = 50.0
     var bounds: CGRect = UIScreen.mainScreen().bounds
     var cells:[UITableViewCell] = [UITableViewCell]()
+    var image: UIImage!
+    var imageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,6 +31,13 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
         if !User.updated {
             updateWithHTTP()
         }
+        if User.photo == nil {
+            let imageName = "head.png"
+            image = UIImage(named: imageName)
+        } else {
+            image = User.photo
+        }
+        imageView = UIImageView(image: image!)
         createCells()
     }
     
@@ -50,9 +59,6 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
                 let sw = subView.bounds.width
                 
                 // Image
-                let imageName = "head.png"
-                let image = UIImage(named: imageName)
-                let imageView = UIImageView(image: image!)
                 imageView.frame = CGRect(x: 20, y: 10, width: sh-20, height: sh-20)
                 subView.addSubview(imageView)
                 
@@ -113,7 +119,7 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func updateWithHTTP(){
-        var request = NSMutableURLRequest(URL: NSURL(string: "http://52.25.65.141:8000/user/" + User.UID + "/profile/")!)
+        var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/user/" + User.UID + "/profile/")!)
         request.HTTPMethod = "POST"
         var flag = true
         
@@ -155,12 +161,34 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
                     User.rating = rating as String!
                 }
                 User.updated = true
+                let photoUrl = jsonResult["photo"] as? String
+                
                 self.label1.text = "Name: " + User.nickname
                 self.label2.text = "Gender: " + User.gender
                 self.label3.text = "Rating: " + User.rating
                 self.label1.reloadInputViews()
                 self.label2.reloadInputViews()
                 self.label3.reloadInputViews()
+                
+                if let url = photoUrl {
+                    let urlString = "http://52.25.65.141:8000" + url  //User.URLbase + url
+                    let request: NSURLRequest = NSURLRequest(URL: NSURL(string: urlString)!)
+                    let mainQueue = NSOperationQueue.mainQueue()
+                    NSURLConnection.sendAsynchronousRequest(request, queue: mainQueue, completionHandler: { (response, data, error) -> Void in
+                        if error == nil {
+                            dispatch_async(dispatch_get_main_queue(), {
+                                User.photo = UIImage(data: data)
+                                self.image = UIImage(data: data)
+                                self.imageView = UIImageView(image: self.image!)
+                                self.imageView.reloadInputViews()
+                            })
+                        }
+                        else {
+                            println("Error: \(error.localizedDescription)")
+                        }
+                    })
+                }
+
             })
         }
         task.resume()
