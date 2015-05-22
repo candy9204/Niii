@@ -150,7 +150,7 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
                     let nickname = fer["nickname"] as! String
                     let username = fer["username"] as! String
                     let imageURL = fer["photo"] as? String
-                    let imageName = "me.png"
+                    let imageName = "head.png"
                     let gender = fer["gender"] as! Int
                     let email = fer["email"] as! String
                     var rating = 0
@@ -160,16 +160,19 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
                     self.followers.append(FriendProfile(id: id, userName: username, nickName: nickname, rating: rating, email: email, numberOfFollowers: 5, numberOfFollowing: 6, gender: gender, image: UIImage(named: imageName)!, updated: true))
                     
                     if let url = imageURL {
-                        let urlString = "http://52.25.65.141:8000" + url  //User.URLbase + url
+                        let urlString = User.URLbase + url  //User.URLbase + url
                         let request: NSURLRequest = NSURLRequest(URL: NSURL(string: urlString)!)
                         let mainQueue = NSOperationQueue.mainQueue()
                         let fow = i
                         NSURLConnection.sendAsynchronousRequest(request, queue: mainQueue, completionHandler: { (response, data, error) -> Void in
                             if error == nil {
                                 dispatch_async(dispatch_get_main_queue(), {
-                                    self.followers[fow].image = UIImage(data: data)!
-                                    self.createCells()
-                                    self.followersList.reloadData()
+                                    let image = UIImage(data: data)
+                                    if fow < self.followers.count && image != nil {
+                                        self.followers[fow].image = image!
+                                        self.createCells()
+                                        self.followersList.reloadData()
+                                    }
                                 })
                             }
                             else {
@@ -212,8 +215,6 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
             
             let fins = jsonResult["followings"] as! NSArray
             
-            println(jsonResult)
-            
             dispatch_async(dispatch_get_main_queue(), {
                 
                 for var i = 0; i < fins.count; i++ {
@@ -228,20 +229,23 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
                     if let r = fin["rating"] as? Int {
                         rating = r
                     }
-                    let imageName = "me.png"
+                    let imageName = "head.png"
                     self.following.append(FriendProfile(id: id, userName: username, nickName: nickname, rating: rating, email: email, numberOfFollowers: 5, numberOfFollowing: 6, gender: gender, image: UIImage(named: imageName)!, updated: true))
                     
                     if let url = imageURL {
-                        let urlString = "http://52.25.65.141:8000" + url  //User.URLbase + url
+                        let urlString = User.URLbase + url  //User.URLbase + url
                         let request: NSURLRequest = NSURLRequest(URL: NSURL(string: urlString)!)
                         let mainQueue = NSOperationQueue.mainQueue()
                         let fow = i
                         NSURLConnection.sendAsynchronousRequest(request, queue: mainQueue, completionHandler: { (response, data, error) -> Void in
                             if error == nil {
                                 dispatch_async(dispatch_get_main_queue(), {
-                                    self.following[fow].image = UIImage(data: data)!
-                                    self.createCells()
-                                    self.followingList.reloadData()
+                                    let image = UIImage(data: data)
+                                    if fow < self.following.count && image != nil {
+                                        self.following[fow].image = UIImage(data: data)!
+                                        self.createCells()
+                                        self.followingList.reloadData()
+                                    }
                                 })
                             }
                             else {

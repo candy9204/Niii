@@ -7,13 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		18C37A731B0EDEA600B55416 /* Arts.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C37A6E1B0EDEA600B55416 /* Arts.png */; };
-		18C37A741B0EDEA600B55416 /* Education.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C37A6F1B0EDEA600B55416 /* Education.png */; };
-		18C37A751B0EDEA600B55416 /* Leisure.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C37A701B0EDEA600B55416 /* Leisure.png */; };
-		18C37A761B0EDEA600B55416 /* Sports.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C37A711B0EDEA600B55416 /* Sports.png */; };
-		18C37A771B0EDEA600B55416 /* Travel.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C37A721B0EDEA600B55416 /* Travel.png */; };
-		18C37A7A1B0EEA8900B55416 /* climbing.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C37A781B0EEA8900B55416 /* climbing.png */; };
-		18C37A7B1B0EEA8900B55416 /* head.png in Resources */ = {isa = PBXBuildFile; fileRef = 18C37A791B0EEA8900B55416 /* head.png */; };
 		258E149D1B0DD73300E97BE8 /* FriendProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258E149C1B0DD73300E97BE8 /* FriendProfile.swift */; };
 		258E149F1B0DE50500E97BE8 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258E149E1B0DE50500E97BE8 /* SettingsController.swift */; };
 		258E14A11B0DF2E100E97BE8 /* FAndHListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 258E14A01B0DF2E100E97BE8 /* FAndHListController.swift */; };
@@ -35,6 +28,7 @@
 		25E6C7B21AF2873100451C10 /* SingleEventController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E6C7B11AF2873100451C10 /* SingleEventController.swift */; };
 		25E6C7B41B093F2800451C10 /* UIColorFromHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25E6C7B31B093F2800451C10 /* UIColorFromHex.swift */; };
 		E16932891B0D7195001F0A04 /* Annotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16932881B0D7195001F0A04 /* Annotation.swift */; };
+		E16C26D31B0EF29F00516E0F /* SRWebClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = E16C26D21B0EF29F00516E0F /* SRWebClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,13 +42,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		18C37A6E1B0EDEA600B55416 /* Arts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Arts.png; path = Images.xcassets/Arts.png; sourceTree = "<group>"; };
-		18C37A6F1B0EDEA600B55416 /* Education.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Education.png; path = Images.xcassets/Education.png; sourceTree = "<group>"; };
-		18C37A701B0EDEA600B55416 /* Leisure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Leisure.png; path = Images.xcassets/Leisure.png; sourceTree = "<group>"; };
-		18C37A711B0EDEA600B55416 /* Sports.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Sports.png; path = Images.xcassets/Sports.png; sourceTree = "<group>"; };
-		18C37A721B0EDEA600B55416 /* Travel.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Travel.png; path = Images.xcassets/Travel.png; sourceTree = "<group>"; };
-		18C37A781B0EEA8900B55416 /* climbing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = climbing.png; path = Images.xcassets/climbing.png; sourceTree = "<group>"; };
-		18C37A791B0EEA8900B55416 /* head.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = head.png; path = Images.xcassets/head.png; sourceTree = "<group>"; };
 		258E149C1B0DD73300E97BE8 /* FriendProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendProfile.swift; sourceTree = "<group>"; };
 		258E149E1B0DE50500E97BE8 /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		258E14A01B0DF2E100E97BE8 /* FAndHListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FAndHListController.swift; sourceTree = "<group>"; };
@@ -80,6 +67,7 @@
 		25E6C7B11AF2873100451C10 /* SingleEventController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleEventController.swift; sourceTree = "<group>"; };
 		25E6C7B31B093F2800451C10 /* UIColorFromHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorFromHex.swift; sourceTree = "<group>"; };
 		E16932881B0D7195001F0A04 /* Annotation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Annotation.swift; sourceTree = "<group>"; };
+		E16C26D21B0EF29F00516E0F /* SRWebClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SRWebClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,14 +129,8 @@
 				25E6C7B31B093F2800451C10 /* UIColorFromHex.swift */,
 				25E1F3221ADF4FBC008FD067 /* GradientColor.swift */,
 				25E1F3561ADF7669008FD067 /* Images.xcassets */,
-				18C37A781B0EEA8900B55416 /* climbing.png */,
-				18C37A791B0EEA8900B55416 /* head.png */,
-				18C37A6E1B0EDEA600B55416 /* Arts.png */,
-				18C37A6F1B0EDEA600B55416 /* Education.png */,
-				18C37A701B0EDEA600B55416 /* Leisure.png */,
-				18C37A711B0EDEA600B55416 /* Sports.png */,
-				18C37A721B0EDEA600B55416 /* Travel.png */,
 				E16932881B0D7195001F0A04 /* Annotation.swift */,
+				E16C26D21B0EF29F00516E0F /* SRWebClient.swift */,
 			);
 			path = Niii;
 			sourceTree = "<group>";
@@ -258,14 +240,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				18C37A741B0EDEA600B55416 /* Education.png in Resources */,
-				18C37A751B0EDEA600B55416 /* Leisure.png in Resources */,
 				25E1F3571ADF7669008FD067 /* Images.xcassets in Resources */,
-				18C37A771B0EDEA600B55416 /* Travel.png in Resources */,
-				18C37A761B0EDEA600B55416 /* Sports.png in Resources */,
-				18C37A7A1B0EEA8900B55416 /* climbing.png in Resources */,
-				18C37A7B1B0EEA8900B55416 /* head.png in Resources */,
-				18C37A731B0EDEA600B55416 /* Arts.png in Resources */,
 				25E1F2FE1ADDDBBE008FD067 /* Main.storyboard in Resources */,
 				25E1F3031ADDDBBE008FD067 /* LaunchScreen.xib in Resources */,
 			);
@@ -287,6 +262,7 @@
 			files = (
 				25C06A291B0D41FB0014D75F /* CreateEventController.swift in Sources */,
 				25E1F3191ADDF6BB008FD067 /* FriendsController.swift in Sources */,
+				E16C26D31B0EF29F00516E0F /* SRWebClient.swift in Sources */,
 				25E1F3231ADF4FBC008FD067 /* GradientColor.swift in Sources */,
 				25E1F31D1ADDFEA7008FD067 /* SearchController.swift in Sources */,
 				25E1F2F71ADDDBBE008FD067 /* AppDelegate.swift in Sources */,

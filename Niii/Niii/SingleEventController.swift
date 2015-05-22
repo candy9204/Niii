@@ -51,7 +51,6 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
         cells = []
         for var i = 0; i < (event.comments.count + 7); i++ {
             let cell: UITableViewCell = eventInfo.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
-            //println("cell #: " + String(indexPath.row))
             
             var subView:UIView!
             let tw = self.bounds.width
@@ -369,7 +368,12 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             
             // Done
             let alertMessage = UIAlertController(title: "Success", message: "You have submitted the comment for this event!", preferredStyle: .Alert)
-            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: {
+                action in
+                
+                self.creatCells()
+                self.eventInfo.reloadData()
+            }))
             self.presentViewController(alertMessage, animated: true, completion: nil)
         })
         submitAction.enabled = false
@@ -500,6 +504,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             
             let holderID = String(organizor["id"] as! Int)
             let parts = jsonResult["participants"] as! NSArray
+            println(parts)
             let pCount = parts.count
             var r = organizor["rating"] as? Int
             var rating = 0
@@ -517,7 +522,32 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 self.event.address = address
 
                 for var i = 0; i < pCount; i++ {
+                    
                     self.event.followers.append(UIImage(named:"head.jpg")!)
+                    let photoURL = parts[i]["photo"] as? String
+                    if let url = photoURL {
+                        let urlString = User.URLbase + url  //User.URLbase + url
+                        let request: NSURLRequest = NSURLRequest(URL: NSURL(string: urlString)!)
+                        let mainQueue = NSOperationQueue.mainQueue()
+                        let fow = i
+                        NSURLConnection.sendAsynchronousRequest(request, queue: mainQueue, completionHandler: { (response, data, error) -> Void in
+                            if error == nil {
+                                dispatch_async(dispatch_get_main_queue(), {
+                                    let image = UIImage(data: data)
+                                    if fow < self.event.followers.count && image != nil  {
+                                        println("TEST")
+                                        self.self.event.followers[fow] = image!
+                                        self.creatCells()
+                                        self.eventInfo.reloadData()
+                                    }
+                                })
+                            }
+                            else {
+                                println("Error: \(error.localizedDescription)")
+                            }
+                        })
+                    }
+
                 }
                 
                 self.updateComments()
@@ -559,8 +589,6 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 println("JSON Error \(err!.localizedDescription)")
                 return
             }
-            
-            //println(jsonResult)
             
             let comments = jsonResult["comments"] as! NSArray
             
@@ -726,13 +754,13 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     User.updated = true
                     
                     self.event.comments.append([nickname, dateString, content])
+                    self.creatCells()
                     self.eventInfo.reloadData()
                 })
             }
             task.resume()
         } else {
             self.event.comments.append([User.nickname, dateString, content])
-            self.eventInfo.reloadData()
         }
 
     }
