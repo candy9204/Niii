@@ -26,6 +26,7 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
         self.searchBar.layer.borderWidth = 1
         self.searchBar.layer.borderColor = UIColorFromHex.color(0x0075FF).CGColor
         self.searchBar.layer.backgroundColor = UIColorFromHex.color(0x0075FF).CGColor
+        resultsList.clearsContextBeforeDrawing = true
         loadResults("")
         createCells()
     }

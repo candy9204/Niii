@@ -568,8 +568,12 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 self.event.rating = rating
                 self.event.description = description
                 self.event.date = dateString
-                self.titleLabel.text = self.event.eventName
-                self.titleLabel.sizeToFit()
+                var title:String = self.event.eventName
+                if count(self.event.eventName) > 21 {
+                    title = (title as NSString).substringToIndex(19) + "..."
+                }
+                self.titleLabel.text = title
+                
                 
                 self.searchInMap(address, time: dateString)
                 self.mapView.reloadInputViews()
