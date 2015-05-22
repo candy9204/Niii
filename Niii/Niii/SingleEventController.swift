@@ -187,7 +187,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 let sw = subView.bounds.width
                 
                 for var i = 0; i < event.followers.count; i++ {
-                    let image = event.followers[i]
+                    let image = event.followers[i].image
                     let imageView = UIImageView(image: image)
                     imageView.frame = CGRect(x: 20+CGFloat(i)*sh, y: 10, width: sh-20, height: sh-20)
                     let selectPhotoGesture = UITapGestureRecognizer(target: self, action: "showInfo:")
@@ -299,10 +299,48 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
     
     func showInfo(gesture: UIGestureRecognizer) {
         if let imageView = gesture.view as? UIImageView {
-            // TODO: Show information of the participant
-            println("Clicked")
-            // User imageView.tag to learn which imageView is clicked
-            println(imageView.tag)
+//            var msg = "--------\nUsername: " + self.results[indexPath.row][3]
+//            msg += "\nGender: " + self.results[indexPath.row][4]
+//            msg += "\nEmail: " + self.results[indexPath.row][5]
+//            msg += "\nRating: " + self.results[indexPath.row][6]
+            var i = imageView.tag
+            var gender = "Female"
+            if self.event.followers[i].gender == 1 {
+                gender = "Male"
+            }
+            var msg = "--------\nUsername: " + self.event.followers[i].userName
+            msg += "\nGender: " + gender
+            msg += "\nEmail: " + self.event.followers[i].email
+            msg += "\nRating: " + String(self.event.followers[i].rating)
+            
+            let alertController = UIAlertController(title: self.event.followers[i].nickName, message: msg, preferredStyle: UIAlertControllerStyle.Alert)
+            
+            
+            
+            let followAction = UIAlertAction(title: "Follow", style: .Default, handler: {
+                action in
+                // TODO: Submit the follow request to server
+                
+                self.followAction(self.event.followers[i].id)
+                
+                // Done
+                let alertMessage = UIAlertController(title: "Success", message: "You have followed " + self.self.event.followers[i].nickName, preferredStyle: .Alert)
+                alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(alertMessage, animated: true, completion: nil)
+            })
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Default) { (_) in }
+            
+            
+            alertController.addAction(followAction)
+            alertController.addAction(cancelAction)
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
+            
+//            // TODO: Show information of the participant
+//            println("Clicked")
+//            // User imageView.tag to learn which imageView is clicked
+//            println(imageView.tag)
         }
     }
     
@@ -453,7 +491,12 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             
             // Done
             let alertMessage = UIAlertController(title: "Success", message: successMsg, preferredStyle: .Alert)
-            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+            alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: {
+                action in
+                
+                self.creatCells()
+                self.eventInfo.reloadData()
+            }))
             self.presentViewController(alertMessage, animated: true, completion: nil)
         })
         
@@ -533,10 +576,13 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 self.event.holderName = holderName
                 self.event.holderID = holderID
                 self.event.address = address
-
+                
+                println(parts)
                 for var i = 0; i < pCount; i++ {
-                    
-                    self.event.followers.append(UIImage(named:"head.jpg")!)
+                    let id = parts[i]["id"] as! Int
+                    let username = parts[i]["username"] as! String
+                    //let nickname = parts[i]["nickname"] as! String
+                    self.event.followers.append(FriendProfile(id:String(id), userName:username, image: UIImage(named:"head.jpg")!))
                     let photoURL = parts[i]["photo"] as? String
                     if let url = photoURL {
                         let urlString = User.URLbase + url  //User.URLbase + url
@@ -548,8 +594,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                                 dispatch_async(dispatch_get_main_queue(), {
                                     let image = UIImage(data: data)
                                     if fow < self.event.followers.count && image != nil  {
-                                        println("TEST")
-                                        self.self.event.followers[fow] = image!
+                                        self.self.event.followers[fow].image = image!
                                         self.creatCells()
                                         self.eventInfo.reloadData()
                                     }
@@ -573,7 +618,6 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     title = (title as NSString).substringToIndex(19) + "..."
                 }
                 self.titleLabel.text = title
-                
                 
                 self.searchInMap(address, time: dateString)
                 self.mapView.reloadInputViews()
@@ -859,10 +903,65 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 return
             }
             
+            dispatch_async(dispatch_get_main_queue(), {
+                self.updateJoiner(join)
+            })
+            
             //println(jsonResult)
             
         })
         task.resume()
         
     }
+    
+    func updateJoiner(join: String) {
+        if join == "join" {
+            var image = UIImage(named:"head.jpg")!
+            if User.photo != nil {
+                image = User.photo!
+            }
+            var gender = 0
+            if User.gender == "Male" {
+                gender = 1
+            }
+            self.event.followers.append(FriendProfile(id: User.UID, userName: User.username, image: image, nickName: User.nickname, rating: User.rating.toInt()!, gender: gender))
+            isJoined = true
+        } else {
+            for var i = 0; i < self.event.followers.count; i++ {
+                if self.event.followers[i].id == User.UID {
+                    self.event.followers.removeAtIndex(i)
+                    break
+                }
+            }
+            isJoined = false
+            
+        }
+    }
+    
+    func followAction(id: String) {
+        let urlPath = User.URLbase + "/user/" + User.UID + "/followings/add/?following_id=" + id
+        
+        let url = NSURL(string: urlPath)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
+            
+            if error != nil {
+                println("error=\(error)")
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+        })
+        task.resume()
+        
+    }
+
 }
