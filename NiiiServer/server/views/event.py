@@ -91,7 +91,7 @@ def search(request):
 		res['success'] = False
 		res['message'] = 'Invalid Request'
 	if searchString == "":
-		pevents = Event.objects.annotate(total_count = Count('participants', distinct = True) + Count('favoriters', distinct = True)).order_by('-total_count').values('id', 'name', 'place', 'time','category__name')[:10]
+		pevents = Event.objects.annotate(total_count = Count('participants', distinct = True) + Count('favoriters', distinct = True)).order_by('-total_count').values('id', 'name', 'place', 'time','category__name', 'total_count')[:10]
 		for event in pevents:
 			event['time'] = event['time'].isoformat()
 			info = {}
