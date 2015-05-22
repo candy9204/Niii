@@ -190,6 +190,10 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                     let image = event.followers[i]
                     let imageView = UIImageView(image: image)
                     imageView.frame = CGRect(x: 20+CGFloat(i)*sh, y: 10, width: sh-20, height: sh-20)
+                    let selectPhotoGesture = UITapGestureRecognizer(target: self, action: "showInfo:")
+                    imageView.addGestureRecognizer(selectPhotoGesture)
+                    imageView.userInteractionEnabled = true
+                    imageView.tag = i
                     subView.addSubview(imageView)
                 }
                 
@@ -291,6 +295,15 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             cells.append(cell)
         }
 
+    }
+    
+    func showInfo(gesture: UIGestureRecognizer) {
+        if let imageView = gesture.view as? UIImageView {
+            // TODO: Show information of the participant
+            println("Clicked")
+            // User imageView.tag to learn which imageView is clicked
+            println(imageView.tag)
+        }
     }
     
     func popToRoot(sender:UIBarButtonItem){
@@ -556,6 +569,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 self.event.description = description
                 self.event.date = dateString
                 self.titleLabel.text = self.event.eventName
+                self.titleLabel.sizeToFit()
                 
                 self.searchInMap(address, time: dateString)
                 self.mapView.reloadInputViews()

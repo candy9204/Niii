@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6fD-1Y-gfI">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="6fD-1Y-gfI">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -273,7 +273,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="67"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Event" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lSa-hd-Gqr">
-                                        <rect key="frame" x="264" y="23" width="72" height="36"/>
+                                        <rect key="frame" x="91" y="23" width="419" height="36"/>
                                         <fontDescription key="fontDescription" name="AmericanTypewriter" family="American Typewriter" pointSize="20"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -421,7 +421,7 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Bpe-Gl-CUq">
-                                <rect key="frame" x="0.0" y="111" width="600" height="440"/>
+                                <rect key="frame" x="0.0" y="67" width="600" height="484"/>
                                 <color key="backgroundColor" red="0.90588235289999997" green="0.94509803920000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <outlet property="dataSource" destination="Khp-lg-ruT" id="TYz-nh-1nK"/>
@@ -429,29 +429,23 @@
                                 </connections>
                             </tableView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="h7c-7Q-5ss">
-                                <rect key="frame" x="0.0" y="111" width="600" height="440"/>
+                                <rect key="frame" x="0.0" y="67" width="600" height="484"/>
                                 <color key="backgroundColor" red="0.90588235289999997" green="0.94509803920000002" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <outlet property="dataSource" destination="Khp-lg-ruT" id="nIQ-ZL-U8Y"/>
                                     <outlet property="delegate" destination="Khp-lg-ruT" id="YYP-js-psi"/>
                                 </connections>
                             </tableView>
-                            <searchBar contentMode="redraw" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sFd-29-A7w">
-                                <rect key="frame" x="0.0" y="67" width="600" height="44"/>
-                                <color key="barTintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="raZ-yg-Wm3" firstAttribute="top" secondItem="h7c-7Q-5ss" secondAttribute="bottom" id="6W3-Hs-mjO"/>
                             <constraint firstItem="Bpe-Gl-CUq" firstAttribute="width" secondItem="qqI-Aa-EFl" secondAttribute="width" id="GWK-ON-xAF"/>
-                            <constraint firstItem="h7c-7Q-5ss" firstAttribute="top" secondItem="mch-BW-ogC" secondAttribute="bottom" constant="44" id="Iot-U4-Bxr"/>
+                            <constraint firstItem="h7c-7Q-5ss" firstAttribute="top" secondItem="mch-BW-ogC" secondAttribute="bottom" id="IE3-cb-knx"/>
                             <constraint firstItem="raZ-yg-Wm3" firstAttribute="top" secondItem="Bpe-Gl-CUq" secondAttribute="bottom" id="NJx-Ks-q7Y"/>
                             <constraint firstItem="h7c-7Q-5ss" firstAttribute="width" secondItem="qqI-Aa-EFl" secondAttribute="width" id="Uxv-nD-Idk"/>
-                            <constraint firstItem="sFd-29-A7w" firstAttribute="width" secondItem="qqI-Aa-EFl" secondAttribute="width" id="m0H-4s-x8Y"/>
                             <constraint firstItem="mch-BW-ogC" firstAttribute="width" secondItem="qqI-Aa-EFl" secondAttribute="width" id="mUR-Jg-vef"/>
-                            <constraint firstItem="Bpe-Gl-CUq" firstAttribute="top" secondItem="mch-BW-ogC" secondAttribute="bottom" constant="44" id="vcL-fe-WFR"/>
+                            <constraint firstItem="Bpe-Gl-CUq" firstAttribute="top" secondItem="mch-BW-ogC" secondAttribute="bottom" id="uzF-Tz-rYe"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Friends" image="friends" id="aqh-yD-WJQ"/>
@@ -459,7 +453,6 @@
                         <outlet property="controller" destination="tuV-xY-iDk" id="DY2-a7-EJZ"/>
                         <outlet property="followersList" destination="h7c-7Q-5ss" id="y10-Xw-8Ef"/>
                         <outlet property="followingList" destination="Bpe-Gl-CUq" id="tXd-mJ-n2q"/>
-                        <outlet property="searchBar" destination="sFd-29-A7w" id="7T8-5x-4gP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GvT-Y0-RQ0" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -80,7 +80,7 @@ class SettingsController: UIViewController, UITableViewDelegate, UITableViewData
                 var textView:UITextView
                 
                 if i == 0 {
-                    title.text = "NickName:"
+                    title.text = "Nickname:"
                     textView = nickName
                 } else if i == 1 {
                     title.text = "Gender:"
