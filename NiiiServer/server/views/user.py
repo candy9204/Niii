@@ -6,9 +6,10 @@ from django.http import JsonResponse
 from django.core.files.base import ContentFile
 from django.forms.models import model_to_dict
 from django.core import serializers
-from django.db.models import Avg
 
-from server.models import Profile, Rating
+from django.db.models import Avg, Count
+
+from server.models import Profile, Rating, Event
 
 # Create your views here.
 def login(request):
@@ -206,8 +207,10 @@ def recommend(request, userid):
 				sim = intersectCount/countOfUser2
 			else:
 				sim = 0
-			if sim >= 0.5:
+			if sim >= 0.1:
 				recommendations.extend(list(set(list2) - set(list1)))
+	if not recommendations:
+		recommendations = Event.objects.annotate(total_count = Count('participants', distinct = True) + Count('favoriters', distinct = True)).order_by('-total_count')[:10]
 	for r in recommendations:
 		info = {}
 		info['id'] = r.id
