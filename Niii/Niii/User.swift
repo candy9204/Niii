@@ -18,7 +18,7 @@ struct User {
     static var updated = false
     static var eventID: String! = "4"
     static var username: String = ""
-    static var URLbase: String = "http://localhost:8000"
+    static var URLbase: String = "http://niii.elasticbeanstalk.com"
     
     static func reset() {
         UID = "0"

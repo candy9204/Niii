@@ -183,37 +183,15 @@ class SettingsController: UIViewController, UITableViewDelegate, UITableViewData
                     println("ERROR")
             })
         
-//        var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/user/" + User.UID + "/profile/update/")!)
-//        request.HTTPMethod = "POST"
-//        let postString = "gender=" + gender.text + "&nickname=" + nickName.text// + "&email=" + email.text
-//        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
-//        
-//        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
-//            data, response, error in
-//            
-//            if error != nil {
-//                println("error=\(error)")
-//                return
-//            }
-//            
-//            var err: NSError?
-//            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
-//            
-//            if (err != nil) {
-//                // If there is an error parsing JSON, print it to the console
-//                println("JSON Error \(err!.localizedDescription)")
-//                return
-//            }
-//            
-//            println(jsonResult)
-//            
-//            
-//        }
-//        task.resume()
-        
         // Done
         let alertMessage = UIAlertController(title: "Success", message: "You have updated your info!", preferredStyle: .Alert)
-        alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: {
+            action in
+            let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
+            mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+            mainPage.selectedIndex = self.parentController
+            self.presentViewController(mainPage, animated:true, completion:nil)
+        }))
         self.presentViewController(alertMessage, animated: true, completion: nil)
     }
 }

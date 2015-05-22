@@ -70,6 +70,7 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
             if json != nil {
                 jsonResult = json!
             } else {
+                println("NULL")
                 return
             }
             

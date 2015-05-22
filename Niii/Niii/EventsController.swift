@@ -116,8 +116,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 println("JSON Error \(err!.localizedDescription)")
                 return
             }
-            
-            println(jsonResult)
+        
             let res = jsonResult["recommendations"] as! NSArray
 
 

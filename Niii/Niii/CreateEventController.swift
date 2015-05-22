@@ -237,7 +237,13 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
         
         // Done
         let alertMessage = UIAlertController(title: "Success", message: "You have created the event!", preferredStyle: .Alert)
-        alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: {
+            action in
+            let mainPage = self.storyboard?.instantiateViewControllerWithIdentifier("mainPage") as! UITabBarController
+            mainPage.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+            mainPage.selectedIndex = self.parentController
+            self.presentViewController(mainPage, animated:true, completion:nil)
+        }))
         self.presentViewController(alertMessage, animated: true, completion: nil)
     }
     
@@ -255,19 +261,19 @@ class CreateEventController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func convertCategoryID() -> String {
-        if categoryField.text != "Leisure" {
+        if categoryField.text == "Leisure" {
             return "2"
         }
-        if categoryField.text != "Travel" {
+        if categoryField.text == "Travel" {
             return "3"
         }
-        if categoryField.text != "Arts" {
+        if categoryField.text == "Arts" {
             return "4"
         }
-        if categoryField.text != "Sports" {
+        if categoryField.text == "Sports" {
             return "5"
         }
-        if categoryField.text != "Education" {
+        if categoryField.text == "Education" {
             return "6"
         }
         return "2"

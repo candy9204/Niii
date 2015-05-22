@@ -504,7 +504,7 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
             
             let holderID = String(organizor["id"] as! Int)
             let parts = jsonResult["participants"] as! NSArray
-            println(parts)
+
             let pCount = parts.count
             var r = organizor["rating"] as? Int
             var rating = 0

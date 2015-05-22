@@ -144,7 +144,6 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
                 return
             }
             
-            println(jsonResult)
             
             let nickname = jsonResult["nickname"] as? String
             let g = jsonResult["gender"] as? Int
@@ -155,7 +154,6 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
                 gender = "Female"
             }
             let rating = jsonResult["rating"] as? String
-            println(nickname)
             dispatch_async(dispatch_get_main_queue(), {
                 User.nickname = nickname
                 User.gender = gender as String!
