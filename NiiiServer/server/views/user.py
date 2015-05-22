@@ -209,6 +209,7 @@ def recommend(request, userid):
 				sim = 0
 			if sim >= 0.1:
 				recommendations.extend(list(set(list2) - set(list1)))
+	recommendations = list(set(recommendations))
 	if not recommendations:
 		recommendations = Event.objects.annotate(total_count = Count('participants', distinct = True) + Count('favoriters', distinct = True)).order_by('-total_count')[:10]
 	for r in recommendations:
