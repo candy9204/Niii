@@ -133,10 +133,13 @@ def search(request):
 					info = {}
 					info['id'] = user.id
 					info['nickname'] = p.nickname
+					info['email'] = p.email
+					info['gender'] = p.gender
 					if p.photo:
 						info['photo'] = p.photo.url
 					else:
 						info['photo'] = None
+					info['rating'] = Rating.objects.filter(ratee = user).aggregate(Avg('score'))['score__avg']
 					# type = 1 user
 					info['type'] = 1
 					res.append(info)
@@ -152,7 +155,7 @@ def viewEventsByCat(request, categoryid):
 		info['time'] = e['time']
 		info['place'] = e['place']
 		res.append(info)
-	return JsonResponse({'recommendations': res})
+	return JsonResponse({'events': res})
 
 def joinEvent(request, eventid):
 	# GET for joining
