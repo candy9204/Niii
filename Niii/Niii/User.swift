@@ -15,12 +15,16 @@ struct User {
     static var photoURL: String?
     static var updated = false
     static var eventID: String! = "4"
+    static var username: String = ""
+    static var URLbase: String = "http://52.25.65.141:8000/"
     
     static func reset() {
         UID = "0"
         nickname = ""
+        username = ""
         rating = "0"
         gender = ""
         updated = false
+        photoURL = nil
     }
 }
