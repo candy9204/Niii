@@ -89,7 +89,13 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         let time = self.timeToString(r["time"] as! String)
                         self.results.append([String(type), name, String(id), place, time])
                         //TODO: Image for category!!!
-                        let imageName = "climbing.png"
+                        var imageName : String
+                        if let imgname = r["category"] as? String {
+                            imageName = imgname + ".png"
+                        }
+                        else {
+                            imageName = "climbing.png"
+                        }
                         self.images.append(UIImage(named: imageName)!)
                     } else {
                         let name = r["nickname"] as! String
@@ -107,9 +113,11 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
                             NSURLConnection.sendAsynchronousRequest(request, queue: mainQueue, completionHandler: { (response, data, error) -> Void in
                                 if error == nil {
                                     dispatch_async(dispatch_get_main_queue(), {
-                                        self.images[fow] = UIImage(data: data)!
-                                        self.createCells()
-                                        self.resultsList.reloadData()
+                                        if fow < self.images.count {
+                                            self.images[fow] = UIImage(data: data)!
+                                            self.createCells()
+                                            self.resultsList.reloadData()
+                                        }
                                     })
                                 }
                                 else {

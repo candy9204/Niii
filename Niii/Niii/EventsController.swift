@@ -132,7 +132,13 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
                     let time = self.timeToString(r["time"] as! String)
                     self.events.append([name, String(id), place, time])
                     //TODO: Image for category!!!
-                    let imageName = "climbing.png"
+                    var imageName : String
+                    if let imgname = r["category"] as? String {
+                        imageName = imgname + ".png"
+                    }
+                    else {
+                        imageName = "climbing.png"
+                    }
                     self.images.append(UIImage(named: imageName)!)
                     
                 }

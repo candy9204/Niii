@@ -132,6 +132,7 @@ def search(request):
 				if names.find(searchString) >=0:
 					info = {}
 					info['id'] = user.id
+					info['username'] = user.username
 					info['nickname'] = p.nickname
 					info['email'] = p.email
 					info['gender'] = p.gender
