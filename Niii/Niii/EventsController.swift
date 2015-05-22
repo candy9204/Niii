@@ -11,7 +11,7 @@ import UIKit
 class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var eventList: UITableView!
-    var events = [String]()
+    var events = [[String]]()
     var images = [UIImage]()
     var cells:[UITableViewCell] = [UITableViewCell]()
     var bounds: CGRect = UIScreen.mainScreen().bounds
@@ -37,7 +37,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     }
     
     @IBAction func addEvent(sender: AnyObject) {
-        let createEvent = self.storyboard?.instantiateViewControllerWithIdentifier("createEventPage") as! CreateEventController
+        let createEvent = self.storyboard?.instantiateViewControllerWithIdentifier("createEventPage") as CreateEventController
         createEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         createEvent.parentController = 0
         // println("haha")
@@ -47,7 +47,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     func createCells(){
         for var i = 0; i < self.events.count; i++ {
             
-            var cell:UITableViewCell = self.eventList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
+            var cell:UITableViewCell = self.eventList.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
             
             
             let th = self.eventList.rowHeight;
@@ -70,20 +70,20 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
             // label
             let label = UILabel();
             label.frame = CGRect(x: sh+30, y: 5, width: sw-sh-30, height: (sh-10)/2.0)
-            label.text = self.events[i]
+            label.text = self.events[i][0]
             label.font = UIFont(name: "AmericanTypewriter", size: 18)
             subView.addSubview(label)
             
             // TODO: Add Location and Time
             let label2 = UILabel();
             label2.frame = CGRect(x: sh+30, y: 5+(sh-10)/2.0, width: sw-sh-30, height: (sh-10)/4.0)
-            label2.text = "Location: " + ""
+            label2.text = "Location: " + self.events[i][2]
             label2.font = UIFont(name: "AlNile", size: 12)
             subView.addSubview(label2)
             
             let label3 = UILabel();
             label3.frame = CGRect(x: sh+30, y: 5+(sh-10)*3.0/4.0, width: sw-sh-30, height: (sh-10)/4.0)
-            label3.text = "Time: " + ""
+            label3.text = "Time: " +  self.events[i][3]
             label3.font = UIFont(name: "AlNile", size: 12)
             subView.addSubview(label3)
             
@@ -97,14 +97,51 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func loadEvents(){
         // TODO: Load events from server
-        
-        
-        // Done
-        for i in 1...7 {
-            let imageName = "climbing.png"
-            self.events.append("Event " + String(i))
-            images.append(UIImage(named: imageName)!)
-        }
+        var urlPath : String
+        urlPath = "http://52.25.65.141:8000/user/" + User.UID + "/recommend/"
+
+        let url = NSURL(string: urlPath)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
+            if error != nil {
+                println("error=\(error)")
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+            println(jsonResult)
+            let res = jsonResult["recommendations"] as NSArray
+
+
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                self.events = []
+                self.images = []
+                for r in res {
+                    let name = r["name"] as String
+                    let id = r["id"] as Int
+                    let place = r["place"] as String
+                    let time = self.timeToString(r["time"] as String)
+                    self.events.append([name, String(id), place, time])
+                    //TODO: Image for category!!!
+                    let imageName = "climbing.png"
+                    self.images.append(UIImage(named: imageName)!)
+                    
+                }
+                self.createCells()
+                self.eventList.reloadData()
+            })
+        })
+        task.resume()
+
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -113,7 +150,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
-        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEventPage") as! SingleEventController
+        let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEventPage") as SingleEventController
         singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         singleEvent.parentController = 0
         self.presentViewController(singleEvent, animated:true, completion:nil)
@@ -125,6 +162,19 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func setHightlighted(highlighted: Bool, animated: Bool) {
         self.setHightlighted(highlighted, animated: animated)
+    }
+    
+    func timeToString(time: String) -> String {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-ddEEEEEHH:mm:ssxxx"
+        var date = dateFormatter.dateFromString(time)
+        if date == nil {
+            dateFormatter.dateFormat = "yyyy-MM-ddEEEEEHH:mm:ss.SSSxxx"
+            date = dateFormatter.dateFromString(time)
+        }
+        dateFormatter.dateFormat = "MMM dd"
+        let dateString = dateFormatter.stringFromDate(date!)
+        return dateString
     }
 }
 
