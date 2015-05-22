@@ -14,12 +14,12 @@ struct Event {
     var holderID: String
     var address: String
     var date: String
-    var followers: [UIImage]
+    var followers: [FriendProfile]
     var comments: [[String]]
     var rating: Int
     var description: String
     var updated: Bool
-    init(eventName: String = "", holderName: String = "", holderID: String = "", address: String = "", date: String = "", followers: [UIImage] = [UIImage](), comments: [[String]] = [[String]](), rating: Int = 5, description: String = "", updated: Bool = false){
+    init(eventName: String = "", holderName: String = "", holderID: String = "", address: String = "", date: String = "", followers: [FriendProfile] = [FriendProfile](), comments: [[String]] = [[String]](), rating: Int = 5, description: String = "", updated: Bool = false){
         self.eventName = eventName
         self.holderName = holderName
         self.holderID = holderID

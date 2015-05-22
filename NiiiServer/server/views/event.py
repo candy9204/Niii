@@ -31,6 +31,11 @@ def viewEvent(request, eventid):
 		info = {
 			'id' : part.id,
 			'username' : part.username,
+			'nickname' : part.profile.nickname,
+			'email' : part.profile.email,
+			"gender" : part.profile.gender,
+			"rating" : Rating.objects.filter(ratee = part).aggregate(Avg('score'))['score__avg'],
+
 			'photo': part.profile.photo.url if hasattr(part.profile.photo, 'url') else None
 		}
 		res['participants'].append(info)
