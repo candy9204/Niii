@@ -590,8 +590,15 @@ class SingleEventController: UIViewController, UITableViewDelegate, UITableViewD
                 for var i = 0; i < pCount; i++ {
                     let id = parts[i]["id"] as! Int
                     let username = parts[i]["username"] as! String
-                    //let nickname = parts[i]["nickname"] as! String
-                    self.event.followers.append(FriendProfile(id:String(id), userName:username, image: UIImage(named:"head.jpg")!))
+                    let nickname = parts[i]["nickname"] as! String
+                    let email = parts[i]["email"] as! String
+                    var rating: Int! = 0
+                    let rat = parts[i]["rating"] as? Int
+                    if rat != nil {
+                        rating = rat
+                    }
+                    let gender = parts[i]["gender"] as! Int
+                    self.event.followers.append(FriendProfile(id:String(id), userName:username, nickName: nickname, email: email, rating: rating!, gender: gender, image: UIImage(named:"head.jpg")!))
                     let photoURL = parts[i]["photo"] as? String
                     if let url = photoURL {
                         let urlString = User.URLbase + url  //User.URLbase + url
