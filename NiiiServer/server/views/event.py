@@ -101,7 +101,7 @@ def search(request):
 			info['category'] = event['category__name']
 			info['type'] = 0
 			res.append(info)
-		return JsonResponse({'events': res})
+		return JsonResponse({'results': res})
 	else:
 		searchString= searchString.lower()
 		events = Event.objects.all()
