@@ -79,7 +79,8 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
                 
                 self.results = []
                 self.images = []
-                for r in res {
+                for var i = 0; i < res.count; i++ {
+                    let r = res[i] as! NSDictionary
                     let type = r["type"] as! Int
                     if type == 0 {
                         let name = r["name"] as! String
@@ -95,8 +96,27 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         let id = r["id"] as! Int
                         self.results.append([String(type), name, String(id)])
                         //TODO: User Image URL!!!
+                        let photoURL = r["photo"] as? String
                         let imageName = "head.png"
                         self.images.append(UIImage(named: imageName)!)
+                        if let url = photoURL {
+                            let urlString = "http://52.25.65.141:8000" + url  //User.URLbase + url
+                            let request: NSURLRequest = NSURLRequest(URL: NSURL(string: urlString)!)
+                            let mainQueue = NSOperationQueue.mainQueue()
+                            let fow = i
+                            NSURLConnection.sendAsynchronousRequest(request, queue: mainQueue, completionHandler: { (response, data, error) -> Void in
+                                if error == nil {
+                                    dispatch_async(dispatch_get_main_queue(), {
+                                        self.images[fow] = UIImage(data: data)!
+                                        self.createCells()
+                                        self.resultsList.reloadData()
+                                    })
+                                }
+                                else {
+                                    println("Error: \(error.localizedDescription)")
+                                }
+                            })
+                        }
                     }
                 }
                 self.createCells()

@@ -759,7 +759,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="FHtitle" destination="o3m-HL-JQJ" id="cyg-Ps-HVM"/>
                         <outlet property="eventList" destination="3pe-XK-LvY" id="QRW-zZ-Dub"/>
                     </connections>
                 </viewController>

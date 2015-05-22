@@ -19,29 +19,22 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
     var otherRowHeight : CGFloat = 50.0
     var bounds: CGRect = UIScreen.mainScreen().bounds
     var cells:[UITableViewCell] = [UITableViewCell]()
-    var image: UIImage!
-    var imageView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.settingList.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        println("Count")
+
         self.settings = ["Name: " + User.nickname, "Gender: " + User.gender, "Rating: " + User.rating, "Favourite", "History", "Settings"]
         if !User.updated {
             updateWithHTTP()
         }
-        if User.photo == nil {
-            let imageName = "head.png"
-            image = UIImage(named: imageName)
-        } else {
-            image = User.photo
-        }
-        imageView = UIImageView(image: image!)
+        
         createCells()
     }
     
     func createCells(){
+        cells = []
         for var i = 0; i < self.settings.count-2; i++ {
             
             var cell:UITableViewCell = self.settingList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
@@ -59,19 +52,28 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
                 let sw = subView.bounds.width
                 
                 // Image
+                let image: UIImage!
+                if let img = User.photo {
+                    image = img
+                } else {
+                    let imageName = "head.png"
+                    image = UIImage(named: imageName)
+                }
+                
+                let imageView = UIImageView(image: image!)
                 imageView.frame = CGRect(x: 20, y: 10, width: sh-20, height: sh-20)
                 subView.addSubview(imageView)
                 
                 // label
                 let eh = (sh - 20) / 3
                 label1.frame = CGRect(x: sh+30, y: 5, width: sw-sh-60, height: eh)
-                label1.text = self.settings[0]
+                label1.text = "Name: " + User.nickname
                 label1.font = UIFont(name: "AmericanTypewriter", size: 20)
                 label2.frame = CGRect(x: sh+30, y: 10+eh, width: sw-sh-60, height: eh)
-                label2.text = self.settings[1]
+                label2.text = "Gender: " + User.gender
                 label2.font = UIFont(name: "AmericanTypewriter", size: 20)
                 label3.frame = CGRect(x: sh+30, y: 15+2*eh, width: sw-sh-60, height: eh)
-                label3.text = self.settings[2]
+                label3.text = "Rating: " + User.rating
                 label3.font = UIFont(name: "AmericanTypewriter", size: 20)
                 subView.addSubview(label1)
                 subView.addSubview(label2)
@@ -178,9 +180,8 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
                         if error == nil {
                             dispatch_async(dispatch_get_main_queue(), {
                                 User.photo = UIImage(data: data)
-                                self.image = UIImage(data: data)
-                                self.imageView = UIImageView(image: self.image!)
-                                self.imageView.reloadInputViews()
+                                self.createCells()
+                                self.settingList.reloadData()
                             })
                         }
                         else {

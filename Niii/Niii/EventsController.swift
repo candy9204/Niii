@@ -40,11 +40,11 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
         let createEvent = self.storyboard?.instantiateViewControllerWithIdentifier("createEventPage") as! CreateEventController
         createEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         createEvent.parentController = 0
-        // println("haha")
         self.presentViewController(createEvent, animated:true, completion:nil)
     }
     
     func createCells(){
+        self.cells = []
         for var i = 0; i < self.events.count; i++ {
             
             var cell:UITableViewCell = self.eventList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
@@ -150,6 +150,7 @@ class EventsController: UIViewController, UITableViewDelegate, UITableViewDataSo
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        User.eventID = events[indexPath.row][1]
         let singleEvent = self.storyboard?.instantiateViewControllerWithIdentifier("singleEventPage")as! SingleEventController
         singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         singleEvent.parentController = 0

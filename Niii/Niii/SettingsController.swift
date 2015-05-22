@@ -71,6 +71,7 @@ class SettingsController: UIViewController, UITableViewDelegate, UITableViewData
                 let selectPhotoGesture = UITapGestureRecognizer(target: self, action: "selectPhoto:")
                 photo.addGestureRecognizer(selectPhotoGesture)
                 photo.userInteractionEnabled = true
+                subView.addSubview(title)
                 subView.addSubview(photo)
             } else {
                 let title = UILabel(frame: CGRectMake(20, 5, (sw-40)/3.0, sh-10))

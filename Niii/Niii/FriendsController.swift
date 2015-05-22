@@ -29,9 +29,9 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
         self.followingList.rowHeight = 50.0
         self.followingList.hidden = false
         self.followersList.hidden = true
-        self.searchBar.layer.borderWidth = 1
-        self.searchBar.layer.borderColor = UIColorFromHex.color(0x0075FF).CGColor
-        self.searchBar.layer.backgroundColor = UIColorFromHex.color(0x0075FF).CGColor
+//        self.searchBar.layer.borderWidth = 1
+//        self.searchBar.layer.borderColor = UIColorFromHex.color(0x0075FF).CGColor
+//        self.searchBar.layer.backgroundColor = UIColorFromHex.color(0x0075FF).CGColor
         
         loadFriends()
         createCells()
@@ -144,7 +144,8 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
             
             dispatch_async(dispatch_get_main_queue(), {
                 
-                for fer in fers {
+                for var i = 0; i < fers.count; i++ {
+                    let fer = fers[i] as! NSDictionary
                     let id = String(fer["id"] as! Int)
                     let nickname = fer["nickname"] as! String
                     let username = fer["username"] as! String
@@ -157,6 +158,25 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
                         rating = r
                     }
                     self.followers.append(FriendProfile(id: id, userName: username, nickName: nickname, rating: rating, email: email, numberOfFollowers: 5, numberOfFollowing: 6, gender: gender, image: UIImage(named: imageName)!, updated: true))
+                    
+                    if let url = imageURL {
+                        let urlString = "http://52.25.65.141:8000" + url  //User.URLbase + url
+                        let request: NSURLRequest = NSURLRequest(URL: NSURL(string: urlString)!)
+                        let mainQueue = NSOperationQueue.mainQueue()
+                        let fow = i
+                        NSURLConnection.sendAsynchronousRequest(request, queue: mainQueue, completionHandler: { (response, data, error) -> Void in
+                            if error == nil {
+                                dispatch_async(dispatch_get_main_queue(), {
+                                    self.followers[fow].image = UIImage(data: data)!
+                                    self.createCells()
+                                    self.followersList.reloadData()
+                                })
+                            }
+                            else {
+                                println("Error: \(error.localizedDescription)")
+                            }
+                        })
+                    }
                 }
                 
                 
@@ -196,14 +216,40 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
             
             dispatch_async(dispatch_get_main_queue(), {
                 
-                for fin in fins {
+                for var i = 0; i < fins.count; i++ {
+                    let fin = fins[i] as! NSDictionary
                     let id = String(fin["id"] as! Int)
                     let nickname = fin["nickname"] as! String
                     let username = fin["username"] as! String
                     let imageURL = fin["photo"] as? String
-                    
+                    let gender = fin["gender"] as! Int
+                    let email = fin["email"] as! String
+                    var rating = 0
+                    if let r = fin["rating"] as? Int {
+                        rating = r
+                    }
                     let imageName = "me.png"
-                    self.following.append(FriendProfile(id: id, userName: username, nickName: nickname, rating: 4, email: "asdf@df.com", numberOfFollowers: 5, numberOfFollowing: 6, gender: 1, image: UIImage(named: imageName)!, updated: true))
+                    self.following.append(FriendProfile(id: id, userName: username, nickName: nickname, rating: rating, email: email, numberOfFollowers: 5, numberOfFollowing: 6, gender: gender, image: UIImage(named: imageName)!, updated: true))
+                    
+                    if let url = imageURL {
+                        let urlString = "http://52.25.65.141:8000" + url  //User.URLbase + url
+                        let request: NSURLRequest = NSURLRequest(URL: NSURL(string: urlString)!)
+                        let mainQueue = NSOperationQueue.mainQueue()
+                        let fow = i
+                        NSURLConnection.sendAsynchronousRequest(request, queue: mainQueue, completionHandler: { (response, data, error) -> Void in
+                            if error == nil {
+                                dispatch_async(dispatch_get_main_queue(), {
+                                    self.following[fow].image = UIImage(data: data)!
+                                    self.createCells()
+                                    self.followingList.reloadData()
+                                })
+                            }
+                            else {
+                                println("Error: \(error.localizedDescription)")
+                            }
+                        })
+                    }
+
                 }
                 
                 
@@ -262,15 +308,13 @@ class FriendsController: UIViewController, UITableViewDelegate, UITableViewDataS
         let id = indexPath.row
         var gender:String
         if friends[id].gender == 0 {
-            gender = "Unknown"
-        } else if friends[id].gender == 1 {
             gender = "Female"
         } else {
             gender = "Male"
         }
         
         let alertController = UIAlertController(title: friends[id].nickName, message:
-            "--------\nUsername: "+friends[id].userName+"\nGender: "+gender+"\nEmail: "+friends[id].email+"\nRating: "+String(friends[id].rating)+"\nNumber of Followers: "+String(friends[id].numberOfFollowers)+"\nNumber of Following: "+String(friends[id].numberOfFollowing), preferredStyle: UIAlertControllerStyle.Alert)
+            "--------\nUsername: "+friends[id].userName+"\nGender: "+gender+"\nEmail: "+friends[id].email+"\nRating: "+String(friends[id].rating), preferredStyle: UIAlertControllerStyle.Alert)
         
         
         
