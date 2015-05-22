@@ -64,15 +64,20 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
             }
             
             var err: NSError?
-            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            let json = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as? NSDictionary
+            
+            var jsonResult: NSDictionary!
+            if json != nil {
+                jsonResult = json!
+            } else {
+                return
+            }
             
             if  err != nil {
                 // If there is an error parsing JSON, print it to the console
                 println("JSON Error \(err!.localizedDescription)")
                 return
             }
-            
-            println(jsonResult)
             
             let res = jsonResult["results"] as! NSArray
             dispatch_async(dispatch_get_main_queue(), {
@@ -98,23 +103,37 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
                         }
                         self.images.append(UIImage(named: imageName)!)
                     } else {
-                        let name = r["nickname"] as! String
+                        let nickname = r["nickname"] as! String
+                        let username = r["username"] as! String
+                        let imageURL = r["photo"] as? String
+                        let g = r["gender"] as! Int
+                        var gender = "Female"
+                        if g == 1 {
+                            gender = "Male"
+                        }
+                        
+                        let email = r["email"] as! String
+                        var rating = 0
+                        if let r = r["rating"] as? Int {
+                            rating = r
+                        }
                         let id = r["id"] as! Int
-                        self.results.append([String(type), name, String(id)])
+                        self.results.append([String(type), nickname, String(id), username, gender, email, String(rating)])
                         //TODO: User Image URL!!!
                         let photoURL = r["photo"] as? String
                         let imageName = "head.png"
                         self.images.append(UIImage(named: imageName)!)
                         if let url = photoURL {
-                            let urlString = "http://52.25.65.141:8000" + url  //User.URLbase + url
+                            let urlString = User.URLbase + url  //User.URLbase + url
                             let request: NSURLRequest = NSURLRequest(URL: NSURL(string: urlString)!)
                             let mainQueue = NSOperationQueue.mainQueue()
                             let fow = i
                             NSURLConnection.sendAsynchronousRequest(request, queue: mainQueue, completionHandler: { (response, data, error) -> Void in
                                 if error == nil {
                                     dispatch_async(dispatch_get_main_queue(), {
-                                        if fow < self.images.count {
-                                            self.images[fow] = UIImage(data: data)!
+                                        let image = UIImage(data: data)
+                                        if fow < self.images.count && image != nil{
+                                            self.images[fow] = image!
                                             self.createCells()
                                             self.resultsList.reloadData()
                                         }
@@ -139,7 +158,6 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
     func createCells() {
         self.cells = []
         for var i = 0; i < self.results.count; i++ {
-            println(results[i][1])
             var cell:UITableViewCell = self.resultsList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
             
             let th = self.resultsList.rowHeight;
@@ -206,6 +224,36 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
             singleEvent.modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
             singleEvent.parentController = 1
             self.presentViewController(singleEvent, animated:true, completion:nil)
+        } else {
+            
+            var msg = "--------\nUsername: " + self.results[indexPath.row][3]
+            msg += "\nGender: " + self.results[indexPath.row][4]
+            msg += "\nEmail: " + self.results[indexPath.row][5]
+            msg += "\nRating: " + self.results[indexPath.row][6]
+            
+            let alertController = UIAlertController(title: self.results[indexPath.row][1], message: msg, preferredStyle: UIAlertControllerStyle.Alert)
+            
+            
+            
+            let followAction = UIAlertAction(title: "Follow", style: .Default, handler: {
+                action in
+                // TODO: Submit the follow request to server
+                
+                self.followAction(self.results[indexPath.row][2])
+                
+                // Done
+                let alertMessage = UIAlertController(title: "Success", message: "You have followed " + self.results[indexPath.row][1], preferredStyle: .Alert)
+                alertMessage.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+                self.presentViewController(alertMessage, animated: true, completion: nil)
+            })
+            
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Default) { (_) in }
+            
+            
+            alertController.addAction(followAction)
+            alertController.addAction(cancelAction)
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
         }
     }
     
@@ -228,5 +276,31 @@ class SearchController: UIViewController, UITableViewDelegate, UITableViewDataSo
         dateFormatter.dateFormat = "MMM dd"
         let dateString = dateFormatter.stringFromDate(date!)
         return dateString
+    }
+    
+    func followAction(id: String) {
+        let urlPath = User.URLbase + "/user/" + User.UID + "/followings/add/?following_id=" + id
+        
+        let url = NSURL(string: urlPath)
+        let session = NSURLSession.sharedSession()
+        let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
+            
+            if error != nil {
+                println("error=\(error)")
+                return
+            }
+            
+            var err: NSError?
+            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+            
+            if  err != nil {
+                // If there is an error parsing JSON, print it to the console
+                println("JSON Error \(err!.localizedDescription)")
+                return
+            }
+            
+        })
+        task.resume()
+        
     }
 }

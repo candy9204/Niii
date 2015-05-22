@@ -54,6 +54,7 @@ class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     func createCells(){
+        cells = []
         for var i = 0; i < self.events.count; i++ {
             
             var cell:UITableViewCell = self.eventList.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
@@ -116,9 +117,7 @@ class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDat
         }
         let url = NSURL(string: urlPath)
         let session = NSURLSession.sharedSession()
-        println("before task")
         let task = session.dataTaskWithURL(url!, completionHandler: {data, response, error -> Void in
-            println("in task")
             if error != nil {
                 println("error=\(error)")
                 return
@@ -133,7 +132,6 @@ class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDat
                 return
             }
             
-            println(jsonResult)
             var res : NSArray
             if self.parentCall == 1 {
                 res = jsonResult["participations"] as! NSArray
@@ -148,10 +146,8 @@ class FAndHListController: UIViewController, UITableViewDelegate, UITableViewDat
                 for r in res {
                     let name = r["name"] as! String
                     let id = r["id"] as! Int
-                    //let place = r["place"] as String
-                    //let time = self.timeToString(r["time"] as String)
-                    let time = "test time"
-                    let place = "test place"
+                    let place = r["place"] as! String
+                    let time = self.timeToString(r["time"] as! String)
                     self.events.append([name, String(id), place, time])
                     //TODO: Image for category!!!
                     var imageName : String

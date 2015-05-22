@@ -173,7 +173,7 @@ class MeController: UIViewController, UITableViewDelegate, UITableViewDataSource
                 self.label3.reloadInputViews()
                 
                 if let url = photoUrl {
-                    let urlString = "http://52.25.65.141:8000" + url  //User.URLbase + url
+                    let urlString = User.URLbase + url  //User.URLbase + url
                     let request: NSURLRequest = NSURLRequest(URL: NSURL(string: urlString)!)
                     let mainQueue = NSOperationQueue.mainQueue()
                     NSURLConnection.sendAsynchronousRequest(request, queue: mainQueue, completionHandler: { (response, data, error) -> Void in

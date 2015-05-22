@@ -22,6 +22,7 @@ class SignInController: UIViewController {
         
         self.signInView.layer.cornerRadius = self.signInView.frame.size.width / 8
         self.signInView.clipsToBounds = true
+        self.password.secureTextEntry = true
     }
     
     override func didReceiveMemoryWarning() {

@@ -26,6 +26,8 @@ class SettingsController: UIViewController, UITableViewDelegate, UITableViewData
     var cells:[UITableViewCell] = [UITableViewCell]()
     var bounds: CGRect = UIScreen.mainScreen().bounds
     
+    var image: UIImage = UIImage()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -138,6 +140,7 @@ class SettingsController: UIViewController, UITableViewDelegate, UITableViewData
         var chosenImage = info[UIImagePickerControllerOriginalImage] as! UIImage //2
         photo.contentMode = .ScaleAspectFit //3
         photo.image = chosenImage //4
+        image = chosenImage
         dismissViewControllerAnimated(true, completion: nil) //5
     }
     
@@ -166,35 +169,47 @@ class SettingsController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func submitUpdate(gesture: UIGestureRecognizer){
-        var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/user/" + User.UID + "/profile/update/")!)
-        request.HTTPMethod = "POST"
-        let postString = "gender=" + gender.text + "&nickname=" + nickName.text// + "&email=" + email.text
-        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+        let imageData:NSData = NSData(data: UIImageJPEGRepresentation(image, 1.0))
+        SRWebClient.POST(User.URLbase + "/user/" + User.UID + "/profile/update/")
+            .data(imageData, fieldName:"photo", data:["gender": gender.text, "nickname": nickName.text, "email": email.text])
+            .send({(response:AnyObject!, status:Int) -> Void in
+                //process success response
+                
+                User.nickname = self.nickName.text
+                User.gender = self.gender.text
+                User.photo = self.image
+
+                },failure:{(error:NSError!) -> Void in
+                    println("ERROR")
+            })
         
-        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
-            data, response, error in
-            
-            if error != nil {
-                println("error=\(error)")
-                return
-            }
-            
-            var err: NSError?
-            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
-            
-            if (err != nil) {
-                // If there is an error parsing JSON, print it to the console
-                println("JSON Error \(err!.localizedDescription)")
-                return
-            }
-            
-            println(jsonResult)
-            
-            User.nickname = self.nickName.text
-            User.gender = self.gender.text
-            
-        }
-        task.resume()
+//        var request = NSMutableURLRequest(URL: NSURL(string: User.URLbase + "/user/" + User.UID + "/profile/update/")!)
+//        request.HTTPMethod = "POST"
+//        let postString = "gender=" + gender.text + "&nickname=" + nickName.text// + "&email=" + email.text
+//        request.HTTPBody = postString.dataUsingEncoding(NSUTF8StringEncoding)
+//        
+//        let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+//            data, response, error in
+//            
+//            if error != nil {
+//                println("error=\(error)")
+//                return
+//            }
+//            
+//            var err: NSError?
+//            let jsonResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: &err) as! NSDictionary
+//            
+//            if (err != nil) {
+//                // If there is an error parsing JSON, print it to the console
+//                println("JSON Error \(err!.localizedDescription)")
+//                return
+//            }
+//            
+//            println(jsonResult)
+//            
+//            
+//        }
+//        task.resume()
         
         // Done
         let alertMessage = UIAlertController(title: "Success", message: "You have updated your info!", preferredStyle: .Alert)
